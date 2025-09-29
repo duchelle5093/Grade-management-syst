@@ -1,0 +1,90 @@
+@import  'tailwindcss';
+
+body {
+    overflow-x: hidden
+}
+@theme {
+    --color-primary: #6EADFF;
+    --color-secondary: #afd0fa;
+    --color-bgColor: #FEFFEF;
+}
+
+.dashboard-layout {
+    @apply h-screen grid lg:grid-cols-[auto_1fr] w-screen
+
+   
+}
+
+.mobile-drawer {
+    @apply grid grid-rows-[auto_1fr_auto] overflow-hidden
+}
+
+ .__main {
+    @apply shadow-xl
+     overflow-hidden duration-300 ease-in-out transition-all
+ }
+
+.sidebar-nav-item {
+    transition: all 0.1s linear;
+    position: relative;
+    border: none;
+    @apply grid grid-cols-[65px_1fr_auto] h-[50px]
+    items-center opacity-60 hover:opacity-100
+}
+
+
+.sidebar-nav-item::after {
+    content: '';
+    transition: all 0.1s ease-in-out;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #000;
+    transform: translateX(-100%);
+
+    @apply bg-transparent rounded-e-full my-3;
+}
+
+
+.sidebar-nav-item.active::after {
+    transform: translateX(0);
+    @apply bg-gray-800
+}
+
+.sidebar-nav-sub-item {
+  position: relative;
+  transition: all 0.1s linear;
+  @apply opacity-60
+ 
+}
+
+
+
+/* Styles pour les semestres actifs */
+.active-semester-row {
+    @apply bg-blue-50 border-l-4 border-blue-500;
+}
+
+.active-semester-row:hover {
+    @apply bg-blue-100;
+}
+
+/* Styles pour les matières sans enseignant */
+.subject-without-teacher {
+    @apply bg-orange-50 border-l-4 border-orange-400;
+}
+
+.subject-without-teacher:hover {
+    @apply bg-orange-100;
+}
+
+
+
+
+
+
+
+
+
