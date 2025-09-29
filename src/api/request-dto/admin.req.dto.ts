@@ -1,25 +1,29 @@
 // DTOs pour les requêtes d'administration selon la nouvelle API
 
-// DTO pour l'inscription utilisateur (admin)
+import { Role, AcademicLevel, StudyCycle } from '../enums';
+
+// DTO pour l'inscription utilisateur (admin) - Aligné avec la documentation API
 export interface SignupReqDto {
-    username: string;
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    role: string[]; // Set<Roles>
-    // Champs étudiants
-    level?: string; // TeachingLevel
+    username: string; // 3-50 chars, required
+    email: string; // valid email, max 100 chars, required
+    password: string; // 6-100 chars, required
+    firstName: string; // 2-50 chars, required
+    lastName: string; // 2-50 chars, required
+    role: Role;
+    
+    // Student fields (when role = STUDENT)
+    levelId?: number; // Long
     matricule?: string;
     speciality?: string;
-    cycle?: string; // StudentCycle
+    cycle?: StudyCycle;
     dateOfBirth?: string; // LocalDate
     placeOfBirth?: string;
-    // Champs enseignants
-    levels?: string[]; // List<TeachingLevel>
-    department?: any; // Department object
+    
+    // Teacher fields (when role = TEACHER)
+    levelIds?: number[]; // List<Long>
+    departmentId?: number; // Long
     phone?: string;
-    subjects?: any[]; // List<Subject>
+    subjectIds?: number[]; // List<Long>
 }
 
 export interface CreateTeacherReqDto {
@@ -31,7 +35,7 @@ export interface CreateTeacherReqDto {
     email: string;
 }
 
-// DTO pour mise à jour enseignant
+// DTO pour mise à jour enseignant - Aligné avec la documentation API
 export interface UpdateTeacherReqDto {
     username?: string;
     password?: string;
@@ -41,34 +45,35 @@ export interface UpdateTeacherReqDto {
     email: string;
     subjects?: any[]; // List<Subject>
     department: any; // Department object
-    teachingLevel: string[]; // List<TeachingLevel>
-    appRole?: string; // Roles
+    teachingLevel: AcademicLevel[]; // List<TeachingLevel>
+    appRole?: Role;
     isActive?: boolean;
 }
 
-// DTO pour mise à jour étudiant
+// DTO pour mise à jour étudiant - Aligné avec la documentation API
 export interface UpdateStudentReqDto {
-    username?: string;
-    password?: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    studentLevel: string; // TeachingLevel
-    cycle: string; // StudentCycle
-    matricule: string;
-    speciality: string;
-    dateOfBirth?: string; // LocalDate
-    placeOfBirth?: string;
+    username?: string; // 3-50 chars
+    password?: string; // 6-100 chars
+    appRole?: Role;
+    firstName: string; // 2-50 chars, required
+    lastName: string; // 2-50 chars, required
+    email?: string; // valid email, max 100 chars
+    studentLevel: AcademicLevel; // required
+    cycle: StudyCycle; // required
+    matricule: string; // pattern: 2 digits + 1 uppercase letter + 4 digits, required
+    speciality: string; // 3-100 chars, required
+    dateOfBirth: string; // LocalDate, required
+    placeOfBirth: string; // 2-100 chars, required
 }
 
-// DTO pour matière
+// DTO pour matière - Aligné avec la documentation API
 export interface SubjectReqDto {
     subjectCode: string;
     credits: number; // BigDecimal
     description?: string;
     teacherId?: number;
-    subjectsLevel: string[]; // List<TeachingLevel>
-    Studentcycle: string; // StudentCycle
+    subjectsLevel: AcademicLevel[]; // List<TeachingLevel>
+    Studentcycle: StudyCycle;
     semesterId: number;
     departmentId: number;
 }

@@ -1,3 +1,5 @@
+import { Role, AcademicLevel, StudyCycle } from '../enums';
+
 interface Subject {
     id: number;
     name: string;
@@ -5,8 +7,8 @@ interface Subject {
     credits: number;
     description: string;
     active: boolean;
-    level: string; // "LEVEL1", "LEVEL2", etc.
-    cycle: string; // "BACHELOR", "MASTER"
+    level: AcademicLevel;
+    cycle: StudyCycle;
     semesterId: number;
     semesterName: string;
     departmentId: number;
@@ -23,7 +25,7 @@ export interface userProfileResDto {
     firstName: string;
     lastName: string;
     email: string;
-    role: string;
+    role: Role;
     subjects: Subject[];
 }
 //

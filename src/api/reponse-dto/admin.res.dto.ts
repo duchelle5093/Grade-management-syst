@@ -1,3 +1,4 @@
+import { AcademicLevel, Role } from '../enums';
 
 export interface TeacherResDto {
     teacherId: number;
@@ -8,10 +9,10 @@ export interface TeacherResDto {
     email: string;
     subjects: any[]; // List<SubjectResponse>
     department: any; // Department object
-    teachingLevel: string[]; // Set<TeachingLevel>
+    teachingLevel: AcademicLevel[]; // Set<TeachingLevel>
     createdDate: string; // Instant
     lastModifiedDate: string; // Instant
-    appRole: string; // Roles
+    appRole: Role;
     isActive: boolean;
     // Legacy compatibility
     id: number;
@@ -52,18 +53,20 @@ export interface DepartmentResDto {
     }[];
 }
 
-// DTO pour les réponses d'étudiant avec pagination
+import { AcademicLevel, StudyCycle } from '../enums';
+
+// DTO pour les réponses d'étudiant avec pagination - Aligné avec la documentation API
 export interface StudentResDto {
     id: number;
     firstName: string;
     lastName: string;
     email: string;
-    studentLevel: string; // TeachingLevel
-    cycle: string; // StudentCycle
+    studentLevel: AcademicLevel;
+    cycle: StudyCycle;
     matricule: string;
     speciality: string;
-    dateOfBirth?: string; // LocalDate
-    placeOfBirth?: string;
+    dateOfBirth: string; // LocalDate - maintenant requis selon la doc
+    placeOfBirth: string; // maintenant requis selon la doc
     grades: any[]; // List<GradeResponse>
     createdDate: string; // Instant
     lastModifiedDate: string; // Instant
@@ -85,8 +88,8 @@ export interface SubjectResDto {
     credits: number; // BigDecimal
     description?: string;
     teacher?: TeacherResDto;
-    subjectsLevel: string[]; // List<TeachingLevel>
-    Studentcycle: string; // StudentCycle
+    subjectsLevel: AcademicLevel[]; // List<TeachingLevel>
+    Studentcycle: StudyCycle;
     semester?: any; // SemesterResponse
     department?: DepartmentResDto;
     createdDate: string; // Instant

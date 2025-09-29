@@ -1,4 +1,4 @@
-import {PeriodLabel} from "../enums";
+import { PeriodLabel, AcademicLevel, StudyCycle, Role } from "../enums";
 
 export interface StudentGradeResDto {
     id: number;
@@ -12,8 +12,8 @@ export interface StudentGradeResDto {
     semesterId: number;
     semesterName: string;
     value: number;
-    type: 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2'; 
-    periodLabel: 'CC_1' | 'CC_2' | 'SN_1' | 'SN_2';
+    type: PeriodLabel;
+    periodLabel: PeriodLabel;
     comments: string;
     enteredBy: number;
     enteredByName: string;
@@ -37,8 +37,8 @@ interface StudentSubject {
     credits: number;
     description: string | null;
     active: boolean | null;
-    level: string | null;
-    cycle: string | null;
+    level: AcademicLevel | null;
+    cycle: StudyCycle | null;
     semesterId: number;
     semesterName: string;
     departmentId: number | null;
@@ -61,8 +61,8 @@ export interface StudentDataResDto {
     lastName: string;
     email: string;
     username: string;
-    level: string;
-    role: string;
+    level: AcademicLevel;
+    role: Role;
     subjects: StudentSubject[];
 }
 
@@ -136,7 +136,7 @@ export interface StudentListResDto {
     firstName: string;
     lastName: string;
     email: string;
-    role: string;
+    role: Role;
     subjects: StudentSubject[];
 }
 
@@ -146,7 +146,7 @@ export interface StudentReqDto {
     firstName: string;
     lastName: string;
     email: string;
-    level: string;
+    level: AcademicLevel;
 }
 
 

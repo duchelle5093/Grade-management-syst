@@ -5,7 +5,7 @@ import {ChangePasswordReqDto, LoginResDto} from "../reponse-dto/auth.res.dto.ts"
 const authApis = {
     LOGIN: 'auth/login',
     REGISTER : 'auth/register',
-    CHANGE_PASSWORD : 'auth/change-password',
+    CHANGE_PASSWORD : 'auth/password',
 };
 
 export class AuthService {

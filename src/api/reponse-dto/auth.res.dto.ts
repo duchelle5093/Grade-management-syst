@@ -1,16 +1,22 @@
+import { Role, AcademicLevel } from '../enums';
+
 export interface LoginResDto{
+    id: number;
+    username: string;
+    roles: Role[];
     token: string;
+    createdDate: string; // Instant
+    lastModifiedDate: string; // Instant
+    // Legacy compatibility
     refreshToken: null;
     type: string;
-    id: number;
     firstName: string;
     lastName: string;
     email: string;
-    username: string;
     role: string;
     authorities: [],
     mustChangePassword: boolean;
-    levels?: string[]; // Niveaux enseignés par l'enseignant
+    levels?: AcademicLevel[]; // Niveaux enseignés par l'enseignant
 }
 
 export interface ChangePasswordReqDto{

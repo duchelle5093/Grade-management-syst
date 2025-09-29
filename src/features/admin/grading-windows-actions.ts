@@ -44,3 +44,10 @@ export const deleteGradingWindow = createAsyncThunk(
     }
 );
 
+export const fetchActiveGradingWindows = createAsyncThunk(
+    'admin/fetchActiveGradingWindows',
+    async () => {
+        return await gradingWindowsService.getActiveGradingWindows();
+    }
+);
+

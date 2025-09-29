@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { adminService, adminReportsService } from '../../api/configs';
 import { CreateTeacherReqDto } from '../../api/request-dto/admin.req.dto';
-import { Role } from '../../api/enums';
+import { Role, AcademicLevel, StudyCycle } from '../../api/enums';
 
 // Actions pour les étudiants avec pagination
 export const fetchAllStudents = createAsyncThunk(
@@ -21,17 +21,17 @@ export const createUser = createAsyncThunk(
         role: Role;
         password: string;
         // Champs spécifiques aux étudiants
-        level?: string;
+        levelId?: number;
         matricule?: string;
         speciality?: string;
-        cycle?: string;
+        cycle?: StudyCycle;
         dateOfBirth?: string;
         placeOfBirth?: string;
         // Champs spécifiques aux enseignants
-        levels?: string[];
-        department?: string;
+        levelIds?: number[];
+        departmentId?: number;
         phone?: string;
-        subjects?: any[];
+        subjectIds?: number[];
     }, { rejectWithValue }) => {
         try {
             return await adminService.createUser(userData);

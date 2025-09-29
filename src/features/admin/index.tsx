@@ -116,16 +116,16 @@ const AcademicPeriodsManager = () => {
     
     // Mapper les données backend vers le format AcademicPeriod
     const backendPeriods: AcademicPeriod[] = gradingWindows.map(period => ({
-        id: period.id.toString(),
-        name: period.name,
-        shortName: period.shortName,
-        type: (period.shortName || period.shortName) as 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2',
-        semester: period.semester,
+        id: (period.revendicationPeriodId || period.id).toString(),
+        name: period.name || `Période ${period.exam?.assessmentType || 'CC_1'}`,
+        shortName: period.shortName || period.exam?.assessmentType || 'CC_1',
+        type: (period.shortName || period.exam?.assessmentType || 'CC_1') as 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2',
+        semester: typeof period.semester === 'object' ? period.semester?.id || 1 : period.semester || 1,
         startDate: period.startDate,
         endDate: period.endDate,
-        color: period.color === 'string' ? '#1890ff' : (period.color || '#1890ff'),
+        color: period.color || '#1890ff',
         isActive: period.isActive,
-        order: period.order
+        order: period.order || 1
     }));
     
     // Trouver le semestre actif
@@ -244,14 +244,16 @@ const AcademicPeriodsManager = () => {
         
         try {
             const payload = {
-                semesterId: selectedPeriod.semester,
-                name: selectedPeriod.name,
-                shortName: selectedPeriod.shortName,
-                periodLabel: selectedPeriod.shortName,
+                examId: 1, // ID par défaut, à adapter selon vos besoins
                 startDate: editedStartDate,
                 endDate: editedEndDate,
                 color: selectedPeriod.color,
                 isActive: editedIsActive,
+                // Legacy compatibility
+                semesterId: selectedPeriod.semester,
+                name: selectedPeriod.name,
+                shortName: selectedPeriod.shortName,
+                type: selectedPeriod.type,
                 order: selectedPeriod.order
             };
             

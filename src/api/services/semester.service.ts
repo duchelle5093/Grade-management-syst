@@ -3,10 +3,10 @@ import {SemesterResDto} from "../reponse-dto/semester.res.dto";
 
 const semesterApis = {
     GET_SEMESTERS: 'semesters',
-    CREATE_SEMESTER: 'semesters',
-    UPDATE_SEMESTER: 'semesters',
-    UPDATE_SEMESTERS: 'semesters',
-    DELETE_SEMESTER: 'semesters',
+    CREATE_SEMESTER: 'admin/semester',
+    UPDATE_SEMESTER: 'admin/semester',
+    UPDATE_SEMESTERS: 'admin/semester',
+    DELETE_SEMESTER: 'admin/semester',
 };
 
 export class SemesterService {

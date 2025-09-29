@@ -1,3 +1,5 @@
+import { AssessmentType, RequestStatus } from '../enums';
+
 // DTOs pour les réponses de notes enseignant selon la nouvelle API
 
 export interface TeacherGradeResDto {
@@ -9,7 +11,7 @@ export interface TeacherGradeResDto {
     subject: any; // SubjectRequest object
     examiner: any; // Teacher object
     semester: any; // SemesterRequest object
-    exam: string; // AssessmentType
+    exam: AssessmentType;
     revendication?: any[]; // List<RevendicationRequest>
     hasPassed: boolean;
     gpa: number;
@@ -26,7 +28,7 @@ export interface TeacherRevendicationResDto {
     requestedScore: number;
     description: string;
     teacherComment?: string;
-    status: 'PENDING' | 'APPROVED' | 'REJECTED'; // RequestStatus
+    status: RequestStatus;
     createdDate: string; // Instant
     lastModifiedDate: string; // Instant
     // Pagination fields

@@ -126,14 +126,17 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             
 
             if (selectedRole === Role.STUDENT) {
-                userData.level = allData.level;
+                userData.levelId = allData.levelId || 1; // Convertir level en levelId
                 userData.matricule = allData.matricule;
                 userData.speciality = allData.speciality;
                 userData.cycle = allData.cycle;
+                userData.dateOfBirth = allData.dateOfBirth;
+                userData.placeOfBirth = allData.placeOfBirth;
             } else if (selectedRole === Role.TEACHER) {
-                userData.levels = allData.levels || [];
-                userData.department = allData.department;
+                userData.levelIds = allData.levelIds || []; // Convertir levels en levelIds
+                userData.departmentId = allData.departmentId || 1; // Convertir department en departmentId
                 userData.phone = allData.phone;
+                userData.subjectIds = allData.subjectIds || [];
             }
 
 
@@ -337,16 +340,16 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                 <Row gutter={16}>
                                     <Col span={8}>
                                         <Form.Item
-                                            name="level"
+                                            name="levelId"
                                             label="Niveau"
                                             rules={[{ required: true, message: 'Le niveau est requis' }]}
                                         >
                                             <Select size="large" placeholder="Sélectionnez le niveau">
-                                                <Select.Option value={AcademicLevel.LEVEL1}>Licence 1</Select.Option>
-                                                <Select.Option value={AcademicLevel.LEVEL2}>Licence 2</Select.Option>
-                                                <Select.Option value={AcademicLevel.LEVEL3}>Licence 3</Select.Option>
-                                                <Select.Option value={AcademicLevel.LEVEL4}>Master 1</Select.Option>
-                                                <Select.Option value={AcademicLevel.LEVEL5}>Master 2</Select.Option>
+                                                <Select.Option value={1}>Licence 1</Select.Option>
+                                                <Select.Option value={2}>Licence 2</Select.Option>
+                                                <Select.Option value={3}>Licence 3</Select.Option>
+                                                <Select.Option value={4}>Master 1</Select.Option>
+                                                <Select.Option value={5}>Master 2</Select.Option>
                                             </Select>
                                         </Form.Item>
                                     </Col>
@@ -381,6 +384,33 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                         </Form.Item>
                                     </Col>
                                 </Row>
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="dateOfBirth"
+                                            label="Date de naissance"
+                                            rules={[{ required: true, message: 'La date de naissance est requise' }]}
+                                        >
+                                            <Input 
+                                                size="large" 
+                                                type="date"
+                                                placeholder="YYYY-MM-DD"
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="placeOfBirth"
+                                            label="Lieu de naissance"
+                                            rules={[{ required: true, message: 'Le lieu de naissance est requis' }]}
+                                        >
+                                            <Input 
+                                                size="large" 
+                                                placeholder="Entrez le lieu de naissance"
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
                             </>
                         )}
 
@@ -389,7 +419,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                 <Row gutter={16}>
                                     <Col span={12}>
                                         <Form.Item
-                                            name="levels"
+                                            name="levelIds"
                                             label="Niveaux enseignés"
                                             rules={[{ required: true, message: 'Au moins un niveau est requis' }]}
                                         >
@@ -398,17 +428,17 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                                 size="large" 
                                                 placeholder="Sélectionnez les niveaux"
                                             >
-                                                <Select.Option value={AcademicLevel.LEVEL1}>Licence 1</Select.Option>
-                                                <Select.Option value={AcademicLevel.LEVEL2}>Licence 2</Select.Option>
-                                                <Select.Option value={AcademicLevel.LEVEL3}>Licence 3</Select.Option>
-                                                <Select.Option value={AcademicLevel.LEVEL4}>Master 1</Select.Option>
-                                                <Select.Option value={AcademicLevel.LEVEL5}>Master 2</Select.Option>
+                                                <Select.Option value={1}>Licence 1</Select.Option>
+                                                <Select.Option value={2}>Licence 2</Select.Option>
+                                                <Select.Option value={3}>Licence 3</Select.Option>
+                                                <Select.Option value={4}>Master 1</Select.Option>
+                                                <Select.Option value={5}>Master 2</Select.Option>
                                             </Select>
                                         </Form.Item>
                                     </Col>
                                     <Col span={12}>
                                         <Form.Item
-                                            name="department"
+                                            name="departmentId"
                                             label="Département"
                                             rules={[{ required: true, message: 'Le département est requis' }]}
                                         >
@@ -417,7 +447,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                                 placeholder="Sélectionnez un département"
                                             >
                                                 {departments.map(dept => (
-                                                    <Select.Option key={dept.id} value={dept.name}>
+                                                    <Select.Option key={dept.id} value={dept.id}>
                                                         {dept.name}
                                                     </Select.Option>
                                                 ))}

@@ -1,3 +1,5 @@
+import { RequestStatus, TranscriptStatus, AcademicLevel, StudyCycle } from '../enums';
+
 // DTOs pour les réponses de réclamations étudiant selon la nouvelle API
 
 export interface StudentRevendicationResDto {
@@ -8,7 +10,7 @@ export interface StudentRevendicationResDto {
     requestedScore: number;
     description: string;
     teacherComment?: string;
-    status: 'PENDING' | 'APPROVED' | 'REJECTED'; // RequestStatus
+    status: RequestStatus;
     createdDate: string; // Instant
     lastModifiedDate: string; // Instant
 }
@@ -31,9 +33,9 @@ export interface TranscriptResDto {
     studentLastName: string;
     studentMatricule: string;
     subjectResults: any[]; // List<SubjectResponse>
-    status: 'DRAFT' | 'FINAL' | 'ARCHIVED'; // TranscriptStatus
-    studentLevel: string; // TeachingLevel
-    studentCycle: string; // StudentCycle
+    status: TranscriptStatus;
+    studentLevel: AcademicLevel;
+    studentCycle: StudyCycle;
     semesterName: string;
     studentGrades: any[]; // List<GradeResponse>
     annualAverage: number;

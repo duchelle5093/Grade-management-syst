@@ -61,6 +61,28 @@ export const LEVEL_ROUTES = {
     [AcademicLevel.LEVEL5]: 'master2',
 } as const;
 
+// Statuts de réclamation
+export enum RequestStatus {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+}
+
+// Statuts de relevé de notes
+export enum TranscriptStatus {
+    DRAFT = 'DRAFT',
+    FINAL = 'FINAL',
+    ARCHIVED = 'ARCHIVED',
+}
+
+// Types d'évaluation détaillés
+export enum AssessmentType {
+    CC_1 = 'CC_1',
+    CC_2 = 'CC_2', 
+    SN_1 = 'SN_1',
+    SN_2 = 'SN_2',
+}
+
 // Groupes de niveaux
 export const LICENCE_LEVELS = [AcademicLevel.LEVEL1, AcademicLevel.LEVEL2, AcademicLevel.LEVEL3];
 export const MASTER_LEVELS = [AcademicLevel.LEVEL4, AcademicLevel.LEVEL5];

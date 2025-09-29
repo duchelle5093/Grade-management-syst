@@ -1,37 +1,46 @@
 import { AxiosInstance } from 'axios';
 
 export interface GradingWindowResponse {
+    revendicationPeriodId: number;
+    exam: {
+        examPeriodId: number;
+        assessmentType: string;
+    };
+    semester: any;
+    startDate: string;
+    endDate: string;
+    color?: string;
+    isActive: boolean;
+    createdDate: string;
+    lastModifiedDate: string;
+    // Legacy compatibility
     id: number;
     name: string;
     shortName: string;
     type: string;
-    semester: number;
-    startDate: string;
-    endDate: string;
-    color: string;
-    isActive: boolean;
     order: number;
-    createdDate: string;
-    lastModifiedDate: string;
 }
 
 export interface GradingWindowRequest {
-    semesterId: number;
-    name: string;
-    shortName: string;
-    type: string;
+    examId: number;
     startDate: string;
     endDate: string;
     color?: string;
     isActive?: boolean;
+    // Legacy compatibility
+    semesterId?: number;
+    name?: string;
+    shortName?: string;
+    type?: string;
     order?: number;
 }
 
 const gradingWindowsApis = {
-    GET_ALL_GRADING_WINDOWS: 'grading-windows',
-    CREATE_GRADING_WINDOW: 'grading-windows',
-    UPDATE_GRADING_WINDOW: 'grading-windows',
-    DELETE_GRADING_WINDOW: 'grading-windows',
+    GET_ALL_GRADING_WINDOWS: 'revendication-period',
+    CREATE_GRADING_WINDOW: 'admin/revendication-period',
+    UPDATE_GRADING_WINDOW: 'admin/revendication-period',
+    DELETE_GRADING_WINDOW: 'admin/revendication-period',
+    GET_ACTIVE_GRADING_WINDOWS: 'revendication-period/active',
 };
 
 export class GradingWindowsService {
@@ -58,5 +67,10 @@ export class GradingWindowsService {
 
     async deleteGradingWindow(id: number): Promise<void> {
         await this._client.delete(`${gradingWindowsApis.DELETE_GRADING_WINDOW}/${id}`);
+    }
+
+    async getActiveGradingWindows(): Promise<GradingWindowResponse[]> {
+        const response = await this._client.get<GradingWindowResponse[]>(gradingWindowsApis.GET_ACTIVE_GRADING_WINDOWS);
+        return response.data;
     }
 }

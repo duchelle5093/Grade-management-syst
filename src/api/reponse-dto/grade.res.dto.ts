@@ -1,4 +1,4 @@
-import {PeriodLabel} from "../enums";
+import { PeriodLabel } from "../enums";
 
 export interface GradeResDto {
     id: number;
@@ -6,9 +6,9 @@ export interface GradeResDto {
     subjectId: number;
     semesterId: number;
     value: number;
-    type: 'CC_1' | 'SN_1' |'CC_2' | 'SN_2';
+    type: PeriodLabel;
     enteredByTeacherId: number;
-    periodLabel: string;
+    periodLabel: PeriodLabel;
     comments?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -20,9 +20,9 @@ export interface CreateGradeReqDto {
     semesterId: number;
     value: number;
     maxValue?: number;
-    type: 'CC_1' | 'SN_1' |'CC_2' | 'SN_2';
+    type: PeriodLabel;
     enteredBy: number;
-    periodType: 'CC_1' | 'CC_2' | 'SN_1' | 'SN_2';
+    periodType: PeriodLabel;
     comments?: string;
 }
 
@@ -32,15 +32,15 @@ export interface CreateGradeByCodeReqDto {
     semesterId: number;
     value: number;
     maxValue?: number;
-    type: 'CC_1' | 'SN_1' |'CC_2' | 'SN_2';
+    type: PeriodLabel;
     comments?: string;
-    periodType: 'CC_1' | 'CC_2' | 'SN_1' | 'SN_2';
+    periodType: PeriodLabel;
 }
 
 export interface UpdateGradeReqDto {
     value: number;
     maxValue?: number;
-    type: 'CC_1' | 'SN_1' |'CC_2' | 'SN_2';
+    type: PeriodLabel;
     comments?: string;
 }
 
@@ -56,8 +56,8 @@ export interface TeacherGradeResDto {
     semesterId: number;
     semesterName: string;
     value: number;
-    type: 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2';
-    periodLabel: string; // "CC_1", "CC_2", "SN_1", "SN_2"
+    type: PeriodLabel;
+    periodLabel: PeriodLabel;
     comments: string;
     enteredBy: number;
     enteredByName: string;

@@ -18,7 +18,8 @@ import {
     fetchAllGradingWindows,
     createGradingWindow,
     updateGradingWindow,
-    deleteGradingWindow
+    deleteGradingWindow,
+    fetchActiveGradingWindows
 } from './grading-windows-actions';
 import {
     createDepartment,
@@ -326,6 +327,20 @@ const adminSlice = createSlice({
             .addCase(switchUserDepartment.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string || 'Failed to switch department';
+            })
+            
+            // Fetch active grading windows
+            .addCase(fetchActiveGradingWindows.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchActiveGradingWindows.fulfilled, (state, action) => {
+                state.loading = false;
+                state.gradingWindows = action.payload;
+            })
+            .addCase(fetchActiveGradingWindows.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to fetch active grading windows';
             });
     },
 });

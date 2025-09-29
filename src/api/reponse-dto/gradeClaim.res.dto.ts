@@ -1,14 +1,16 @@
+import { PeriodLabel, RequestStatus } from '../enums';
+
 export interface GradeClaimResDto {
     id: number;
     gradeId: number;
     studentId: number;
     subjectCode: string;
-    period: 'CC_1' | 'CC_2' | 'SN_1' | 'SN_2';
+    period: PeriodLabel;
     currentScore: number;
     requestedScore: number;
     cause: string;
     description: string;
-    status: 'PENDING' | 'APPROVED' | 'REJECTED';
+    status: RequestStatus;
     teacherComment?: string;
     resolvedAt?: string;
 }

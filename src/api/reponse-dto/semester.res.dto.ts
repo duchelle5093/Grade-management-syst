@@ -9,12 +9,14 @@ export interface SemesterResDto {
     orderIndex: number;
 }
 
+import { PeriodLabel } from '../enums';
+
 export interface CreateGradeByCodeReqDto {
     studentMatricule: string;
     subjectCode: string;
     semesterId: string;
     value: number;
-    type: 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2';
+    type: PeriodLabel;
     comments: string;
-    periodLabel: string;
+    periodLabel: PeriodLabel;
 }

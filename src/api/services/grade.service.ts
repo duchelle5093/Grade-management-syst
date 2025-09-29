@@ -25,7 +25,7 @@ const gradeApis = {
     REJECT_GRADE_CLAIM: 'grade-claims',
     SUBMIT_GRADE_CLAIM: 'grade-claims',
     LIST_GRADE_CLAIMS: 'grade-claims',
-    GET_ACTIVE_PERIOD: 'grading-windows/active',
+    GET_ACTIVE_PERIOD: 'revendication-period/active',
 };
 
 export class GradeService {
