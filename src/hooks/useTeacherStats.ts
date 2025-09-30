@@ -18,7 +18,8 @@ export const useRecentGrades = () => {
             grades: recentGrades,
             count: recentGrades.length,
             byPeriod: recentGrades.reduce((acc, grade) => {
-                acc[grade.periodLabel] = (acc[grade.periodLabel] || 0) + 1;
+                const period = grade.periodLabel || grade.assessmentType || 'UNKNOWN';
+                acc[period] = (acc[period] || 0) + 1;
                 return acc;
             }, {} as Record<string, number>)
         };
@@ -33,7 +34,9 @@ export const useStudentsByLevel = () => {
         const byLevel = uniqueLevels.reduce((acc, level) => {
             // Compter les étudiants qui ont au moins une matière de ce niveau
             acc[level] = students.filter(student => 
-                student.subjects?.some(subject => subject.level === level)
+                student.subjects?.some(subject => subject.level === level) ||
+                student.levelId === level || // Utiliser levelId si disponible
+                student.level?.id === level // Ou level.id si c'est un objet
             ).length;
             return acc;
         }, {} as Record<string, number>);
@@ -72,8 +75,8 @@ export const useGradeProgression = () => {
         // Calculer progression CC → SN pour chaque semestre
         Object.entries(gradesByStudent).forEach(([studentId, grades]) => {
             // Semestre 1
-            const cc1 = grades.find(g => g.periodLabel === 'CC_1')?.value;
-            const sn1 = grades.find(g => g.periodLabel === 'SN_1')?.value;
+            const cc1 = grades.find(g => (g.periodLabel || g.assessmentType) === 'CC_1')?.value || grades.find(g => (g.periodLabel || g.assessmentType) === 'CC_1')?.score;
+            const sn1 = grades.find(g => (g.periodLabel || g.assessmentType) === 'SN_1')?.value || grades.find(g => (g.periodLabel || g.assessmentType) === 'SN_1')?.score;
             
             if (cc1 !== undefined && sn1 !== undefined) {
                 const improvement = sn1 - cc1;
@@ -85,8 +88,8 @@ export const useGradeProgression = () => {
             }
             
             // Semestre 2
-            const cc2 = grades.find(g => g.periodLabel === 'CC_2')?.value;
-            const sn2 = grades.find(g => g.periodLabel === 'SN_2')?.value;
+            const cc2 = grades.find(g => (g.periodLabel || g.assessmentType) === 'CC_2')?.value || grades.find(g => (g.periodLabel || g.assessmentType) === 'CC_2')?.score;
+            const sn2 = grades.find(g => (g.periodLabel || g.assessmentType) === 'SN_2')?.value || grades.find(g => (g.periodLabel || g.assessmentType) === 'SN_2')?.score;
             
             if (cc2 !== undefined && sn2 !== undefined) {
                 const improvement = sn2 - cc2;
@@ -142,12 +145,12 @@ export const useRecentActivity = () => {
                 
                 return {
                     type: 'grade' as const,
-                    name: `${grade.subjectName} ${grade.periodLabel}`,
+                    name: `${grade.subjectName || grade.subject?.name} ${grade.periodLabel || grade.assessmentType}`,
                     action: isUpdate ? 'Note modifiée' : 'Note ajoutée',
                     time: timeAgo,
-                    avatar: grade.subjectCode?.charAt(0) || 'N',
-                    studentName: grade.studentName,
-                    value: grade.value
+                    avatar: (grade.subjectCode || grade.subject?.code)?.charAt(0) || 'N',
+                    studentName: grade.studentName || grade.student?.name,
+                    value: grade.value || grade.score
                 };
             });
         

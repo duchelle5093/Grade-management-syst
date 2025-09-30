@@ -108,7 +108,7 @@ export const DashboardHeader = ({ onDisconnect: disconnect }: Props) => {
               <span>{userInfo.firstName}</span>
               <span>{userInfo.lastName}</span>
             </div>
-            {userInfo.role}
+            {typeof userInfo.role === 'object' ? userInfo.role?.appRole || userInfo.role?.roleId || 'N/A' : userInfo.role}
           </div>
         </div>
       </div>

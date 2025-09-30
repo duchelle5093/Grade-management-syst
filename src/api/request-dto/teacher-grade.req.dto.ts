@@ -1,4 +1,4 @@
-import { PeriodLabel } from '../enums';
+import { AssessmentType } from '../enums';
 
 // DTOs pour les requêtes de notes enseignant selon la nouvelle API
 
@@ -10,7 +10,7 @@ export interface TeacherGradeReqDto {
     ccScore?: number; // 0-30
     snScore?: number; // 0-70
     comments?: string; // 5-255 chars
-    assessmentType: PeriodLabel; // AssessmentType, required
+    assessmentType: AssessmentType; // required
 }
 
 export interface TeacherRevendicationApprovalReqDto {

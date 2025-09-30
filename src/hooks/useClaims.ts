@@ -27,10 +27,10 @@ export const useClaims = (currentSubjectId?: number) => {
 
         const filteredClaims = claims.filter(claim => {
             const studentMatch = claim.studentId === studentId;
-            const periodMatch = periodMap[period].includes(claim.period);
+            const periodMatch = periodMap[period].includes(claim.assessmentType || claim.period);
             const statusMatch = claim.status === 'PENDING';
             const subjectMatch = profile?.subjects?.some(subject => 
-                subject.code === claim.subjectCode && 
+                subject.code === (claim.subjectCode || claim.subject?.code) && 
                 (!currentSubjectId || subject.id === currentSubjectId)
             );
             
@@ -44,7 +44,7 @@ export const useClaims = (currentSubjectId?: number) => {
         const pendingClaims = claims.filter(claim => {
             const statusMatch = claim.status === 'PENDING';
             const subjectMatch = profile?.subjects?.some(subject => 
-                subject.code === claim.subjectCode &&
+                subject.code === (claim.subjectCode || claim.subject?.code) &&
                 (!currentSubjectId || subject.id === currentSubjectId)
             );
             
@@ -57,7 +57,7 @@ export const useClaims = (currentSubjectId?: number) => {
     const getAllPendingClaimsCount = () => {
         return claims.filter(claim => 
             claim.status === 'PENDING' &&
-            profile?.subjects?.some(subject => subject.code === claim.subjectCode)
+            profile?.subjects?.some(subject => subject.code === (claim.subjectCode || claim.subject?.code))
         ).length;
     };
 

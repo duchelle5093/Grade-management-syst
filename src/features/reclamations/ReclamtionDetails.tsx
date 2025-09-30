@@ -50,8 +50,8 @@ export const ReclamationsDetails = ({
         const periodLabel = formValues.period;
 
         const grade = student?.grades.find(
-            grade => grade.subjectCode === currentTopic?.code &&
-                     grade.periodLabel === periodLabel
+            grade => (grade.subjectCode || grade.subject?.code) === currentTopic?.code &&
+                     (grade.periodLabel || grade.assessmentType) === periodLabel
         );
 
         if (!grade) {
@@ -64,7 +64,7 @@ export const ReclamationsDetails = ({
         }
 
         const payload: GradeClaimReqDto = {
-            gradeId: grade.id,
+            gradeId: grade.id || grade.gradeId,
             requestedScore: parseFloat(formValues.requestedScore.toString()),
             cause: formValues.cause,
             period: periodLabel as 'CC_1' | 'CC_2' | 'SN_1' | 'SN_2',

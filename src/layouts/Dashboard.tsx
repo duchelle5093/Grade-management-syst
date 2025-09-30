@@ -130,7 +130,7 @@ export const Dashboard = () => {
                     <DashboardHeader
                         onDisconnect={onDisconnect}
                         useAppSelector={useAppSelector}
-                        role={userProfile.role}
+                        role={typeof userProfile.role === 'object' ? userProfile.role?.appRole || 'UNKNOWN' : userProfile.role}
                     />
                     <div className={"outlet overflow-hidden overflow-y-auto pt-4 "}>
                         <div className="container mx-auto ">

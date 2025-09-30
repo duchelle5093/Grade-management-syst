@@ -104,10 +104,10 @@ export const TeacherGradesTable = ({
             // Transformer la réclamation API en format attendu par la modal
             const apiClaim = claims[0];
             const transformedClaim = {
-                id: apiClaim.id.toString(),
+                id: (apiClaim.id || apiClaim.revendicationId).toString(),
                 period: period,
                 requestedScore: apiClaim.requestedScore,
-                cause: apiClaim.cause,
+                cause: apiClaim.cause || apiClaim.reason,
                 description: apiClaim.description
             };
             setSelectedClaim(transformedClaim);

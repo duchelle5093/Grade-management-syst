@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { TeacherGradeResDto} from '../../api/reponse-dto/grade.res.dto';
+import { TeacherGradeResDto} from '../../api/reponse-dto/teacher-grade.res.dto';
 import {
     fetchTeacherGrades,
     fetchStudentGrades,

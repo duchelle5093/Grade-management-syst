@@ -7,7 +7,7 @@ import {
 } from '../../api/reponse-dto/grade.res.dto';
 import {GradeClaimReqDto} from "../../api/request-dto/gradeClaim.req.dto.ts";
 import {GradeClaimResDto} from "../../api/reponse-dto/gradeClaim.res.dto.ts";
-import { PeriodLabel } from '../../api/enums';
+import { PeriodLabel, AssessmentType } from '../../api/enums';
 
 export const fetchTeacherGrades = createAsyncThunk(
     'grades/fetchTeacherGrades',
@@ -36,7 +36,7 @@ export const createGrade = createAsyncThunk(
             ccScore: gradeData.type === PeriodLabel.CC1 || gradeData.type === PeriodLabel.CC2 ? gradeData.value : undefined,
             snScore: gradeData.type === PeriodLabel.SN1 || gradeData.type === PeriodLabel.SN2 ? gradeData.value : undefined,
             comments: gradeData.comments,
-            assessmentType: gradeData.type
+            assessmentType: gradeData.type as string
         });
         return response;
     }
@@ -61,7 +61,7 @@ export const updateGrade = createAsyncThunk(
             ccScore: gradeData.type === PeriodLabel.CC1 || gradeData.type === PeriodLabel.CC2 ? gradeData.value : undefined,
             snScore: gradeData.type === PeriodLabel.SN1 || gradeData.type === PeriodLabel.SN2 ? gradeData.value : undefined,
             comments: gradeData.comments,
-            assessmentType: gradeData.type || PeriodLabel.CC1
+            assessmentType: (gradeData.type || PeriodLabel.CC1) as string
         });
         return response;
     }

@@ -152,25 +152,25 @@ export const TeacherOverview = () => {
                         <div style={{ textAlign: 'center' }}>
                             <Statistic
                                 title="Taux de progression"
-                                value={gradeProgression.progressRate}
+                                value={gradeProgression.progressRate || 0}
                                 suffix="%"
-                                valueStyle={{ color: gradeProgression.progressRate > 50 ? '#52c41a' : '#faad14' }}
+                                valueStyle={{ color: (gradeProgression.progressRate || 0) > 50 ? '#52c41a' : '#faad14' }}
                             />
                             <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-around' }}>
                                 <div>
                                     <Text type="secondary">Améliorations</Text>
                                     <br />
-                                    <Text strong style={{ color: '#52c41a' }}>{gradeProgression.improvements}</Text>
+                                    <Text strong style={{ color: '#52c41a' }}>{gradeProgression.improvements || 0}</Text>
                                 </div>
                                 <div>
                                     <Text type="secondary">Déclins</Text>
                                     <br />
-                                    <Text strong style={{ color: '#ff4d4f' }}>{gradeProgression.declines}</Text>
+                                    <Text strong style={{ color: '#ff4d4f' }}>{gradeProgression.declines || 0}</Text>
                                 </div>
                                 <div>
                                     <Text type="secondary">Stables</Text>
                                     <br />
-                                    <Text strong>{gradeProgression.stable}</Text>
+                                    <Text strong>{gradeProgression.stable || 0}</Text>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +184,7 @@ export const TeacherOverview = () => {
                     >
                         <List
                             itemLayout="horizontal"
-                            dataSource={recentActivity}
+                            dataSource={recentActivity || []}
                             renderItem={(item) => (
                                 <List.Item>
                                     <List.Item.Meta

@@ -49,7 +49,9 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
     
     const [form] = Form.useForm();
     const [currentStep, setCurrentStep] = useState(0);
-    const [selectedRole, setSelectedRole] = useState<Role>(editingUser?.role || Role.STUDENT);
+    const [selectedRole, setSelectedRole] = useState<Role>(
+        (typeof editingUser?.role === 'object' ? editingUser?.appRole : editingUser?.role) || Role.STUDENT
+    );
     const [formData, setFormData] = useState<any>({});
     
     // Charger les départements
@@ -143,7 +145,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             let result;
             if (editingUser) {
                 const userId = editingUser.studentId || editingUser.id;
-                const userRole = editingUser.role || selectedRole;
+                const userRole = (typeof editingUser.role === 'object' ? editingUser.appRole : editingUser.role) || selectedRole;
                 result = await dispatch(updateUser({ id: userId, userData, role: userRole }));
             } else {
                 result = await dispatch(createUser(userData));

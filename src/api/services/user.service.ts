@@ -36,12 +36,12 @@ export class UserService {
 
   async getProfile() {
     try {
-      return await this.getTeacherProfile();
+      return await this.getAdminProfile();
     } catch {
       try {
-        return await this.getStudentProfile();
+        return await this.getTeacherProfile();
       } catch {
-        return await this.getAdminProfile();
+        return await this.getStudentProfile();
       }
     }
   }

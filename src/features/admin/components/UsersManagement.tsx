@@ -48,7 +48,7 @@ export const UsersManagement = () => {
     // Stats simples calculées directement
     const totalStudents = students.length;
     const totalTeachers = teachers.length;
-    const activeStudents = students.filter(student => student.role === 'STUDENT').length;
+    const activeStudents = students.filter(student => (student.role || student.appRole || 'STUDENT') === 'STUDENT').length;
     
     const [searchText, setSearchText] = useState('');
     const [activeTab, setActiveTab] = useState('students');
@@ -120,7 +120,7 @@ Cette action est irréversible.`,
             (student.email || '').toLowerCase().includes(searchText.toLowerCase()) ||
             (student.username || '').toLowerCase().includes(searchText.toLowerCase());
         
-        const matchesRole = filterRole === 'all' || student.role === filterRole;
+        const matchesRole = filterRole === 'all' || (student.role || student.appRole || 'STUDENT') === filterRole;
         const matchesLevel = filterLevel === 'all' || student.level === filterLevel;
         
         return matchesSearch && matchesRole && matchesLevel;
@@ -346,14 +346,20 @@ Cette action est irréversible.`,
         },
         {
             title: 'Rôle',
-            dataIndex: 'role',
             key: 'role',
-            sorter: (a: any, b: any) => (a.role || '').localeCompare(b.role || ''),
-            render: (role: string) => (
-                <Tag color={role === 'STUDENT' ? 'green' : role === 'TEACHER' ? 'orange' : 'red'}>
-                    {role === 'STUDENT' ? 'Étudiant' : role === 'TEACHER' ? 'Enseignant' : 'Admin'}
-                </Tag>
-            ),
+            sorter: (a: any, b: any) => {
+                const roleA = a.role || a.appRole || 'STUDENT';
+                const roleB = b.role || b.appRole || 'STUDENT';
+                return roleA.localeCompare(roleB);
+            },
+            render: (record: any) => {
+                const role = record.role || record.appRole || 'STUDENT';
+                return (
+                    <Tag color={role === 'STUDENT' ? 'green' : role === 'TEACHER' ? 'orange' : 'red'}>
+                        {role === 'STUDENT' ? 'Étudiant' : role === 'TEACHER' ? 'Enseignant' : 'Admin'}
+                    </Tag>
+                );
+            },
         },
         {
             title: 'Actions',

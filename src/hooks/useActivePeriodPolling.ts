@@ -26,7 +26,7 @@ export const useActivePeriodPolling = ({
             const result = await dispatch(fetchActivePeriod());
             
             if (fetchActivePeriod.fulfilled.match(result)) {
-                const newPeriod = result.payload?.shortName;
+                const newPeriod = result.payload?.shortName || result.payload?.periodLabel || result.payload?.name;
                 
                 // Notifier si la période a changé
                 if (previousPeriodRef.current && 
@@ -91,12 +91,13 @@ export const useActivePeriodPolling = ({
         return result; // Fallback vers CC1 si période inconnue
     };
 
-    const editableColumns = getEditableColumns(activePeriod?.shortName);
+    const periodName = activePeriod?.shortName || activePeriod?.periodLabel || activePeriod?.name;
+    const editableColumns = getEditableColumns(periodName);
     
     console.log('DEBUG - useActivePeriodPolling return:', {
         activePeriod,
         editableColumns,
-        activePeriodShortName: activePeriod?.shortName
+        activePeriodShortName: periodName
     });
     
     return {
