@@ -12,18 +12,23 @@ import { AcademicLevel, LEVEL_DISPLAY_NAMES, LEVEL_ROUTES, LICENCE_LEVELS, MASTE
 export const useTeacherLevels = () => {
     const { profile } = useAppSelector(state => state.user);
 
-    // Extraire les niveaux depuis les matières enseignées
+    // Extraire les niveaux depuis teachingLevel ou les matières enseignées
     const uniqueLevels = useMemo(() => {
-        if (!profile?.subjects?.length) return [];
+        // Priorité à teachingLevel si disponible
+        if (profile?.teachingLevel?.length) {
+            return [...new Set(profile.teachingLevel)];
+        }
         
-        // Extraire les niveaux uniques des matières
-        const levels = profile.subjects
-            .map(subject => subject.level as AcademicLevel)
-            .filter(Boolean);
+        // Fallback sur les matières si teachingLevel est vide
+        if (profile?.subjects?.length) {
+            const levels = profile.subjects
+                .map(subject => subject.level as AcademicLevel)
+                .filter(Boolean);
+            return [...new Set(levels)];
+        }
         
-        // Supprimer les doublons
-        return [...new Set(levels)];
-    }, [profile?.subjects]);
+        return [];
+    }, [profile?.teachingLevel, profile?.subjects]);
 
     // Générer les données pour les niveaux de Licence
     const licenceLevels = useMemo(() => {

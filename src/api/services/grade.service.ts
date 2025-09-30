@@ -23,7 +23,7 @@ const gradeApis = {
     EXPORT_PRINT: 'export/print',
     APPROVE_GRADE_CLAIM: 'grade-claims',
     REJECT_GRADE_CLAIM: 'grade-claims',
-    SUBMIT_GRADE_CLAIM: 'grade-claims',
+    SUBMIT_GRADE_CLAIM: 'student/revendication',
     LIST_GRADE_CLAIMS: 'grade-claims',
     GET_ACTIVE_PERIOD: 'revendication-period/active',
 };

@@ -78,12 +78,12 @@ export const Overview = () => {
         
         // Répartition par niveau
         const studentsPerLevel = [
-            { level: 'LEVEL1', count: students.filter(s => s.level === 'LEVEL1').length },
-            { level: 'LEVEL2', count: students.filter(s => s.level === 'LEVEL2').length },
-            { level: 'LEVEL3', count: students.filter(s => s.level === 'LEVEL3').length },
-            { level: 'LEVEL4', count: students.filter(s => s.level === 'LEVEL4').length },
-            { level: 'LEVEL5', count: students.filter(s => s.level === 'LEVEL5').length },
-            { level: 'NON_DEFINI', count: students.filter(s => !s.level || s.level === null).length }
+            { level: 'LEVEL1', count: students.filter(s => (s.studentLevel?.studentLevel || s.level) === 'LEVEL1').length },
+            { level: 'LEVEL2', count: students.filter(s => (s.studentLevel?.studentLevel || s.level) === 'LEVEL2').length },
+            { level: 'LEVEL3', count: students.filter(s => (s.studentLevel?.studentLevel || s.level) === 'LEVEL3').length },
+            { level: 'LEVEL4', count: students.filter(s => (s.studentLevel?.studentLevel || s.level) === 'LEVEL4').length },
+            { level: 'LEVEL5', count: students.filter(s => (s.studentLevel?.studentLevel || s.level) === 'LEVEL5').length },
+            { level: 'NON_DEFINI', count: students.filter(s => !(s.studentLevel?.studentLevel || s.level)).length }
         ];
 
         // Matières par département

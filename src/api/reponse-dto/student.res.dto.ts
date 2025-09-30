@@ -50,20 +50,33 @@ interface StudentSubject {
 }
 
 export interface StudentDataResDto {
-    studentId: number;
-    studentName: string;
+    id?: number;
+    studentId?: number;
+    studentName?: string;
     semesterId: number | null;
     semesterName: string | null;
     grades: StudentGradeResDto[];
-    gpa: number;
+    gpa?: number;
     status: string | null;
     firstName: string;
     lastName: string;
     email: string;
-    username: string;
-    level: AcademicLevel;
+    username?: string;
+    matricule?: string;
+    level?: AcademicLevel;
+    studentLevel?: {
+        teachingLevelId: number;
+        studentLevel: string;
+    };
+    cycle?: string;
+    speciality?: string;
+    dateOfBirth?: string;
+    placeOfBirth?: string;
     role: Role;
-    subjects: StudentSubject[];
+    subjects?: StudentSubject[];
+    isActive?: boolean;
+    createdDate?: string;
+    lastModifiedDate?: string;
 }
 
 

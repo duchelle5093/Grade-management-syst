@@ -63,11 +63,12 @@ export const ReclamationsDetails = ({
             return;
         }
 
-        const payload: GradeClaimReqDto = {
-            gradeId: grade.id || grade.gradeId,
+        const payload = {
+            period: grade.exam || { assessmentType: periodLabel },
+            student: { id: student.id || student.studentId },
+            grade: { id: grade.id || grade.gradeId },
+            semester: { id: grade.semesterId },
             requestedScore: parseFloat(formValues.requestedScore.toString()),
-            cause: formValues.cause,
-            period: periodLabel as 'CC_1' | 'CC_2' | 'SN_1' | 'SN_2',
             description: formValues.description
         };
         

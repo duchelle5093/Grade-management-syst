@@ -87,7 +87,20 @@ export const createTeacher = createAsyncThunk(
 export const fetchAllDepartments = createAsyncThunk(
     'admin/fetchAllDepartments',
     async (params: { pageNumber?: number; pageSize?: number; sortBy?: string; sortOrder?: string } = {}) => {
-        return await adminService.getAllDepartments(params.pageNumber, params.pageSize, params.sortBy, params.sortOrder);
+        const response = await adminService.getAllDepartments(params.pageNumber, params.pageSize, params.sortBy, params.sortOrder);
+        // Mapper les propriétés pour la compatibilité avec le composant
+        if (Array.isArray(response)) {
+            return response.map((dept: any) => ({
+                id: dept.departmentId,
+                name: dept.departmentName,
+                departmentId: dept.departmentId,
+                departmentName: dept.departmentName,
+                createdDate: dept.createdDate,
+                lastModifiedDate: dept.lastModifiedDate,
+                subjects: dept.subjects || dept.departmentSubjects
+            }));
+        }
+        return response;
     }
 );
 

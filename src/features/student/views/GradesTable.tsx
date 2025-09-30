@@ -143,7 +143,7 @@ export default function GradesTable({ student }: GradesTableProps) {
         lastName: student.lastName || '',
         username: student.username || student.studentId?.toString() || '',
         email: student.email || '',
-        level: student.level || '',
+        level: student.studentLevel?.studentLevel || student.level || '',
         gpa: student.gpa || 0
       };
 

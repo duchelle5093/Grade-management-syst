@@ -21,12 +21,20 @@ interface Subject {
 
 export interface userProfileResDto {
     id: number;
+    teacherId?: number;
     username: string;
     firstName: string;
     lastName: string;
     email: string;
+    phoneNumber?: string;
     role: Role;
     subjects: Subject[];
+    teachingLevel?: string[];
+    department?: {
+        departmentId: number;
+        departmentName: string;
+    };
+    isActive?: boolean;
 }
 //
 // interface Topic {

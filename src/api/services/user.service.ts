@@ -35,13 +35,47 @@ export class UserService {
   }
 
   async getProfile() {
+    // Essayer de déterminer le rôle depuis le token JWT
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const role = payload.sub; // Le username peut indiquer le rôle
+        const authorities = payload.authorities;
+        
+        // Vérifier les autorités d'abord
+        if (authorities && Array.isArray(authorities)) {
+          const userRole = authorities[0];
+          if (userRole === 'ADMIN') {
+            return await this.getAdminProfile();
+          } else if (userRole === 'TEACHER') {
+            return await this.getTeacherProfile();
+          } else if (userRole === 'STUDENT') {
+            return await this.getStudentProfile();
+          }
+        }
+        
+        // Fallback sur le username pattern
+        if (role && typeof role === 'string') {
+          if (role.includes('admin')) {
+            return await this.getAdminProfile();
+          } else if (role.includes('prof')) {
+            return await this.getTeacherProfile();
+          }
+        }
+      } catch (e) {
+        console.warn('Erreur décodage token:', e);
+      }
+    }
+    
+    // Fallback: essayer student en premier (plus probable)
     try {
-      return await this.getAdminProfile();
+      return await this.getStudentProfile();
     } catch {
       try {
         return await this.getTeacherProfile();
       } catch {
-        return await this.getStudentProfile();
+        return await this.getAdminProfile();
       }
     }
   }

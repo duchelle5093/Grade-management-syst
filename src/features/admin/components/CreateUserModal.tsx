@@ -50,7 +50,8 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
     const [form] = Form.useForm();
     const [currentStep, setCurrentStep] = useState(0);
     const [selectedRole, setSelectedRole] = useState<Role>(
-        (typeof editingUser?.role === 'object' ? editingUser?.appRole : editingUser?.role) || Role.STUDENT
+        (typeof editingUser?.role === 'object' ? editingUser?.appRole : editingUser?.role) || 
+        (editingUser?.teacherId ? Role.TEACHER : Role.STUDENT)
     );
     const [formData, setFormData] = useState<any>({});
     
@@ -67,22 +68,32 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             setCurrentStep(1); 
             
             setTimeout(() => {
-                const formData = {
+                const isTeacher = editingUser.teacherId || editingUser.role === 'TEACHER';
+                setSelectedRole(isTeacher ? Role.TEACHER : Role.STUDENT);
+                
+                const formData: any = {
                     firstName: editingUser.firstName || '',
                     lastName: editingUser.lastName || '',
                     username: editingUser.username || '',
                     email: editingUser.email || '',
                     password: editingUser.password || '',
-                    // Champs spécifiques aux étudiants
-                    matricule: editingUser.matricule || editingUser.username || '',
-                    level: editingUser.level || '',
-                    speciality: editingUser.speciality || (editingUser.subjects && editingUser.subjects[0] ? editingUser.subjects[0].departmentName : ''),
-                    cycle: editingUser.cycle || (editingUser.level && (editingUser.level.includes('LEVEL1') || editingUser.level.includes('LEVEL2') || editingUser.level.includes('LEVEL3')) ? 'BACHELOR' : 'MASTER'),
-                    // Champs spécifiques aux enseignants
-                    levels: editingUser.levels || (editingUser.subjects ? editingUser.subjects.map(s => s.level).filter((v, i, a) => a.indexOf(v) === i) : []),
-                    department: editingUser.department || (editingUser.subjects && editingUser.subjects[0] ? editingUser.subjects[0].departmentName : ''),
-                    phone: editingUser.phone || '',
                 };
+                
+                if (isTeacher) {
+                    // Champs spécifiques aux enseignants
+                    formData.levelIds = editingUser.teachingLevel || [];
+                    formData.departmentId = editingUser.department?.departmentId || 1;
+                    formData.phone = editingUser.phoneNumber || '';
+                } else {
+                    // Champs spécifiques aux étudiants
+                    formData.matricule = editingUser.matricule || editingUser.username || '';
+                    formData.levelId = editingUser.studentLevel?.studentLevel ? parseInt(editingUser.studentLevel.studentLevel.replace('LEVEL', '')) : (editingUser.studentLevel ? parseInt(editingUser.studentLevel.replace('LEVEL', '')) : 1);
+                    formData.speciality = editingUser.speciality || '';
+                    formData.cycle = editingUser.cycle || 'BACHELOR';
+                    formData.dateOfBirth = editingUser.dateOfBirth || '';
+                    formData.placeOfBirth = editingUser.placeOfBirth || '';
+                }
+                
                 form.setFieldsValue(formData);
                 setFormData(formData);
             }, 100);
@@ -144,7 +155,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
 
             let result;
             if (editingUser) {
-                const userId = editingUser.studentId || editingUser.id;
+                const userId = editingUser.teacherId || editingUser.studentId || editingUser.id;
                 const userRole = (typeof editingUser.role === 'object' ? editingUser.appRole : editingUser.role) || selectedRole;
                 result = await dispatch(updateUser({ id: userId, userData, role: userRole }));
             } else {
@@ -359,7 +370,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                         <Form.Item
                                             name="speciality"
                                             label="Spécialité"
-                                            rules={[{ required: true, message: 'La spécialité est requise' }]}
+                                            //rules={[{ required: true, message: 'La spécialité est requise' }]}
                                         >
                                             <Select 
                                                 size="large" 
@@ -442,7 +453,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                         <Form.Item
                                             name="departmentId"
                                             label="Département"
-                                            rules={[{ required: true, message: 'Le département est requis' }]}
+                                            //rules={[{ required: true, message: 'Le département est requis' }]}
                                         >
                                             <Select 
                                                 size="large" 

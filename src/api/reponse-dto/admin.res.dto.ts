@@ -12,7 +12,7 @@ export interface TeacherResDto {
     teachingLevel: AcademicLevel[]; // Set<TeachingLevel>
     createdDate: string; // Instant
     lastModifiedDate: string; // Instant
-    appRole: Role;
+    role: Role;
     isActive: boolean;
     // Legacy compatibility
     id: number;
@@ -28,7 +28,6 @@ export interface DepartmentResDto {
     lastModifiedDate: string; // Instant
     // Pagination fields
     content?: DepartmentResDto[];
-    subjects?: any[]; // Set<SubjectResponse>
     pageNumber?: number;
     pageSize?: number;
     totalElements?: number;
@@ -65,11 +64,11 @@ export interface StudentResDto {
     cycle: StudyCycle;
     matricule: string;
     speciality: string;
-    dateOfBirth: string; // LocalDate - maintenant requis selon la doc
-    placeOfBirth: string; // maintenant requis selon la doc
-    grades: any[]; // List<GradeResponse>
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
+    dateOfBirth: string;
+    placeOfBirth: string;
+    grades: any[];
+    createdDate: string;
+    lastModifiedDate: string;
     isActive: boolean;
     semesterId?: number;
     // Pagination fields

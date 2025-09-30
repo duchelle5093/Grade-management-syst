@@ -70,7 +70,7 @@ export const UsersManagement = () => {
     };
     
     const handleDeleteUser = (user: any) => {
-        const userId = user.studentId || user.id;
+        const userId = user.teacherId || user.studentId || user.id;
         const firstName = user.firstName || '';
         const lastName = user.lastName || '';
         const userName = firstName && lastName ? `${firstName} ${lastName}` : user.username || user.email || `Utilisateur #${userId}`;
@@ -121,7 +121,7 @@ Cette action est irréversible.`,
             (student.username || '').toLowerCase().includes(searchText.toLowerCase());
         
         const matchesRole = filterRole === 'all' || (student.role || student.appRole || 'STUDENT') === filterRole;
-        const matchesLevel = filterLevel === 'all' || student.level === filterLevel;
+        const matchesLevel = filterLevel === 'all' || student.studentLevel?.studentLevel === filterLevel || student.studentLevel === filterLevel || student.level === filterLevel;
         
         return matchesSearch && matchesRole && matchesLevel;
     });
@@ -149,7 +149,7 @@ Cette action est irréversible.`,
         const checked = e.target.checked;
         setSelectAll(checked);
         if (checked) {
-            const allStudentIds = filteredStudents.map(student => student.studentId || student.id);
+            const allStudentIds = filteredStudents.map(student => student.teacherId || student.studentId || student.id);
             setSelectedStudents(allStudentIds);
         } else {
             setSelectedStudents([]);
@@ -180,7 +180,7 @@ Cette action est irréversible.`,
         setGeneratingTranscripts(true);
         try {
             const selectedStudentData = filteredStudents.filter(student => 
-                selectedStudents.includes(student.studentId )
+                selectedStudents.includes(student.teacherId || student.studentId || student.id)
             );
             
             console.log('Selected students data:', selectedStudentData.map(s => ({
@@ -207,7 +207,7 @@ Cette action est irréversible.`,
             const studentsByLevel = selectedStudentData.reduce((acc, student) => {
                 const level = student.level;
                 if (!acc[level]) acc[level] = [];
-                acc[level].push(student.studentId);
+                acc[level].push(student.teacherId || student.studentId || student.id);
                 return acc;
             }, {} as Record<string, number[]>);
             
@@ -295,8 +295,8 @@ Cette action est irréversible.`,
             width: 50,
             render: (record: any) => (
                 <Checkbox
-                    checked={selectedStudents.includes(record.studentId || record.id)}
-                    onChange={(e) => handleStudentSelect(record.studentId || record.id, e.target.checked)}
+                    checked={selectedStudents.includes(record.teacherId || record.studentId || record.id)}
+                    onChange={(e) => handleStudentSelect(record.teacherId || record.studentId || record.id, e.target.checked)}
                 />
             ),
         },
@@ -337,12 +337,27 @@ Cette action est irréversible.`,
         },
         {
             title: 'Niveau',
-            dataIndex: 'level',
             key: 'level',
-            sorter: (a: any, b: any) => (a.level || '').localeCompare(b.level || ''),
-            render: (level: string) => (
-                <Tag color="blue">{level || 'Non défini'}</Tag>
-            ),
+            sorter: (a: any, b: any) => {
+                const levelA = a.studentLevel?.studentLevel || a.studentLevel || a.level || '';
+                const levelB = b.studentLevel?.studentLevel || b.studentLevel || b.level || '';
+                return levelA.localeCompare(levelB);
+            },
+            render: (record: any) => {
+                const level = record.studentLevel?.studentLevel || record.studentLevel || record.level;
+                let levelDisplay = 'Non défini';
+                
+                if (level && typeof level === 'string') {
+                    if (level === 'LEVEL1') levelDisplay = 'Licence 1';
+                    else if (level === 'LEVEL2') levelDisplay = 'Licence 2';
+                    else if (level === 'LEVEL3') levelDisplay = 'Licence 3';
+                    else if (level === 'LEVEL4') levelDisplay = 'Master 1';
+                    else if (level === 'LEVEL5') levelDisplay = 'Master 2';
+                    else levelDisplay = level;
+                }
+                
+                return <Tag color="blue">{levelDisplay}</Tag>;
+            },
         },
         {
             title: 'Rôle',
@@ -408,7 +423,7 @@ Cette action est irréversible.`,
                 <Table
                     columns={studentColumns}
                     dataSource={filteredStudents}
-                    rowKey={(record) => record.studentId}
+                    rowKey={(record) => record.teacherId || record.studentId || record.id}
                     loading={loading}
                     pagination={{
                         pageSize: 10,
