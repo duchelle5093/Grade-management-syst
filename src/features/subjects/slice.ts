@@ -58,7 +58,24 @@ const subjectsSlice = createSlice({
             })
             .addCase(fetchAllSubjects.fulfilled, (state, action) => {
                 state.loading = false;
-                state.allSubjects = action.payload;
+                // Normaliser les données de l'API vers le format attendu selon la nouvelle structure
+                const subjects = Array.isArray(action.payload) ? action.payload.map((subject: any) => ({
+                    id: subject.subjectId,
+                    name: subject.subjectName || subject.subjectCode,
+                    code: subject.subjectCode,
+                    credits: typeof subject.credits === 'object' ? subject.credits.parsedValue : subject.credits,
+                    description: subject.description || '',
+                    active: true,
+                    level: subject.subjectsLevel?.[0]?.studentLevel || 'LEVEL1',
+                    cycle: subject.studentCycle,
+                    semesterId: subject.semester?.id,
+                    semesterName: subject.semester?.name || '',
+                    departmentId: subject.departmentId,
+                    departmentName: subject.department?.departmentName || '',
+                    teacherId: subject.teacher?.teacherId,
+                    teacherName: subject.teacher ? `${subject.teacher.firstName} ${subject.teacher.lastName}` : undefined
+                })) : [];
+                state.allSubjects = subjects;
             })
             .addCase(fetchAllSubjects.rejected, (state, action) => {
                 state.loading = false;

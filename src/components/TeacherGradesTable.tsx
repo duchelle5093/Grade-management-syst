@@ -15,6 +15,7 @@ import { getMaxGradeValue } from "../utils/periodUtils";
 interface StudentGradeRow {
     studentId: number;
     studentName: string;
+    matricule: string;
     cc1: number | null;
     sn1: number | null;
     cc2: number | null;
@@ -169,10 +170,10 @@ export const TeacherGradesTable = ({
     const columns = [
         {
             title: "Matricule",
-            dataIndex: "studentId",
-            key: "studentId",
+            dataIndex: "matricule",
+            key: "matricule",
             sorter: (a: StudentGradeRow, b: StudentGradeRow) =>
-                Number(a.studentId) - Number(b.studentId),
+                String(a.matricule || "").localeCompare(String(b.matricule || "")),
         },
         {
             title: "Noms et prénoms",

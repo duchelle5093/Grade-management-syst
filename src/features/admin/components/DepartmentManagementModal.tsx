@@ -150,7 +150,7 @@ export const DepartmentManagementModal: React.FC<DepartmentManagementModalProps>
             title: 'Matières',
             key: 'subjects',
             render: (record: any) => {
-                const deptSubjects = subjects.filter(s => s.departmentName === record.name);
+                const deptSubjects = subjects.filter(s => s.departmentId === record.id);
                 return <Tag color="blue">{deptSubjects.length} matières</Tag>;
             }
         },
@@ -168,7 +168,7 @@ export const DepartmentManagementModal: React.FC<DepartmentManagementModalProps>
                                 form.setFieldsValue({
                                     name: record.name,
                                     subjectIds: subjects
-                                        .filter(s => s.departmentName === record.name)
+                                        .filter(s => s.departmentId === record.id)
                                         .map(s => s.id)
                                 });
                                 setShowForm(true);

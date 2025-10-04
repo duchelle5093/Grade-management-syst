@@ -149,18 +149,14 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
     };
 
     const getCompatibleTeachers = (departmentName: string, level: string) => {
-        if (!departmentName) return teachers;
+        if (!departmentName) return [];
         
         return teachers.filter(teacher => {
-            if (!teacher.subjects || teacher.subjects.length === 0) return false;
-            const teacherDepartment = teacher.subjects[0].departmentName;
-            if (teacherDepartment !== departmentName) return false;
-            
             // Contrainte: 1 enseignant pour 1 matière par niveau
             const hasSubjectAtLevel = allSubjects.some(subject => 
-                subject.teacherId === teacher.id && 
+                subject.teacherId === teacher.teacherId && 
                 subject.level === level &&
-                subject.id !== editingSubject?.id // Exclure matière en cours d'édition
+                subject.id !== editingSubject?.id
             );
             
             return !hasSubjectAtLevel;

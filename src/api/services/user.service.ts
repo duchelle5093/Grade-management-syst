@@ -1,6 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { userProfileResDto } from '../reponse-dto/user.res.dto';
-import {StudentListResDto} from "../reponse-dto/student.res.dto.ts";
+
 
 export const userApis = {
   GET_STUDENT_PROFILE: 'student/profile',
@@ -8,6 +7,7 @@ export const userApis = {
   GET_ADMIN_PROFILE: 'auth/admin/profile',
   GET_TEACHER_SUBJECTS: 'teacher/subject',
   GET_TEACHER_GRADES: 'teacher/my-grades',
+  GET_TEACHER_STUDENTS: 'teacher/my-students',
   GET_STUDENT_GRADES: 'student',
   CHANGE_PASSWORD: 'auth/password',
 };
@@ -95,6 +95,11 @@ export class UserService {
   async getStudentGrades(studentId: number, semesterId?: number) {
     const params = semesterId ? { semesterId } : {};
     const res = await this._client.get(`${userApis.GET_STUDENT_GRADES}/${studentId}`, { params });
+    return res.data;
+  }
+
+  async getTeacherStudents() {
+    const res = await this._client.get(userApis.GET_TEACHER_STUDENTS);
     return res.data;
   }
 

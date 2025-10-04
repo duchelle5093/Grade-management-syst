@@ -131,9 +131,13 @@ export const SubjectsManagement = () => {
     };
 
     const getCompatibleTeachers = (subject: SubjectResDto) => {
-        return teachers.filter(teacher => 
-            teacher.department === subject.departmentName
-        );
+        return teachers.filter(teacher => {
+            if (!teacher.department) return false;
+            const deptName = typeof teacher.department === 'object' 
+                ? teacher.department.departmentName 
+                : teacher.department;
+            return deptName === subject.departmentName;
+        });
     };
 
     const subjectColumns = [
@@ -169,7 +173,22 @@ export const SubjectsManagement = () => {
             title: 'Enseignant',
             key: 'teacher',
             render: (record: SubjectResDto) => {
-                const currentTeacher = teachers.find(t => t.id === record.teacherId);
+                // Chercher l'enseignant par teacherId ou id
+                const currentTeacher = teachers.find(t => 
+                    t.teacherId === record.teacherId || 
+                    t.id === record.teacherId
+                );
+                
+                // Si pas trouvé dans teachers, utiliser les données de la matière
+                if (!currentTeacher && record.teacherName) {
+                    return (
+                        <Space>
+                            <Tag color="green" icon={<UserOutlined />}>
+                                {record.teacherName}
+                            </Tag>
+                        </Space>
+                    );
+                }
                 
                 return currentTeacher ? (
                     <Space>

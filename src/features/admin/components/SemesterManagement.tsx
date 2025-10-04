@@ -203,11 +203,11 @@ export const SemesterManagement: React.FC = () => {
             <Table
                 columns={columns}
                 dataSource={semesters}
-                rowKey="id"
+                rowKey="revendicationPeriodId"
                 loading={loading}
                 pagination={{ pageSize: 10 }}
                 defaultSortOrder="ascend"
-                rowClassName={(record) => record.active ? 'active-semester-row' : ''}
+                rowClassName={(record) => record.isActive ? 'active-semester-row' : ''}
             />
 
             <Modal

@@ -16,13 +16,17 @@ export const useTeacherLevels = () => {
     const uniqueLevels = useMemo(() => {
         // Priorité à teachingLevel si disponible
         if (profile?.teachingLevel?.length) {
-            return [...new Set(profile.teachingLevel)];
+            // Normaliser si ce sont des objets
+            const levels = profile.teachingLevel.map(level => 
+                typeof level === 'object' ? level.studentLevel : level
+            );
+            return [...new Set(levels)];
         }
         
         // Fallback sur les matières si teachingLevel est vide
         if (profile?.subjects?.length) {
             const levels = profile.subjects
-                .map(subject => subject.level as AcademicLevel)
+                .flatMap(subject => subject.subjectsLevel)
                 .filter(Boolean);
             return [...new Set(levels)];
         }

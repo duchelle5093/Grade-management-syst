@@ -4,9 +4,9 @@ import {CreateSubjectReqDto, UpdateSubjectReqDto} from "../../api/reponse-dto/su
 
 export const fetchAssignedSubjects = createAsyncThunk(
     'subjects/fetchAssigned',
-    async (params: { pageNumber?: number; pageSize?: number } = {}) => {
+    async () => {
         const { userService } = await import('../../api/configs');
-        const response = await userService.getTeacherSubjects(params.pageNumber, params.pageSize);
+        const response = await userService.getTeacherSubjects();
         return response;
     }
 );

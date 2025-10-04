@@ -11,31 +11,45 @@ export const useFilteredStudents = ({ currentLevel }: UseFilteredStudentsProps) 
     const students = useAppSelector(state => state.user.students);
 
     const filteredStudents = useMemo(() => {
-        if (!students?.length || !teacherProfile?.subjects?.length) return [];
-
-        // Obtenir les matières enseignées par l'enseignant pour ce niveau
-        const teacherSubjectsForLevel = teacherProfile.subjects
-            .filter(subject => subject.level === currentLevel);
-
-        if (teacherSubjectsForLevel.length === 0) return [];
-
-        const teacherSubjectIds = teacherSubjectsForLevel.map(subject => subject.id);
-
-        // Filtrer les étudiants qui suivent au moins une matière de l'enseignant pour ce niveau
-        const levelStudents = students.filter((student: any) => {
-            // Vérifier si l'étudiant suit au moins une matière enseignée par cet enseignant
-            return student.subjects?.some((subject: any) => 
-                subject.level === currentLevel && 
-                teacherSubjectIds.includes(subject.id)
-            );
-        });
-
-        return levelStudents;
-    }, [students, teacherProfile?.subjects, currentLevel]);
+        if (!students || typeof students !== 'object') return [];
+        
+        // Si students est un objet groupé par niveau
+        if (students[currentLevel]) {
+            return students[currentLevel];
+        }
+        
+        // Fallback pour l'ancien format (array)
+        if (Array.isArray(students)) {
+            return students.filter((student: any) => {
+                const studentLevel = student.studentLevel?.studentLevel || student.level;
+                return studentLevel === currentLevel;
+            });
+        }
+        
+        return [];
+    }, [students, currentLevel]);
 
     const teacherSubjectsForLevel = useMemo(() => {
-        if (!teacherProfile?.subjects?.length) return [];
-        return teacherProfile.subjects.filter(subject => subject.level === currentLevel);
+        if (!teacherProfile?.subjects?.length) {
+            return [];
+        }
+        
+        // Filtrer selon la structure API réelle
+        const filtered = teacherProfile.subjects.filter(subject => {
+            // Vérifier dans subjectsLevel si la matière est pour ce niveau
+            return subject.subjectsLevel?.some((levelObj: any) => 
+                levelObj.studentLevel === currentLevel
+            );
+        });
+        
+        // Transformer pour compatibilité
+        return filtered.map(subject => ({
+            id: subject.subjectId || subject.id,
+            name: subject.subjectName || subject.name,
+            code: subject.subjectCode || subject.code,
+            level: currentLevel,
+            credits: subject.credits?.parsedValue || subject.credits
+        }));
     }, [teacherProfile?.subjects, currentLevel]);
 
     return {

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 export const useStudentsByLevel = () => {
     const { profile } = useAppSelector(state => state.user);
-    const students = useAppSelector(state => state.admin?.students || []);
+    const students = useAppSelector(state => state.user?.students || []);
     
     return useMemo(() => {
         if (!profile?.subjects?.length) {

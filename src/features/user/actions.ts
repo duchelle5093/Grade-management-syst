@@ -67,6 +67,18 @@ export const fetchStudents = createAsyncThunk(
   }
 );
 
+export const fetchTeacherStudents = createAsyncThunk(
+  'profile/fetchTeacherStudents',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await userService.getTeacherStudents();
+      return response;
+    } catch (e: any) {
+      return rejectWithValue(e.response);
+    }
+  }
+);
+
 export const fetchTeacherSubjects = createAsyncThunk(
   'profile/fetchTeacherSubjects',
   async (params: { pageNumber?: number; pageSize?: number } = {}, { rejectWithValue }) => {

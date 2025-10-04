@@ -14,7 +14,7 @@ import {
 } from "../utils";
 import { translatePeriodName } from "../utils/periodTranslation";
 import { calculateSuccessRate, calculateDaysRemaining } from "../utils/statsUtils";
-import { fetchStudents } from "../features/user/actions";
+import { fetchTeacherStudents } from "../features/user/actions";
 import { fetchTeacherGrades, createGrade, updateGrade } from "../features/grades";
 import { fetchAssignedSubjects } from "../features/subjects";
 
@@ -25,6 +25,7 @@ import { useNotification } from "../contexts";
 interface StudentGradeRow {
     studentId: number;
     studentName: string;
+    matricule: string;
     cc1: number | null;
     sn1: number | null;
     cc2: number | null;
@@ -38,7 +39,6 @@ interface GradeManagementProps {
 }
 
 export const GradeManagement = ({ level, levelName, levelCode }: GradeManagementProps) => {
-    console.log('DEBUG - GradeManagement component rendered for level:', levelName);
     const dispatch = useAppDispatch();
     const { notify } = useNotification();
 
@@ -71,34 +71,47 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
     const mergedRows = useMemo((): StudentGradeRow[] => {
         if (!filteredStudents?.length) return [];
         
+
+        
         return filteredStudents.map((student) => {
             const studentId = student.id;
             const studentName = [student.firstName, student.lastName].filter(Boolean).join(" ") ||
                 student.username ||
                 `Étudiant ${studentId}`;
 
-            const studentGrades = (teacherGrades || []).filter((grade) => 
-                grade.studentId === studentId && 
-                grade.subjectId === selectedSubject?.id
+            const allStudentGrades = (teacherGrades || []).filter((grade) => 
+                (grade.studentId || grade.student?.id) === studentId && 
+                (grade.subjectId || grade.subject?.id) === selectedSubject?.id
             );
+            
+            const studentGrades = allStudentGrades.filter((grade) => 
+                (grade.semester?.active === true)
+            );
+            
+
 
             const gradeMap: Record<string, number | null> = {
                 cc1: null, sn1: null, cc2: null, sn2: null,
             };
             
             studentGrades.forEach((grade) => {
-                switch (grade.type) {
+                const examType = grade.exam || grade.type;
+                // Gérer les valeurs qui peuvent être des objets ou des nombres
+                const ccScore = typeof grade.ccScore === 'object' ? grade.ccScore?.parsedValue : grade.ccScore;
+                const snScore = typeof grade.snScore === 'object' ? grade.snScore?.parsedValue : grade.snScore;
+                
+                switch (examType) {
                     case 'CC_1':
-                        gradeMap.cc1 = grade.value;
+                        gradeMap.cc1 = ccScore ? Math.round(ccScore) : (grade.value ? Math.round(grade.value) : null);
                         break;
                     case 'CC_2':
-                        gradeMap.cc2 = grade.value;
+                        gradeMap.cc2 = ccScore ? Math.round(ccScore) : (grade.value ? Math.round(grade.value) : null);
                         break;
                     case 'SN_1':
-                        gradeMap.sn1 = grade.value;
+                        gradeMap.sn1 = snScore ? Math.round(snScore) : (grade.value ? Math.round(grade.value) : null);
                         break;
                     case 'SN_2':
-                        gradeMap.sn2 = grade.value;
+                        gradeMap.sn2 = snScore ? Math.round(snScore) : (grade.value ? Math.round(grade.value) : null);
                         break;
                 }
             });
@@ -106,6 +119,7 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
             return {
                 studentId,
                 studentName,
+                matricule: student.matricule || `${studentId}`,
                 cc1: gradeMap.cc1,
                 sn1: gradeMap.sn1,
                 cc2: gradeMap.cc2,
@@ -125,13 +139,15 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
     const successRate = useMemo(() => {
         if (!mergedRows?.length) return 0;
         
-        const studentsWithGrades = mergedRows.filter(student => {
-            const hasAnyGrade = [student.cc1, student.sn1, student.cc2, student.sn2]
-                .some(grade => grade !== null && grade !== undefined && grade >= 10); // Seuil de réussite à 10
-            return hasAnyGrade;
+        const studentsWithValidGrades = mergedRows.filter(student => {
+            const grades = [student.cc1, student.sn1, student.cc2, student.sn2].filter(g => g !== null && g !== undefined);
+            if (grades.length === 0) return false;
+            
+            const total = grades.reduce((sum, grade) => sum + grade, 0);
+            return total >= 60; // Seuil de réussite sur 120 (4 notes de 30 max chacune)
         });
         
-        return Math.round((studentsWithGrades.length / mergedRows.length) * 100);
+        return Math.round((studentsWithValidGrades.length / mergedRows.length) * 100);
     }, [mergedRows]);
 
     // Calcul des jours restants
@@ -179,32 +195,40 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
                 
                 const value = Number(gradeValue);
                 const existing = (teacherGrades || []).find(grade => 
-                    grade.studentId === row.studentId && 
-                    grade.subjectId === selectedSubject.id &&
-                    (grade.type === currentPeriodLabel || grade.periodLabel === currentPeriodLabel)
+                    (grade.studentId || grade.student?.id) === row.studentId && 
+                    (grade.subjectId || grade.subject?.id) === selectedSubject.id &&
+                    (grade.exam || grade.type) === currentPeriodLabel
                 );
+
+                // Vérifier si la note a réellement changé
+                const originalRow = mergedRows.find(r => r.studentId === row.studentId);
+                const originalValue = originalRow?.[columnKey as keyof StudentGradeRow];
+                if (existing && originalValue === value) continue; // Pas de changement
 
                 if (existing) {
                     payloads.push({
-                        gradeId: existing.id,
+                        gradeId: existing.gradeId || existing.id,
                         gradeData: {
-                            value,
-                            maxValue: getMaxGradeValue(currentPeriodLabel),
-                            type: currentPeriodLabel as any,
+                            studentId: row.studentId,
+                            subjectId: selectedSubject.id,
+                            examId: 1,
+                            semesterId: activeSemester?.id || 1,
+                            ccScore: currentPeriodLabel.includes('CC') ? value : undefined,
+                            snScore: currentPeriodLabel.includes('SN') ? value : undefined,
                             comments: `Note ${periodType} S${semester} mise à jour`,
+                            assessmentType: currentPeriodLabel,
                         }
                     });
                 } else {
                     payloads.push({
                         studentId: row.studentId,
                         subjectId: selectedSubject.id,
+                        examId: 1,
                         semesterId: activeSemester?.id || 1,
-                        value,
-                        maxValue: getMaxGradeValue(currentPeriodLabel),
-                        type: currentPeriodLabel as any,
-                        periodType: currentPeriodLabel as any,
+                        ccScore: currentPeriodLabel.includes('CC') ? value : undefined,
+                        snScore: currentPeriodLabel.includes('SN') ? value : undefined,
                         comments: `Note ${periodType} S${semester} ajoutée`,
-                        enteredBy: user?.id || 1,
+                        assessmentType: currentPeriodLabel,
                     });
                 }
             }
@@ -216,33 +240,26 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
             }
 
             const results = await Promise.allSettled(
-                payloads.map(payload => 
-                    "gradeId" in payload 
+                payloads.map(payload =>
+                    "gradeId" in payload
                         ? dispatch(updateGrade(payload)).unwrap()
                         : dispatch(createGrade(payload)).unwrap()
                 )
             );
-            
+
             const successful = results.filter(r => r.status === 'fulfilled').length;
             const failed = results.filter(r => r.status === 'rejected').length;
-            
-            if (failed > 0) {
-                notify({
-                    type: "warning",
-                    message: "Traitement partiel",
-                    description: `${successful} note(s) sauvegardée(s), ${failed} échec(s)`,
-                });
-            }
 
             await dispatch(fetchTeacherGrades());
-            await dispatch(fetchStudents());
             setIsTableEditable(false);
 
-            notify({
-                type: "success",
-                message: "Succès",
-                description: "Note(s) enregistrée(s) avec succès"
-            });
+            if (successful > 0 && failed === 0) {
+                notify({
+                    type: "success",
+                    message: "Succès",
+                    description: "Note(s) enregistrée(s) avec succès"
+                });
+            }
         } catch (error) {
             console.error(error);
             notify({
@@ -256,8 +273,7 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
     useEffect(() => {
         dispatch(fetchAssignedSubjects());
         dispatch(fetchTeacherGrades());
-        dispatch(fetchStudents());
-       // dispatch(fetchActiveSemester());
+        dispatch(fetchTeacherStudents());
     }, [dispatch]);
 
     if (teacherSubjectsForLevel.length === 0) {
@@ -298,7 +314,7 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
                 successRate={successRate}
                 daysRemaining={daysRemaining}
                 studentCount={filteredStudents.length}
-                claimsCount={getAllPendingClaimsCount()}
+                claimsCount={getPendingClaimsCount()}
             />
 
             <div className="mt-8">

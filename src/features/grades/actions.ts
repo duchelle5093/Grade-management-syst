@@ -27,17 +27,8 @@ export const fetchStudentGrades = createAsyncThunk(
 
 export const createGrade = createAsyncThunk(
     'grades/create',
-    async (gradeData: CreateGradeReqDto) => {
-        const response = await teacherGradeService.createGrade({
-            studentId: gradeData.studentId,
-            subjectId: gradeData.subjectId,
-            examId: gradeData.examId || 1,
-            semesterId: gradeData.semesterId,
-            ccScore: gradeData.type === PeriodLabel.CC1 || gradeData.type === PeriodLabel.CC2 ? gradeData.value : undefined,
-            snScore: gradeData.type === PeriodLabel.SN1 || gradeData.type === PeriodLabel.SN2 ? gradeData.value : undefined,
-            comments: gradeData.comments,
-            assessmentType: gradeData.type as string
-        });
+    async (gradeData: any) => {
+        const response = await teacherGradeService.createGrade(gradeData);
         return response;
     }
 );
@@ -52,17 +43,8 @@ export const createGradeByCode = createAsyncThunk(
 
 export const updateGrade = createAsyncThunk(
     'grades/update',
-    async ({ gradeId, gradeData }: { gradeId: number; gradeData: UpdateGradeReqDto }) => {
-        const response = await teacherGradeService.updateGrade(gradeId, {
-            studentId: gradeData.studentId || 0,
-            subjectId: gradeData.subjectId || 0,
-            examId: gradeData.examId || 1,
-            semesterId: gradeData.semesterId || 1,
-            ccScore: gradeData.type === PeriodLabel.CC1 || gradeData.type === PeriodLabel.CC2 ? gradeData.value : undefined,
-            snScore: gradeData.type === PeriodLabel.SN1 || gradeData.type === PeriodLabel.SN2 ? gradeData.value : undefined,
-            comments: gradeData.comments,
-            assessmentType: (gradeData.type || PeriodLabel.CC1) as string
-        });
+    async ({ gradeId, gradeData }: { gradeId: number; gradeData: any }) => {
+        const response = await teacherGradeService.updateGrade(gradeId, gradeData);
         return response;
     }
 );

@@ -23,7 +23,7 @@
 {
   "id": "Long",
   "username": "string",
-  "roles": ["string"],
+  "role": "string",
   "token": "string",
   "createdDate": "Instant",
   "lastModifiedDate": "Instant"
@@ -134,9 +134,443 @@
 
 ---
 
+## Teacher Endpoints
+
+### 6. Get Teacher Profile
+- **URL**: `GET /teacher/profile`
+- **Description**: Get current teacher profile
+- **Authorization**: Teacher role required
+- **Parameters**: None
+
+**Response DTO:**
+```json
+{
+  "teacherId": "Long",
+  "username": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "email": "string",
+  "department": {
+    "departmentId": "Long",
+    "departmentName": "string",
+    "createdDate": "Instant",
+    "lastModifiedDate": "Instant"
+  },
+  "teachingLevel": [
+    {
+      "teachingLevelId": "Long",
+      "studentLevel": "string (LEVEL1/LEVEL2/LEVEL3/LEVEL4/LEVEL5)"
+    }
+  ],
+  "createdDate": "Instant",
+  "lastModifiedDate": "Instant",
+  "role": "string",
+  "isActive": "Boolean"
+}
+```
+
+---
+
+### 7. Get Teacher Grades
+- **URL**: `GET /teacher/my-grades`
+- **Description**: Get all grades entered by current teacher
+- **Authorization**: Teacher role required
+- **Parameters**: None
+
+**Response DTO:**
+```json
+[
+  {
+    "gradeId": "Long",
+    "ccScore": "Double",
+    "snScore": "Double",
+    "totalScore": "Double",
+    "maxValue": "Double",
+    "comments": "string",
+    "student": {
+      "id": "Long",
+      "username": "string",
+      "firstName": "string",
+      "lastName": "string",
+      "email": "string",
+      "matricule": "string"
+    },
+    "subject": {
+      "id": "Long",
+      "subjectName": "string",
+      "subjectCode": "string",
+      "credits": "Double"
+    },
+    "examiner": {
+      "id": "Long",
+      "username": "string",
+      "firstName": "string",
+      "lastName": "string",
+      "email": "string"
+    },
+    "semester": {
+      "id": "Long",
+      "name": "string",
+      "active": "Boolean"
+    },
+    "exam": "string (CC_1/CC_2/SN_1/SN_2)",
+    "revendication": [],
+    "hasPassed": "Boolean",
+    "gpa": "Double",
+    "createdDate": "Instant",
+    "lastModifiedDate": "Instant"
+  }
+]
+```
+
+---
+
+### 8. Get Teacher Students
+- **URL**: `GET /teacher/my-students`
+- **Description**: Get students grouped by teaching levels
+- **Authorization**: Teacher role required
+- **Parameters**: None
+
+**Response DTO:**
+```json
+{
+  "LEVEL2": [
+    {
+      "id": "Long",
+      "firstName": "string",
+      "lastName": "string",
+      "email": "string",
+      "studentLevel": {
+        "teachingLevelId": "Long",
+        "studentLevel": "string"
+      },
+      "cycle": "string (BACHELOR/MASTER/PHD)",
+      "matricule": "string",
+      "speciality": "string",
+      "dateOfBirth": "LocalDate",
+      "placeOfBirth": "string",
+      "grades": null,
+      "createdDate": "Instant",
+      "lastModifiedDate": "Instant",
+      "isActive": "Boolean",
+      "role": "string"
+    }
+  ],
+  "LEVEL3": []
+}
+```
+
+---
+
+## Student Endpoints
+
+### 9. Get Student Profile
+- **URL**: `GET /student/profile`
+- **Description**: Get current student profile with grades
+- **Authorization**: Student role required
+- **Parameters**: None
+
+**Response DTO:**
+```json
+{
+  "id": "Long",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "studentLevel": {
+    "teachingLevelId": "Long",
+    "studentLevel": "string"
+  },
+  "cycle": "string (BACHELOR/MASTER/PHD)",
+  "matricule": "string",
+  "speciality": "string",
+  "dateOfBirth": "LocalDate",
+  "placeOfBirth": "string",
+  "grades": [
+    {
+      "gradeId": "Long",
+      "ccScore": "Double",
+      "snScore": "Double",
+      "totalScore": "Double",
+      "comments": "string",
+      "student": {
+        "id": "Long",
+        "username": "string",
+        "firstName": "string",
+        "lastName": "string",
+        "email": "string",
+        "matricule": "string"
+      },
+      "subject": {
+        "id": "Long",
+        "subjectName": "string",
+        "subjectCode": "string",
+        "credits": "Double"
+      },
+      "examiner": {
+        "id": "Long",
+        "username": "string",
+        "firstName": "string",
+        "lastName": "string",
+        "email": "string"
+      },
+      "semester": {
+        "id": "Long",
+        "name": "string",
+        "active": "Boolean"
+      },
+      "exam": "string (CC_1/CC_2/SN_1/SN_2)",
+      "hasPassed": "Boolean",
+      "gpa": "Double",
+      "createdDate": "Instant",
+      "lastModifiedDate": "Instant"
+    }
+  ],
+  "createdDate": "Instant",
+  "lastModifiedDate": "Instant",
+  "isActive": "Boolean",
+  "role": "string"
+}
+```
+
+---
+
+### 10. Get Student Grades
+- **URL**: `GET /student/{studentId}`
+- **Description**: Get grades for specific student (filtered by semester)
+- **Authorization**: Student/Teacher/Admin role required
+- **Parameters**: 
+  - `studentId` (path parameter)
+  - `semesterId` (optional query parameter)
+
+**Response DTO:**
+```json
+{
+  "id": "Long",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "studentLevel": {
+    "teachingLevelId": "Long",
+    "studentLevel": "string"
+  },
+  "cycle": "string",
+  "matricule": "string",
+  "speciality": "string",
+  "dateOfBirth": "LocalDate",
+  "placeOfBirth": "string",
+  "grades": [],
+  "createdDate": "Instant",
+  "lastModifiedDate": "Instant",
+  "isActive": "Boolean",
+  "role": "string"
+}
+```
+
+---
+
+### 11. Get Student Revendications
+- **URL**: `GET /student/{studentId}/revendications`
+- **Description**: Get student's revendication history
+- **Authorization**: Student/Teacher/Admin role required
+- **Parameters**: `studentId` (path parameter)
+
+**Response DTO:**
+```json
+[
+  {
+    "revendicationId": "Long",
+    "student": "StudentResponse",
+    "grade": "GradeResponse",
+    "semester": "SemesterResponse",
+    "requestedScore": "Double",
+    "description": "string",
+    "teacherComment": "string",
+    "status": "string (PENDING/APPROVED/REJECTED)",
+    "createdDate": "Instant",
+    "lastModifiedDate": "Instant"
+  }
+]
+```
+
+---
+
+## Admin Endpoints
+
+### 12. Get All Teachers
+- **URL**: `GET /admin/teachers`
+- **Description**: Admin views all teachers
+- **Authorization**: Admin role required
+- **Parameters**: 
+  - `pageNumber` (optional, default: 0)
+  - `pageSize` (optional, default: 50)
+  - `sortBy` (optional, default: id)
+  - `sortOrder` (optional, default: asc)
+
+**Response DTO:**
+```json
+[
+  {
+    "teacherId": "Long",
+    "username": "string",
+    "firstName": "string",
+    "lastName": "string",
+    "phoneNumber": "string",
+    "email": "string",
+    "department": {
+      "departmentId": "Long",
+      "departmentName": "string",
+      "departmentSubjects": [
+        {
+          "subjectId": "Long",
+          "subjectName": "string",
+          "subjectCode": "string",
+          "credits": "Double",
+          "description": "string",
+          "teacher": "TeacherResponse",
+          "subjectsLevel": ["TeachingLevel"],
+          "studentcycle": "string",
+          "departmentId": "Long",
+          "createdDate": "Instant",
+          "lastModifiedDate": "Instant"
+        }
+      ],
+      "createdDate": "Instant",
+      "lastModifiedDate": "Instant"
+    },
+    "teachingLevel": [
+      {
+        "teachingLevelId": "Long",
+        "studentLevel": "string"
+      }
+    ],
+    "createdDate": "Instant",
+    "lastModifiedDate": "Instant",
+    "role": "string",
+    "isActive": "Boolean"
+  }
+]
+```
+
+---
+
+### 13. Get All Students
+- **URL**: `GET /admin/students`
+- **Description**: Admin views all students
+- **Authorization**: Admin role required
+- **Parameters**: 
+  - `pageNumber` (optional, default: 0)
+  - `pageSize` (optional, default: 50)
+  - `sortBy` (optional, default: id)
+  - `sortOrder` (optional, default: asc)
+
+**Response DTO:**
+```json
+[
+  {
+    "id": "Long",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "studentLevel": "TeachingLevel",
+    "cycle": "string",
+    "matricule": "string",
+    "speciality": "string",
+    "dateOfBirth": "LocalDate",
+    "placeOfBirth": "string",
+    "grades": null,
+    "createdDate": "Instant",
+    "lastModifiedDate": "Instant",
+    "isActive": "Boolean",
+    "role": "string"
+  }
+]
+```
+
+---
+
+### 14. Update Student (Admin)
+- **URL**: `PUT /admin/student/{id}`
+- **Description**: Admin updates student information
+- **Authorization**: Admin role required
+- **Parameters**: `id` (path parameter)
+
+**Request DTO:**
+```json
+{
+  "username": "string (3-50 chars)",
+  "password": "string (6-100 chars)",
+  "firstName": "string (2-50 chars, required)",
+  "lastName": "string (2-50 chars, required)",
+  "email": "string (valid email, max 100 chars)",
+  "studentLevel": "TeachingLevel (required)",
+  "cycle": "StudentCycle (required)",
+  "matricule": "string (required)",
+  "speciality": "string (3-100 chars, required)",
+  "dateOfBirth": "LocalDate (required)",
+  "placeOfBirth": "string (2-100 chars, required)"
+}
+```
+
+**Response DTO:**
+```json
+{
+  "username": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "studentLevel": "TeachingLevel",
+  "cycle": "StudentCycle",
+  "matricule": "string",
+  "speciality": "string",
+  "dateOfBirth": "LocalDate",
+  "placeOfBirth": "string"
+}
+```
+
+---
+
 ## Department Management (Admin Only)
 
-### 6. Create Department
+### 15. Get All Departments
+- **URL**: `GET /admin/department`
+- **Description**: Retrieve all departments
+- **Authorization**: Admin role required
+- **Parameters**: 
+  - `pageNumber` (optional, default: 0)
+  - `pageSize` (optional, default: 50)
+  - `sortBy` (optional, default: departmentName)
+  - `sortOrder` (optional, default: asc)
+
+**Response DTO:**
+```json
+[
+  {
+    "departmentId": "Long",
+    "departmentName": "string",
+    "departmentSubjects": [
+      {
+        "subjectId": "Long",
+        "subjectName": "string",
+        "subjectCode": "string",
+        "credits": "Double",
+        "description": "string",
+        "teacher": "TeacherResponse",
+        "subjectsLevel": ["TeachingLevel"],
+        "studentcycle": "string",
+        "departmentId": "Long"
+      }
+    ],
+    "createdDate": "Instant",
+    "lastModifiedDate": "Instant"
+  }
+]
+```
+
+---
+
+### 16. Create Department
 - **URL**: `POST /admin/department`
 - **Description**: Create new department
 - **Authorization**: Admin role required
@@ -160,59 +594,7 @@
 
 ---
 
-### 7. Get All Departments
-- **URL**: `GET /admin/department`
-- **Description**: Retrieve all departments with pagination
-- **Authorization**: Admin role required
-- **Parameters**: 
-  - `pageNumber` (optional, default: 0)
-  - `pageSize` (optional, default: 50)
-  - `sortBy` (optional, default: departmentName)
-  - `sortOrder` (optional, default: asc)
-
-**Response DTO:**
-```json
-{
-  // Individual department fields for single operations
-  "departmentId": "Long",
-  "departmentName": "string",
-  "departmentSubjects": [
-    {
-      "subjectId": "Long",
-      "subjectCode": "string",
-      "credits": "BigDecimal",
-      "description": "string",
-      "teacher": "TeacherResponse",
-      "subjectsLevel": ["TeachingLevel"],
-      "Studentcycle": "StudentCycle",
-      "semester": "SemesterResponse",
-      "department": "DepartmentResponse",
-      "createdDate": "Instant",
-      "lastModifiedDate": "Instant"
-    }
-  ],
-  "createdDate": "Instant",
-  "lastModifiedDate": "Instant",
-  
-  // Pagination fields
-  "content": [
-    {
-      "departmentName": "string",
-      "subjectIds": ["Long"]
-    }
-  ],
-  "subjects": ["SubjectResponse"],
-  "pageNumber": "Integer",
-  "pageSize": "Integer",
-  "totalElements": "Long",
-  "totalPages": "Integer",
-  "lastPage": "Boolean"
-}
-```
-
----
-
-### 8. Update Department
+### 17. Update Department
 - **URL**: `PUT /admin/department/{departmentId}`
 - **Description**: Update department information
 - **Authorization**: Admin role required
@@ -236,7 +618,7 @@
 
 ---
 
-### 9. Delete Department
+### 18. Delete Department
 - **URL**: `DELETE /admin/department/{departmentId}`
 - **Description**: Delete department
 - **Authorization**: Admin role required
@@ -252,9 +634,73 @@
 
 ---
 
+## Subject Management
+
+### 19. Get All Subjects (Admin)
+- **URL**: `GET /admin/subjects`
+- **Description**: Admin views all subjects
+- **Authorization**: Admin role required
+- **Parameters**: 
+  - `pageNumber` (optional, default: 0)
+  - `pageSize` (optional, default: 50)
+  - `sortBy` (optional, default: subjectId)
+  - `sortOrder` (optional, default: asc)
+
+**Response DTO:**
+```json
+[
+  {
+    "subjectId": "Long",
+    "subjectName": "string",
+    "subjectCode": "string",
+    "credits": "Double",
+    "description": "string",
+    "teacher": "TeacherResponse",
+    "subjectsLevel": ["TeachingLevel"],
+    "studentcycle": "string",
+    "departmentId": "Long",
+    "createdDate": "Instant",
+    "lastModifiedDate": "Instant"
+  }
+]
+```
+
+---
+
+### 20. Get Teacher Subjects
+- **URL**: `GET /teacher/subject`
+- **Description**: Get subjects assigned to current teacher
+- **Authorization**: Teacher role required
+- **Parameters**: 
+  - `pageNumber` (optional, default: 0)
+  - `pageSize` (optional, default: 50)
+  - `sortBy` (optional, default: subjectId)
+  - `sortOrder` (optional, default: asc)
+
+**Response DTO:**
+```json
+[
+  {
+    "subjectId": "Long",
+    "subjectName": "string",
+    "subjectCode": "string",
+    "credits": "Double",
+    "description": "string",
+    "teacher": "TeacherResponse",
+    "subjectsLevel": ["TeachingLevel"],
+    "studentcycle": "string",
+    "departmentId": "Long",
+    "createdDate": "Instant",
+    "lastModifiedDate": "Instant"
+  }
+]
+```
+
+---
+
 ## Grade Management
 
-### 10. Create Grade (Teacher)
+### 21. Create Grade (Teacher)
 - **URL**: `POST /teacher/grade`
 - **Description**: Teacher creates new grade entry
 - **Authorization**: Teacher role required
@@ -290,7 +736,7 @@
 
 ---
 
-### 11. Update Grade (Teacher)
+### 22. Update Grade (Teacher)
 - **URL**: `PUT /teacher/grade/{gradeId}`
 - **Description**: Teacher updates existing grade
 - **Authorization**: Teacher role required
@@ -326,7 +772,7 @@
 
 ---
 
-### 12. Delete Grade (Teacher)
+### 23. Delete Grade (Teacher)
 - **URL**: `DELETE /teacher/grade/{gradeId}`
 - **Description**: Teacher deletes grade entry
 - **Authorization**: Teacher role required
@@ -336,836 +782,6 @@
 ```json
 {
   "message": "string"
-}
-```
-
----
-
-## Student Management
-
-### 13. Update Student (Admin)
-- **URL**: `PUT /admin/student/{id}`
-- **Description**: Admin updates student information
-- **Authorization**: Admin role required
-- **Parameters**: `id` (path parameter)
-
-**Request DTO:**
-```json
-{
-  "username": "string (3-50 chars)",
-  "password": "string (6-100 chars)",
-  "appRole": "Roles",
-  "firstName": "string (2-50 chars, required)",
-  "lastName": "string (2-50 chars, required)",
-  "email": "string (valid email, max 100 chars)",
-  "studentLevel": "TeachingLevel (required)",
-  "cycle": "StudentCycle (required)",
-  "matricule": "string (pattern: 2 digits + 1 uppercase letter + 4 digits, required)",
-  "speciality": "string (3-100 chars, required)",
-  "dateOfBirth": "LocalDate (required)",
-  "placeOfBirth": "string (2-100 chars, required)"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "username": "string",
-  "password": "string",
-  "appRole": "Roles",
-  "firstName": "string",
-  "lastName": "string",
-  "email": "string",
-  "studentLevel": "TeachingLevel",
-  "cycle": "StudentCycle",
-  "matricule": "string",
-  "speciality": "string",
-  "dateOfBirth": "LocalDate",
-  "placeOfBirth": "string"
-}
-```
-
----
-
-### 14. Get Student Profile
-- **URL**: `GET /profile`
-- **Description**: Get current student profile
-- **Authorization**: Student role required
-- **Parameters**: None
-
-**Response DTO:**
-```json
-{
-  "id": "Long",
-  "firstName": "string",
-  "lastName": "string",
-  "email": "string",
-  "studentLevel": "TeachingLevel",
-  "cycle": "StudentCycle",
-  "matricule": "string",
-  "speciality": "string",
-  "dateOfBirth": "LocalDate",
-  "placeOfBirth": "string",
-  "grades": [
-    {
-      "gradeId": "Long",
-      "score": "Double",
-      "maxValue": "Double",
-      "comments": "string",
-      "student": "StudentRequest",
-      "subject": "SubjectRequest",
-      "examiner": "Teacher",
-      "semester": "SemesterRequest",
-      "exam": "AssessmentType",
-      "revendication": ["RevendicationRequest"],
-      "hasPassed": "Boolean",
-      "gpa": "Double",
-      "content": "GradeRequest",
-      "createdDate": "Instant",
-      "lastModifiedDate": "Instant"
-    }
-  ],
-  "createdDate": "Instant",
-  "lastModifiedDate": "Instant",
-  "isActive": "Boolean",
-  "semesterId": "Long",
-  
-  // Pagination fields
-  "content": ["StudentRequest"],
-  "pageNumber": "Integer",
-  "pageSize": "Integer",
-  "totalElements": "Long",
-  "totalPages": "Integer",
-  "lastPage": "Boolean"
-}
-```
-
----
-
-### 15. Get Student Grades
-- **URL**: `GET /student/{studentId}`
-- **Description**: Get grades for specific student
-- **Authorization**: Teacher/Admin role required
-- **Parameters**: 
-  - `studentId` (path parameter)
-  - `semesterId` (optional query parameter)
-
-**Response DTO:**
-```json
-{
-  "id": "Long",
-  "firstName": "string",
-  "lastName": "string",
-  "email": "string",
-  "studentLevel": "TeachingLevel",
-  "cycle": "StudentCycle",
-  "matricule": "string",
-  "speciality": "string",
-  "dateOfBirth": "LocalDate",
-  "placeOfBirth": "string",
-  "grades": ["GradeResponse"],
-  "createdDate": "Instant",
-  "lastModifiedDate": "Instant",
-  "isActive": "Boolean",
-  "semesterId": "Long",
-  
-  // Pagination fields
-  "content": ["StudentRequest"],
-  "pageNumber": "Integer",
-  "pageSize": "Integer",
-  "totalElements": "Long",
-  "totalPages": "Integer",
-  "lastPage": "Boolean"
-}
-```
-
----
-
-## Subject Management
-
-### 16. Get All Subjects (Admin)
-- **URL**: `GET /admin/subjects`
-- **Description**: Admin views all subjects with pagination
-- **Authorization**: Admin role required
-- **Parameters**: 
-  - `pageNumber` (optional, default: 0)
-  - `pageSize` (optional, default: 50)
-  - `sortBy` (optional, default: subjectId)
-  - `sortOrder` (optional, default: asc)
-
-**Response DTO:**
-```json
-{
-  "subjectId": "Long",
-  "subjectCode": "string",
-  "credits": "BigDecimal",
-  "description": "string",
-  "teacher": {
-    "teacherId": "Long",
-    "username": "string",
-    "firstName": "string",
-    "lastName": "string",
-    "phoneNumber": "string",
-    "email": "string",
-    "subjects": ["SubjectResponse"],
-    "department": "Department",
-    "teachingLevel": ["TeachingLevel"],
-    "createdDate": "Instant",
-    "lastModifiedDate": "Instant",
-    "appRole": "Roles",
-    "isActive": "Boolean"
-  },
-  "subjectsLevel": ["TeachingLevel"],
-  "Studentcycle": "StudentCycle",
-  "semester": "SemesterResponse",
-  "department": "DepartmentResponse",
-  "createdDate": "Instant",
-  "lastModifiedDate": "Instant",
-  
-  // Pagination fields
-  "content": ["SubjectRequest"],
-  "pageNumber": "Integer",
-  "pageSize": "Integer",
-  "totalElements": "Long",
-  "totalPages": "Integer",
-  "lastPage": "Boolean"
-}
-```
-
----
-
-### 17. Create Subject (Admin)
-- **URL**: `POST /admin/subject`
-- **Description**: Admin creates new subject
-- **Authorization**: Admin role required
-- **Parameters**: None
-
-**Request DTO:**
-```json
-{
-  "subjectCode": "string",
-  "credits": "BigDecimal",
-  "description": "string",
-  "teacherId": "Long",
-  "subjectsLevel": ["TeachingLevel"],
-  "Studentcycle": "StudentCycle",
-  "semesterId": "Long",
-  "departmentId": "Long"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "subjectCode": "string",
-  "credits": "BigDecimal",
-  "description": "string",
-  "teacherId": "Long",
-  "subjectsLevel": ["TeachingLevel"],
-  "Studentcycle": "StudentCycle",
-  "semesterId": "Long",
-  "departmentId": "Long"
-}
-```
-
----
-
-### 18. Update Subject (Admin)
-- **URL**: `PUT /admin/subject/{id}`
-- **Description**: Admin updates subject
-- **Authorization**: Admin role required
-- **Parameters**: `id` (path parameter)
-
-**Request DTO:**
-```json
-{
-  "subjectCode": "string",
-  "credits": "BigDecimal",
-  "description": "string",
-  "teacherId": "Long",
-  "subjectsLevel": ["TeachingLevel"],
-  "Studentcycle": "StudentCycle",
-  "semesterId": "Long",
-  "departmentId": "Long"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "subjectCode": "string",
-  "credits": "BigDecimal",
-  "description": "string",
-  "teacherId": "Long",
-  "subjectsLevel": ["TeachingLevel"],
-  "Studentcycle": "StudentCycle",
-  "semesterId": "Long",
-  "departmentId": "Long"
-}
-```
-
----
-
-### 19. Delete Subject (Admin)
-- **URL**: `DELETE /admin/subject/{id}`
-- **Description**: Admin deletes subject
-- **Authorization**: Admin role required
-- **Parameters**: `id` (path parameter)
-
-**Response DTO:**
-```json
-{
-  "subjectCode": "string",
-  "credits": "BigDecimal",
-  "description": "string",
-  "teacherId": "Long",
-  "subjectsLevel": ["TeachingLevel"],
-  "Studentcycle": "StudentCycle",
-  "semesterId": "Long",
-  "departmentId": "Long"
-}
-```
-
----
-
-### 20. Get Teacher Subjects
-- **URL**: `GET /teacher/subject`
-- **Description**: Get subjects assigned to current teacher
-- **Authorization**: Teacher role required
-- **Parameters**: 
-  - `pageNumber` (optional, default: 0)
-  - `pageSize` (optional, default: 50)
-  - `sortBy` (optional, default: subjectId)
-  - `sortOrder` (optional, default: asc)
-
-**Response DTO:**
-```json
-{
-  "subjectId": "Long",
-  "subjectCode": "string",
-  "credits": "BigDecimal",
-  "description": "string",
-  "teacher": "TeacherResponse",
-  "subjectsLevel": ["TeachingLevel"],
-  "Studentcycle": "StudentCycle",
-  "semester": "SemesterResponse",
-  "department": "DepartmentResponse",
-  "createdDate": "Instant",
-  "lastModifiedDate": "Instant",
-  
-  // Pagination fields
-  "content": ["SubjectRequest"],
-  "pageNumber": "Integer",
-  "pageSize": "Integer",
-  "totalElements": "Long",
-  "totalPages": "Integer",
-  "lastPage": "Boolean"
-}
-```
-
----
-
-## Teacher Management
-
-### 21. Update Teacher (Admin)
-- **URL**: `PUT /admin/teacher/{id}`
-- **Description**: Admin updates teacher information
-- **Authorization**: Admin role required
-- **Parameters**: `id` (path parameter)
-
-**Request DTO:**
-```json
-{
-  "username": "string",
-  "password": "string",
-  "firstName": "string",
-  "lastName": "string",
-  "phoneNumber": "string",
-  "email": "string",
-  "subjects": ["Subject"],
-  "department": "Department",
-  "teachingLevel": ["TeachingLevel"],
-  "appRole": "Roles",
-  "isActive": "Boolean"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "username": "string",
-  "password": "string",
-  "firstName": "string",
-  "lastName": "string",
-  "phoneNumber": "string",
-  "email": "string",
-  "subjects": ["Subject"],
-  "department": "Department",
-  "teachingLevel": ["TeachingLevel"],
-  "appRole": "Roles",
-  "isActive": "Boolean"
-}
-```
-
----
-
-### 22. Get Teacher Profile
-- **URL**: `GET /profile`
-- **Description**: Get current teacher profile
-- **Authorization**: Teacher role required
-- **Parameters**: None
-
-**Response DTO:**
-```json
-{
-  "teacherId": "Long",
-  "username": "string",
-  "firstName": "string",
-  "lastName": "string",
-  "phoneNumber": "string",
-  "email": "string",
-  "subjects": ["SubjectResponse"],
-  "department": "Department",
-  "teachingLevel": ["TeachingLevel"],
-  "createdDate": "Instant",
-  "lastModifiedDate": "Instant",
-  "appRole": "Roles",
-  "isActive": "Boolean"
-}
-```
-
----
-
-### 23. Get Teacher Grades
-- **URL**: `GET /teacher/my-grades`
-- **Description**: Get all grades entered by current teacher
-- **Authorization**: Teacher role required
-- **Parameters**: None
-
-**Response DTO:**
-```json
-[
-  {
-    "gradeId": "Long",
-    "score": "Double",
-    "maxValue": "Double",
-    "comments": "string",
-    "student": "StudentRequest",
-    "subject": "SubjectRequest",
-    "examiner": "Teacher",
-    "semester": "SemesterRequest",
-    "exam": "AssessmentType",
-    "revendication": ["RevendicationRequest"],
-    "hasPassed": "Boolean",
-    "gpa": "Double",
-    "content": "GradeRequest",
-    "createdDate": "Instant",
-    "lastModifiedDate": "Instant"
-  }
-]
-```
-
----
-
-## Semester Management
-
-### 24. Get All Semesters
-- **URL**: `GET /semesters`
-- **Description**: Retrieve all semesters
-- **Authorization**: Authenticated user required
-- **Parameters**: None
-
-**Response DTO:**
-```json
-[
-  {
-    "semesterId": "Long",
-    "name": "string",
-    "startDate": "LocalDate",
-    "endDate": "LocalDate",
-    "active": "Boolean",
-    "createdDate": "Instant",
-    "lastModifiedDate": "Instant",
-    "subjects": ["SubjectResponse"],
-    "grades": ["GradeResponse"],
-    
-    // Pagination fields
-    "content": ["SemesterResponse"],
-    "pageNumber": "Integer",
-    "pageSize": "Integer",
-    "totalElements": "Long",
-    "totalPages": "Integer",
-    "lastPage": "Boolean"
-  }
-]
-```
-
----
-
-### 25. Create Semester (Admin)
-- **URL**: `POST /admin/semester`
-- **Description**: Admin creates new semester
-- **Authorization**: Admin role required
-- **Parameters**: None
-
-**Request DTO:**
-```json
-{
-  "name": "string (5+ chars, required)",
-  "startDate": "LocalDate (required)",
-  "endDate": "LocalDate (required)",
-  "active": "Boolean (default: true)"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "name": "string",
-  "startDate": "LocalDate",
-  "endDate": "LocalDate",
-  "active": "Boolean"
-}
-```
-
----
-
-### 26. Update Semester (Admin)
-- **URL**: `PUT /admin/semester/{id}`
-- **Description**: Admin updates semester
-- **Authorization**: Admin role required
-- **Parameters**: `id` (path parameter)
-
-**Request DTO:**
-```json
-{
-  "name": "string (5+ chars, required)",
-  "startDate": "LocalDate (required)",
-  "endDate": "LocalDate (required)",
-  "active": "Boolean (default: true)"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "name": "string",
-  "startDate": "LocalDate",
-  "endDate": "LocalDate",
-  "active": "Boolean"
-}
-```
-
----
-
-### 27. Delete Semester (Admin)
-- **URL**: `DELETE /admin/semester/{id}`
-- **Description**: Admin deletes semester
-- **Authorization**: Admin role required
-- **Parameters**: `id` (path parameter)
-
-**Response DTO:**
-```json
-{
-  "message": "string"
-}
-```
-
----
-
-## Revendication Management
-
-### 28. Create Revendication (Student)
-- **URL**: `POST /student/revendication`
-- **Description**: Student submits grade revendication request
-- **Authorization**: Student role required
-- **Parameters**: None
-
-**Request DTO:**
-```json
-{
-  "period": "Exam",
-  "student": "Student",
-  "grade": "Grades",
-  "semester": "Semester",
-  "requestedScore": "Double",
-  "description": "string"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "period": "Exam",
-  "student": "Student",
-  "grade": "Grades",
-  "semester": "Semester",
-  "requestedScore": "Double",
-  "description": "string"
-}
-```
-
----
-
-### 29. Get Teacher Revendications
-- **URL**: `GET /teacher/revendications`
-- **Description**: Teacher views pending revendications
-- **Authorization**: Teacher role required
-- **Parameters**: 
-  - `pageNumber` (optional, default: 0)
-  - `pageSize` (optional, default: 50)
-  - `sortBy` (optional, default: revendicationId)
-  - `sortOrder` (optional, default: asc)
-
-**Response DTO:**
-```json
-{
-  "revendicationId": "Long",
-  "student": "StudentResponse",
-  "grade": "GradeResponse",
-  "semester": "SemesterResponse",
-  "requestedScore": "Double",
-  "description": "string",
-  "teacherComment": "string",
-  "status": "RequestStatus",
-  "createdDate": "Instant",
-  "lastModifiedDate": "Instant",
-  
-  // Pagination fields
-  "content": ["RevendicationRequest"],
-  "pageNumber": "Integer",
-  "pageSize": "Integer",
-  "totalElements": "Long",
-  "totalPages": "Integer",
-  "lastPage": "Boolean"
-}
-```
-
----
-
-### 30. Approve Revendication (Teacher)
-- **URL**: `POST /teacher/revendication/{id}/approve`
-- **Description**: Teacher approves grade revendication
-- **Authorization**: Teacher role required
-- **Parameters**: 
-  - `id` (path parameter)
-  - `comment` (optional query parameter)
-
-**Response DTO:**
-```json
-{
-  "message": "string"
-}
-```
-
----
-
-### 31. Reject Revendication (Teacher)
-- **URL**: `POST /teacher/revendication/{id}/reject`
-- **Description**: Teacher rejects grade revendication
-- **Authorization**: Teacher role required
-- **Parameters**: 
-  - `id` (path parameter)
-  - `reason` (optional query parameter)
-
-**Response DTO:**
-```json
-{
-  "message": "string"
-}
-```
-
----
-
-### 32. Get Student Revendications
-- **URL**: `GET /student/{studentId}/revendications`
-- **Description**: Get student's revendication history
-- **Authorization**: Student/Teacher/Admin role required
-- **Parameters**: `studentId` (path parameter)
-
-**Response DTO:**
-```json
-[
-  {
-    "revendicationId": "Long",
-    "student": "StudentResponse",
-    "grade": "GradeResponse",
-    "semester": "SemesterResponse",
-    "requestedScore": "Double",
-    "description": "string",
-    "teacherComment": "string",
-    "status": "RequestStatus",
-    "createdDate": "Instant",
-    "lastModifiedDate": "Instant"
-  }
-]
-```
-
----
-
-## Revendication Period Management
-
-### 33. Get All Revendication Periods
-- **URL**: `GET /revendication-period`
-- **Description**: Retrieve all revendication periods
-- **Authorization**: Authenticated user required
-- **Parameters**: None
-
-**Response DTO:**
-```json
-[
-  {
-    "revendicationPeriodId": "Long",
-    "exam": {
-      "examPeriodId": "Long",
-      "assessmentType": "AssessmentType"
-    },
-    "semester": "SemesterResponse",
-    "startDate": "LocalDate",
-    "endDate": "LocalDate",
-    "color": "string",
-    "isActive": "Boolean",
-    "createdDate": "Instant",
-    "lastModifiedDate": "Instant"
-  }
-]
-```
-
----
-
-### 34. Create Revendication Period (Admin)
-- **URL**: `POST /admin/revendication-period`
-- **Description**: Admin creates new revendication period
-- **Authorization**: Admin role required
-- **Parameters**: None
-
-**Request DTO:**
-```json
-{
-  "examId": "Long (required)",
-  "startDate": "LocalDate (required)",
-  "endDate": "LocalDate (required)",
-  "color": "string",
-  "isActive": "Boolean (default: false)"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "examId": "Long",
-  "startDate": "LocalDate",
-  "endDate": "LocalDate",
-  "color": "string",
-  "isActive": "Boolean"
-}
-```
-
----
-
-### 35. Update Revendication Period (Admin)
-- **URL**: `PUT /admin/revendication-period/{id}`
-- **Description**: Admin updates revendication period
-- **Authorization**: Admin role required
-- **Parameters**: `id` (path parameter)
-
-**Request DTO:**
-```json
-{
-  "examId": "Long (required)",
-  "startDate": "LocalDate (required)",
-  "endDate": "LocalDate (required)",
-  "color": "string",
-  "isActive": "Boolean (default: false)"
-}
-```
-
-**Response DTO:**
-```json
-{
-  "examId": "Long",
-  "startDate": "LocalDate",
-  "endDate": "LocalDate",
-  "color": "string",
-  "isActive": "Boolean"
-}
-```
-
----
-
-### 36. Delete Revendication Period (Admin)
-- **URL**: `DELETE /admin/revendication-period/{id}`
-- **Description**: Admin deletes revendication period
-- **Authorization**: Admin role required
-- **Parameters**: `id` (path parameter)
-
-**Response DTO:**
-```json
-{
-  "message": "string"
-}
-```
-
----
-
-### 37. Get Active Revendication Periods
-- **URL**: `GET /revendication-period/active`
-- **Description**: Retrieve all active revendication periods
-- **Authorization**: Authenticated user required
-- **Parameters**: None
-
-**Response DTO:**
-```json
-[
-  {
-    "revendicationPeriodId": "Long",
-    "exam": "ExamResponse",
-    "semester": "SemesterResponse",
-    "startDate": "LocalDate",
-    "endDate": "LocalDate",
-    "color": "string",
-    "isActive": "Boolean",
-    "createdDate": "Instant",
-    "lastModifiedDate": "Instant"
-  }
-]
-```
-
----
-
-## Transcript Management
-
-### 38. Get Student Transcript
-- **URL**: `GET /student/transcript`
-- **Description**: Student retrieves their academic transcript
-- **Authorization**: Student role required
-- **Parameters**: None
-
-**Response DTO:**
-```json
-{
-  "transcriptId": "Long",
-  "studentFirstName": "string",
-  "studentLastName": "string",
-  "studentMatricule": "string",
-  "subjectResults": ["SubjectResponse"],
-  "status": "TranscriptStatus",
-  "studentLevel": "TeachingLevel",
-  "studentCycle": "StudentCycle",
-  "semesterName": "string",
-  "studentGrades": ["GradeResponse"],
-  "annualAverage": "Double",
-  "pdfPath": "string",
-  "creditsEarned": "Integer",
-  "totalCreditsRequired": "Integer",
-  "semester1Credits": "Integer",
-  "semester2Credits": "Integer",
-  "semester1Average": "Double",
-  "semester2Average": "Double",
-  "facultyName": "string",
-  "academicYear": "string",
-  "createdDate": "Instant",
-  "lastModifiedDate": "Instant"
 }
 ```
 
@@ -1184,7 +800,7 @@
 - `MASTER` - Graduate (Levels 4-5)
 - `PHD` - Doctoral
 
-### TeachingLevel
+### StudentLevel
 - `LEVEL1` - First Year
 - `LEVEL2` - Second Year
 - `LEVEL3` - Third Year
@@ -1196,11 +812,6 @@
 - `APPROVED` - Approved by teacher
 - `REJECTED` - Rejected by teacher
 
-### TranscriptStatus
-- `DRAFT` - In preparation
-- `FINAL` - Completed and official
-- `ARCHIVED` - Historical record
-
 ### AppRole
 - `ADMIN` - System administrator
 - `TEACHER` - Faculty member
@@ -1208,12 +819,28 @@
 
 ---
 
-## Authentication Notes
+## Important Notes
+
+### Authentication
 - All endpoints require JWT token in Authorization header: `Bearer <token>`
 - Role-based access control enforced on admin/teacher/student specific endpoints
 - Token expires after 24 hours by default
 - Use `/auth/login` to obtain JWT token
-- Include token in all subsequent requests
+
+### Pagination Removed
+- All list endpoints now return direct arrays without pagination metadata
+- No `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, or `lastPage` fields
+- Pagination parameters still accepted but only affect result size
+
+### Response Structure Changes
+- All responses return direct data without wrapper objects
+- GradeResponse uses nested simple DTOs to avoid circular references
+- Student/Teacher responses include complete nested objects
+
+### Test Credentials
+- Admin: `admin` / `admin`
+- Teachers: username format `prof.{lastname}` / password `duchelle`
+- Students: matricule format `24X0001` / password `nathan`
 
 ## Error Responses
 All endpoints may return standard HTTP error responses:

@@ -116,16 +116,16 @@ const AcademicPeriodsManager = () => {
     
     // Mapper les données backend vers le format AcademicPeriod
     const backendPeriods: AcademicPeriod[] = gradingWindows.map(period => ({
-        id: (period.revendicationPeriodId || period.id).toString(),
-        name: period.name || `Période ${period.exam?.assessmentType || 'CC_1'}`,
-        shortName: period.shortName || period.exam?.assessmentType || 'CC_1',
-        type: (period.shortName || period.exam?.assessmentType || 'CC_1') as 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2',
-        semester: typeof period.semester === 'object' ? period.semester?.id || 1 : period.semester || 1,
+        id: period.revendicationPeriodId.toString(),
+        name: `Période ${period.exam.assessmentType}`,
+        shortName: period.exam.assessmentType,
+        type: period.exam.assessmentType as 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2',
+        semester: period.semester.semesterId as 1 | 2,
         startDate: period.startDate,
         endDate: period.endDate,
-        color: period.color || '#1890ff',
+        color: period.color,
         isActive: period.isActive,
-        order: period.order || 1
+        order: period.revendicationPeriodId
     }));
     
     // Trouver le semestre actif
@@ -134,7 +134,7 @@ const AcademicPeriodsManager = () => {
     // Filtrer les périodes par semestre actif
     const allPeriods = backendPeriods.length > 0 ? backendPeriods : mockPeriods;
     const periods = activeSemester 
-        ? allPeriods.filter(period => period.semester === activeSemester.id)
+        ? allPeriods.filter(period => period.semester === activeSemester.semesterId)
         : allPeriods;
 
     // Générer une année académique standard (9 mois)
@@ -160,13 +160,12 @@ const AcademicPeriodsManager = () => {
 
     const calculatePosition = (dateStr: string) => {
         const date = new Date(dateStr);
-        // Année académique : Sep année N à Juin année N+1
-        const currentYear = new Date().getFullYear();
-        const startYear = new Date(currentYear, 8, 1); // 1er septembre
-        const endYear = new Date(currentYear + 1, 5, 30); // 30 juin
+        // Utiliser l'année académique du semestre actif
+        const semesterStart = activeSemester ? new Date(activeSemester.startDate) : new Date();
+        const semesterEnd = activeSemester ? new Date(activeSemester.endDate) : new Date();
         
-        const totalDuration = endYear.getTime() - startYear.getTime();
-        const elapsed = date.getTime() - startYear.getTime();
+        const totalDuration = semesterEnd.getTime() - semesterStart.getTime();
+        const elapsed = date.getTime() - semesterStart.getTime();
         return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
     };
 

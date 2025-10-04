@@ -87,7 +87,27 @@ const adminSlice = createSlice({
             })
             .addCase(fetchAllTeachers.fulfilled, (state, action) => {
                 state.loading = false;
-                state.teachers = action.payload;
+                // Normaliser les données des enseignants selon la nouvelle API
+                const teachers = Array.isArray(action.payload) ? action.payload.map((teacher: any) => ({
+                    id: teacher.teacherId,
+                    teacherId: teacher.teacherId,
+                    username: teacher.username,
+                    firstName: teacher.firstName,
+                    lastName: teacher.lastName,
+                    phoneNumber: teacher.phoneNumber,
+                    email: teacher.email,
+                    department: teacher.department ? {
+                        departmentId: teacher.department.departmentId,
+                        departmentName: teacher.department.departmentName,
+                        departmentSubjects: teacher.department.departmentSubjects || []
+                    } : null,
+                    teachingLevel: (teacher.teachingLevel || []).map((level: any) => level.studentLevel),
+                    createdDate: teacher.createdDate,
+                    lastModifiedDate: teacher.lastModifiedDate,
+                    role: teacher.role,
+                    isActive: teacher.isActive
+                })) : [];
+                state.teachers = teachers;
             })
             .addCase(fetchAllTeachers.rejected, (state, action) => {
                 state.loading = false;
@@ -101,7 +121,30 @@ const adminSlice = createSlice({
             })
             .addCase(fetchAllDepartments.fulfilled, (state, action) => {
                 state.loading = false;
-                state.departments = action.payload;
+                // Normaliser les données des départements selon la nouvelle API
+                const departments = Array.isArray(action.payload) ? action.payload.map((dept: any) => ({
+                    id: dept.departmentId,
+                    name: dept.departmentName,
+                    departmentId: dept.departmentId,
+                    departmentName: dept.departmentName,
+                    createdDate: dept.createdDate,
+                    lastModifiedDate: dept.lastModifiedDate,
+                    subjects: (dept.departmentSubjects || []).map((subject: any) => ({
+                        id: subject.subjectId,
+                        name: subject.subjectName || subject.subjectCode,
+                        code: subject.subjectCode,
+                        credits: subject.credits,
+                        description: subject.description || '',
+                        active: true,
+                        level: subject.subjectsLevel?.[0] || 'LEVEL1',
+                        cycle: subject.Studentcycle,
+                        semesterId: subject.semester?.id,
+                        semesterName: subject.semester?.name || '',
+                        departmentId: dept.departmentId,
+                        departmentName: dept.departmentName
+                    }))
+                })) : [];
+                state.departments = departments;
             })
             .addCase(fetchAllDepartments.rejected, (state, action) => {
                 state.loading = false;

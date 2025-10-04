@@ -10,7 +10,11 @@ export const createDepartment = createAsyncThunk(
     'departments/create',
     async (departmentData: DepartmentData, { rejectWithValue }) => {
         try {
-            return await adminService.createDepartment(departmentData);
+            const payload = {
+                departmentName: departmentData.name,
+                subjectIds: departmentData.subjectIds
+            };
+            return await adminService.createDepartment(payload);
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Erreur lors de la création');
         }
@@ -21,7 +25,11 @@ export const updateDepartment = createAsyncThunk(
     'departments/update',
     async ({ id, departmentData }: { id: number; departmentData: DepartmentData }, { rejectWithValue }) => {
         try {
-            return await adminService.updateDepartment(id, departmentData);
+            const payload = {
+                departmentName: departmentData.name,
+                subjectIds: departmentData.subjectIds
+            };
+            return await adminService.updateDepartment(id, payload);
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Erreur lors de la modification');
         }

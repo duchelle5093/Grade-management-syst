@@ -1,22 +1,31 @@
 import { Role, AcademicLevel, StudyCycle } from '../enums';
 
 interface Subject {
-    id: number;
-    name: string;
-    code: string;
-    credits: number;
-    description: string;
-    active: boolean;
-    level: AcademicLevel;
-    cycle: StudyCycle;
-    semesterId: number;
-    semesterName: string;
-    departmentId: number;
-    departmentName: string;
-    teacherId: number;
-    teacherName: string;
-    createdDate: string | null;
-    lastModifiedDate: string | null;
+    id?: number;
+    subjectId?: number;
+    name?: string;
+    subjectName?: string;
+    code?: string;
+    subjectCode?: string;
+    credits?: number | { source: string; parsedValue: number };
+    description?: string;
+    active?: boolean;
+    level?: AcademicLevel;
+    cycle?: StudyCycle;
+    semesterId?: number;
+    semesterName?: string;
+    departmentId?: number;
+    departmentName?: string;
+    teacherId?: number;
+    teacherName?: string;
+    teacher?: any;
+    subjectsLevel?: Array<{
+        teachingLevelId: number;
+        studentLevel: string;
+    }>;
+    studentCycle?: string;
+    createdDate?: string | null;
+    lastModifiedDate?: string | null;
 }
 
 export interface userProfileResDto {
@@ -28,13 +37,30 @@ export interface userProfileResDto {
     email: string;
     phoneNumber?: string;
     role: Role;
-    subjects: Subject[];
-    teachingLevel?: string[];
+    subjects?: Subject[];
+    teachingLevel?: Array<{
+        teachingLevelId: number;
+        studentLevel: string;
+    }>;
     department?: {
         departmentId: number;
         departmentName: string;
+        createdDate: string;
+        lastModifiedDate: string;
     };
     isActive?: boolean;
+    createdDate?: string;
+    lastModifiedDate?: string;
+    grades?: any[];
+    studentLevel?: {
+        teachingLevelId: number;
+        studentLevel: string;
+    };
+    cycle?: string;
+    matricule?: string;
+    speciality?: string;
+    dateOfBirth?: string;
+    placeOfBirth?: string;
 }
 //
 // interface Topic {

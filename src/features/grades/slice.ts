@@ -82,16 +82,16 @@ const gradesSlice = createSlice({
             .addCase(updateGrade.fulfilled, (state, action) => {
                 const updatedGrade = action.payload;
                 state.teacherGrades = state.teacherGrades.map(grade =>
-                    grade.id === updatedGrade.id ? { ...grade, ...updatedGrade } : grade
+                    (grade.gradeId || grade.id) === (updatedGrade.gradeId || updatedGrade.id) ? { ...grade, ...updatedGrade } : grade
                 );
                 state.studentGrades = state.studentGrades.map(grade =>
-                    grade.studentId === updatedGrade.id ? { ...grade, ...updatedGrade } : grade
+                    grade.id === updatedGrade.id ? { ...grade, ...updatedGrade } : grade
                 );
             })
             // Delete grade
             .addCase(deleteGrade.fulfilled, (state, action) => {
                 const deletedId = action.payload;
-                state.teacherGrades = state.teacherGrades.filter(grade => grade.id !== deletedId);
+                state.teacherGrades = state.teacherGrades.filter(grade => (grade.gradeId || grade.id) !== deletedId);
                 state.studentGrades = state.studentGrades.filter(grade => grade.id !== deletedId);
             })
             // Fetch grade sheet

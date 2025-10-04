@@ -344,6 +344,24 @@ Cette action est irréversible.`,
                 return levelA.localeCompare(levelB);
             },
             render: (record: any) => {
+                // Pour les enseignants, afficher leurs niveaux d'enseignement
+                if (record.teachingLevel && Array.isArray(record.teachingLevel)) {
+                    return (
+                        <Space wrap>
+                            {record.teachingLevel.map((level: string, index: number) => {
+                                let levelDisplay = level;
+                                if (level === 'LEVEL1') levelDisplay = 'L1';
+                                else if (level === 'LEVEL2') levelDisplay = 'L2';
+                                else if (level === 'LEVEL3') levelDisplay = 'L3';
+                                else if (level === 'LEVEL4') levelDisplay = 'M1';
+                                else if (level === 'LEVEL5') levelDisplay = 'M2';
+                                return <Tag key={index} color="orange">{levelDisplay}</Tag>;
+                            })}
+                        </Space>
+                    );
+                }
+                
+                // Pour les étudiants
                 const level = record.studentLevel?.studentLevel || record.studentLevel || record.level;
                 let levelDisplay = 'Non défini';
                 

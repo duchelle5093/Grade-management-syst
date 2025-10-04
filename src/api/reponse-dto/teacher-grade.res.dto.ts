@@ -1,33 +1,49 @@
 import { AssessmentType, RequestStatus } from '../enums';
 
-// DTOs pour les réponses de notes enseignant selon la nouvelle API
-
 export interface TeacherGradeResDto {
-    id: number;
     gradeId: number;
-    score: number;
-    value: number; // Alias pour score
+    ccScore: number | null;
+    snScore: number | null;
+    totalScore: number | null;
     maxValue: number;
-    comments?: string;
-    student: any; // StudentRequest object
-    studentId: number;
-    studentName: string;
-    subject: any; // SubjectRequest object
-    subjectId: number;
-    subjectName: string;
-    subjectCode: string;
-    examiner: any; // Teacher object
-    semester: any; // SemesterRequest object
-    semesterId: number;
-    exam: AssessmentType;
-    assessmentType: AssessmentType;
-    periodLabel: string; // Pour compatibilité
-    revendication?: any[]; // List<RevendicationRequest>
+    comments: string;
+    student: {
+        id: number;
+        username: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        matricule: string;
+    };
+    subject: {
+        id: number;
+        subjectName: string;
+        subjectCode: string;
+        credits: number;
+    };
+    examiner: {
+        id: number;
+        username: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+    };
+    semester: {
+        id: number;
+        name: string;
+        active: boolean;
+    };
+    exam: "CC_1" | "CC_2" | "SN_1" | "SN_2";
+    revendication: any[];
     hasPassed: boolean;
     gpa: number;
-    content: any; // GradeRequest object
-    createdDate: string; // Instant
-    lastModifiedDate?: string; // Instant
+    createdDate: string;
+    lastModifiedDate: string;
+    // Propriétés dérivées pour compatibilité
+    studentId: number;
+    subjectId: number;
+    value: number;
+    type: AssessmentType;
 }
 
 export interface TeacherRevendicationResDto {

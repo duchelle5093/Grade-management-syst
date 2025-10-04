@@ -22,7 +22,8 @@ import { useTeacherLevels, useRecentGrades, useStudentsByLevel, useGradeProgress
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../store';
 import { fetchTeacherGrades } from '../grades/actions';
-import { fetchStudents } from '../user/actions';
+import { fetchTeacherStudents } from '../user/actions';
+import { fetchAssignedSubjects } from '../subjects/actions';
 
 const { Title, Text } = Typography;
 
@@ -45,7 +46,8 @@ export const TeacherOverview = () => {
     // Chargement initial des données
     useEffect(() => {
         dispatch(fetchTeacherGrades());
-        dispatch(fetchStudents());
+        dispatch(fetchTeacherStudents());
+        dispatch(fetchAssignedSubjects());
     }, [dispatch]);
 
     return (
