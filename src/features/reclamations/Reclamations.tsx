@@ -35,10 +35,10 @@ export default function Reclamations({
 
 
     const onFinish = async (values: any) => {
-      // Sauvegarder les valeurs du formulaire
+
       setFormValues(values);
       
-      // Passer à l'étape suivante pour afficher le récapitulatif
+
       handleNext?.();
     };
 

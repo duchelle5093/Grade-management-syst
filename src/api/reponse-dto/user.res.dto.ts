@@ -62,25 +62,25 @@ export interface userProfileResDto {
     dateOfBirth?: string;
     placeOfBirth?: string;
 }
-//
-// interface Topic {
-//     code: string,
-//     title: string,
-//     cc: number,
-//     sn: number,
-//     semester: string,
-//     credits:number
-// }
 
-// export interface studentResDto {
-//     id: number;
-//     firstName: string;
-//     lastName: string;
-//     email: string;
-//     username: string;
-//     role: string;
-//     level: string;
-//     topics: Topic[];
-//     [index: string]: any
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

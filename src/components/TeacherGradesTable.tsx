@@ -11,7 +11,7 @@ import { useNotification } from "../contexts";
 import { useActivePeriodPolling, useClaims } from "../hooks";
 import { getMaxGradeValue } from "../utils/periodUtils";
 
-// Interface pour les données d'affichage du tableau
+
 interface StudentGradeRow {
     studentId: number;
     studentName: string;
@@ -34,7 +34,7 @@ interface TeacherGradesTableProps {
     isDataEditable?: boolean;
     setIsDataEditable: (value: boolean) => void;
     onSearch?: (value: string) => void;
-    currentSubjectId?: number; // Ajout pour filtrer les réclamations
+    currentSubjectId?: number;
 }
 
 export const TeacherGradesTable = ({
@@ -57,13 +57,13 @@ export const TeacherGradesTable = ({
     const [rejectReason, setRejectReason] = useState("");
     const { notify } = useNotification();
     
-    // Polling des colonnes éditables basé sur la période active
+
     const { editableColumns: pollingEditableColumns } = useActivePeriodPolling({
         enabled: true,
-        interval: 60000 // 1 minute - optimisé
+        interval: 60000
     });
     
-    // Hook pour gérer les réclamations via API
+
     const { getClaimsForStudent, getPendingClaimsCount, refreshClaims } = useClaims(currentSubjectId);
     
 
@@ -102,7 +102,7 @@ export const TeacherGradesTable = ({
         const claims = getClaimsForStudent(studentId, period);
         
         if (claims.length > 0) {
-            // Transformer la réclamation API en format attendu par la modal
+
             const apiClaim = claims[0];
             const transformedClaim = {
                 id: (apiClaim.id || apiClaim.revendicationId).toString(),
@@ -122,10 +122,10 @@ export const TeacherGradesTable = ({
         try {
             await gradeService.processGradeClaim(parseInt(selectedClaim.id), { approve: true });
             
-            // Refresh multiple stores pour synchronisation complète
+
             await Promise.all([
                 refreshClaims(),
-                // Pas besoin de recharger les notes car elles ne changent pas lors de l'approbation
+
             ]);
             
             notify({
@@ -154,7 +154,7 @@ export const TeacherGradesTable = ({
                 message: 'Revendication rejetée',
                 description: 'L\'étudiant a été notifié'
             });
-            await refreshClaims(); // Actualiser les réclamations
+            await refreshClaims();
             setIsClaimModalOpen(false);
             setSelectedClaim(null);
             setRejectReason("");
@@ -197,7 +197,7 @@ export const TeacherGradesTable = ({
                 const claims = getClaimsForStudent(record.studentId, field as any);
                 const hasClaim = claims.length > 0;
 
-                // Seul le polling détermine les colonnes éditables
+
                 const currentEditableColumns = Array.isArray(pollingEditableColumns) ? pollingEditableColumns : [];
                 
 

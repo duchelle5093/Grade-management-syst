@@ -3,7 +3,7 @@ import { adminService, adminReportsService } from '../../api/configs';
 import { CreateTeacherReqDto } from '../../api/request-dto/admin.req.dto';
 import { Role, AcademicLevel, StudyCycle } from '../../api/enums';
 
-// Actions pour les étudiants avec pagination
+
 export const fetchAllStudents = createAsyncThunk(
     'admin/fetchAllStudents',
     async (params: { pageNumber?: number; pageSize?: number; sortBy?: string; sortOrder?: string } = {}) => {
@@ -20,14 +20,14 @@ export const createUser = createAsyncThunk(
         lastName: string;
         role: Role;
         password: string;
-        // Champs spécifiques aux étudiants
+
         levelId?: number;
         matricule?: string;
         speciality?: string;
         cycle?: StudyCycle;
         dateOfBirth?: string;
         placeOfBirth?: string;
-        // Champs spécifiques aux enseignants
+
         levelIds?: number[];
         departmentId?: number;
         phone?: string;
@@ -68,7 +68,7 @@ export const deleteUser = createAsyncThunk(
     }
 );
 
-// Actions pour les enseignants
+
 export const fetchAllTeachers = createAsyncThunk(
     'admin/fetchAllTeachers',
     async (params: { pageNumber?: number; pageSize?: number; sortBy?: string; sortOrder?: string } = {}) => {
@@ -83,12 +83,12 @@ export const createTeacher = createAsyncThunk(
     }
 );
 
-// Actions pour les départements avec pagination
+
 export const fetchAllDepartments = createAsyncThunk(
     'admin/fetchAllDepartments',
     async (params: { pageNumber?: number; pageSize?: number; sortBy?: string; sortOrder?: string } = {}) => {
         const response = await adminService.getAllDepartments(params.pageNumber, params.pageSize, params.sortBy, params.sortOrder);
-        // Mapper les propriétés pour la compatibilité avec le composant
+
         if (Array.isArray(response)) {
             return response.map((dept: any) => ({
                 id: dept.departmentId,
@@ -106,7 +106,7 @@ export const fetchAllDepartments = createAsyncThunk(
 
 
 
-// Actions pour l'import
+
 export const importStudents = createAsyncThunk(
     'admin/importStudents',
     async (file: File) => {
@@ -121,7 +121,7 @@ export const importTeachers = createAsyncThunk(
     }
 );
 
-// Actions pour les fenêtres de notation
+
 export const fetchAllGradingWindows = createAsyncThunk(
     'admin/fetchAllGradingWindows',
     async () => {

@@ -93,7 +93,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
                 throw new Error(`Une matière "${values.name}" existe déjà au niveau ${values.level} dans le département ${values.departmentName}`);
             }
             
-            // Information si aucun enseignant disponible
+
             if (selectedDepartment && selectedLevel) {
                 const availableTeachers = getCompatibleTeachers(selectedDepartment, selectedLevel);
                 
@@ -152,7 +152,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
         if (!departmentName) return [];
         
         return teachers.filter(teacher => {
-            // Contrainte: 1 enseignant pour 1 matière par niveau
+
             const hasSubjectAtLevel = allSubjects.some(subject => 
                 subject.teacherId === teacher.teacherId && 
                 subject.level === level &&

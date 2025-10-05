@@ -1,30 +1,30 @@
 import { RequestStatus, TranscriptStatus, AcademicLevel, StudyCycle } from '../enums';
 
-// DTOs pour les réponses de réclamations étudiant selon la nouvelle API
+
 
 export interface StudentRevendicationResDto {
     revendicationId: number;
-    student: any; // StudentResponse object
-    grade: any; // GradeResponse object
-    semester: any; // SemesterResponse object
+    student: any;
+    grade: any;
+    semester: any;
     requestedScore: number;
     description: string;
     teacherComment?: string;
     status: RequestStatus;
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
+    createdDate: string;
+    lastModifiedDate: string;
 }
 
 export interface RevendicationPeriodResDto {
     revendicationPeriodId: number;
-    exam: any; // ExamResponse object
-    semester: any; // SemesterResponse object
-    startDate: string; // LocalDate
-    endDate: string; // LocalDate
+    exam: any;
+    semester: any;
+    startDate: string;
+    endDate: string;
     color?: string;
     isActive: boolean;
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
+    createdDate: string;
+    lastModifiedDate: string;
 }
 
 export interface TranscriptResDto {
@@ -32,12 +32,12 @@ export interface TranscriptResDto {
     studentFirstName: string;
     studentLastName: string;
     studentMatricule: string;
-    subjectResults: any[]; // List<SubjectResponse>
+    subjectResults: any[];
     status: TranscriptStatus;
     studentLevel: AcademicLevel;
     studentCycle: StudyCycle;
     semesterName: string;
-    studentGrades: any[]; // List<GradeResponse>
+    studentGrades: any[];
     annualAverage: number;
     pdfPath?: string;
     creditsEarned: number;
@@ -48,6 +48,6 @@ export interface TranscriptResDto {
     semester2Average: number;
     facultyName?: string;
     academicYear?: string;
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
+    createdDate: string;
+    lastModifiedDate: string;
 }

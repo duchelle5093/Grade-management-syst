@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { adminService } from '../../api/configs';
 import { SubjectResDto, CreateSubjectReqDto, UpdateSubjectReqDto } from '../../api/reponse-dto/subjects.res.dto';
 
-// Actions pour les matières
+
 export const fetchAllSubjects = createAsyncThunk(
     'subjects/fetchAllSubjects',
     async (_, { rejectWithValue }) => {

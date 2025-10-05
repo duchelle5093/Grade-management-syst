@@ -139,7 +139,7 @@
 ### 6. Get Teacher Profile
 - **URL**: `GET /teacher/profile`
 - **Description**: Get current teacher profile
-- **Authorization**: Teacher role required
+- **Authorization**: Teacher role  required
 - **Parameters**: None
 
 **Response DTO:**

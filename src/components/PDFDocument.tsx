@@ -270,10 +270,9 @@ const calculateMention = (grade: number): string => {
 
 export const PDFDocument: React.FC<PDFDocumentProps> = ({ studentData, grades }) => {
   const calculateStats = () => {
-    const totalCredits = grades.reduce((sum, grade) => sum + grade.creditsEarned, 0);
-    const weightedSum = grades.reduce((sum, grade) => sum + (grade.value * grade.creditsEarned), 0);
-    const mgp = totalCredits > 0 ? (weightedSum / totalCredits).toFixed(2) : '0.00';
-    return { totalCredits, mgp };
+    const totalCredits = grades.reduce((sum, grade) => sum + (grade.creditsEarned || 0), 0);
+    const totalGpa = studentData.gpa || 0;
+    return { totalCredits, mgp: totalGpa.toFixed(2) };
   };
 
   const { totalCredits, mgp } = calculateStats();
@@ -282,7 +281,7 @@ export const PDFDocument: React.FC<PDFDocumentProps> = ({ studentData, grades })
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* En-tête officiel */}
+        {}
         <View style={styles.headerSection}>
           <View style={styles.leftHeader}>
             <Text style={styles.institutionText}>IGNITE ACADEMY</Text>
@@ -301,17 +300,17 @@ export const PDFDocument: React.FC<PDFDocumentProps> = ({ studentData, grades })
 
 
 
-        {/* Titre du document */}
+        {}
         <Text style={styles.documentTitle}>RELEVÉ DE NOTES/TRANSCRIPT</Text>
         <Text style={styles.documentNumber}>{docNumber}</Text>
 
-        {/* Informations étudiant */}
+        {}
         <View style={styles.studentInfo}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Noms et Prénoms :</Text>
             <Text style={styles.infoValue}>{studentData.firstName} {studentData.lastName}</Text>
             <Text style={styles.infoLabelRight}>Matricule :</Text>
-            <Text style={styles.infoValueRight}>{studentData.username}</Text>
+            <Text style={styles.infoValueRight}>{studentData.username || 'N/A'}</Text>
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Email :</Text>
@@ -323,7 +322,6 @@ export const PDFDocument: React.FC<PDFDocumentProps> = ({ studentData, grades })
           </View>
         </View>
 
-        {/* Tableau des notes */}
         <View style={styles.gradesTable}>
           <View style={styles.tableHeader}>
             <View style={styles.codeCell}>
@@ -360,16 +358,16 @@ export const PDFDocument: React.FC<PDFDocumentProps> = ({ studentData, grades })
                 <Text style={styles.cellTextLeft}>{grade.subjectName}</Text>
               </View>
               <View style={styles.gradeCell}>
-                <Text style={styles.cellText}>{grade.cc1 || "-"}</Text>
+                <Text style={styles.cellText}>{grade.cc1 ? grade.cc1.toFixed(1) : "-"}</Text>
               </View>
               <View style={styles.gradeCell}>
-                <Text style={styles.cellText}>{grade.cc2 || "-"}</Text>
+                <Text style={styles.cellText}>{grade.cc2 ? grade.cc2.toFixed(1) : "-"}</Text>
               </View>
               <View style={styles.gradeCell}>
-                <Text style={styles.cellText}>{grade.sn1 || "-"}</Text>
+                <Text style={styles.cellText}>{grade.sn1 ? grade.sn1.toFixed(1) : "-"}</Text>
               </View>
               <View style={styles.gradeCell}>
-                <Text style={styles.cellText}>{grade.sn2 || "-"}</Text>
+                <Text style={styles.cellText}>{grade.sn2 ? grade.sn2.toFixed(1) : "-"}</Text>
               </View>
               <View style={styles.creditCell}>
                 <Text style={styles.cellText}>{grade.creditsEarned}</Text>
@@ -381,12 +379,11 @@ export const PDFDocument: React.FC<PDFDocumentProps> = ({ studentData, grades })
           ))}
         </View>
 
-        {/* Section moyenne générale */}
+        {}
         <View style={styles.summarySection}>
           <View style={styles.summaryLeft}>
             <Text style={styles.summaryText}>Total Crédits : {totalCredits}</Text>
-            <Text style={[styles.summaryText, { fontSize: 12, fontWeight: 'bold' }]}>Moyenne Générale (GPA) : {studentData.gpa ? studentData.gpa.toFixed(2) : mgp}</Text>
-            <Text style={styles.summaryText}>Statut : {grades.every(g => g.passed) ? 'VALIDÉ' : 'EN COURS'}</Text>
+            <Text style={[styles.summaryText, { fontSize: 12, fontWeight: 'bold' }]}>Moyenne Générale (GPA) : {mgp}</Text>
           </View>
           <View style={styles.summaryRight}>
             <View style={styles.legendTable}>

@@ -4,14 +4,14 @@ import {useContext} from "react";
 import {StepperContext} from "../../../../contexts";
 import {IdentificationInfoDataType, RegisterContext} from "../context";
 import {Role} from "../../../../api/enums";
-// import {useAppDispatch} from "../../../../store";
-// import {navigateTo} from "../../../navigation";
+
+
 
 export const IdentificationForm =()=>{
 
     const { handlePrev } = useContext(StepperContext);
     const { setIdentificationInfo , register , role , personalInfo, identificationInfo ,isRegisterLoading } = useContext(RegisterContext)
-    //const dispatch = useAppDispatch()
+
 
     const levels = [
         {

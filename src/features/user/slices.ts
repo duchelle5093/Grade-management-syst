@@ -24,7 +24,7 @@ const slice = createSlice({
   reducers: {
     loadUserProfile(state, action: PayloadAction<userProfileResDto>) {
       const profile = action.payload;
-      // Normaliser teachingLevel pour compatibilité
+
       if (profile.teachingLevel && Array.isArray(profile.teachingLevel)) {
         const normalizedLevels = profile.teachingLevel.map((level: any) => 
           typeof level === 'object' ? level.studentLevel : level
@@ -40,14 +40,14 @@ const slice = createSlice({
             state.students = action.payload;
         })
         .addCase(fetchTeacherStudents.fulfilled, (state, action) => {
-            // Aplatir la structure groupée par niveau
+
             const groupedStudents = action.payload as TeacherStudentsResponse;
             const allStudents: StudentDataResDto[] = [];
             
             Object.keys(groupedStudents).forEach(level => {
                 const levelStudents = groupedStudents[level].map(student => ({
                     ...student,
-                    level: level // Ajouter le niveau à chaque étudiant
+                    level: level
                 }));
                 allStudents.push(...levelStudents);
             });
@@ -55,7 +55,7 @@ const slice = createSlice({
             state.students = allStudents;
         })
         .addCase(fetchAssignedSubjects.fulfilled, (state, action) => {
-            // Stocker les matières avec leur structure complète
+
             if (state.profile) {
                 state.profile.subjects = action.payload;
             }

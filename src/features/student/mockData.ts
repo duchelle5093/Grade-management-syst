@@ -7,7 +7,7 @@ export const mockStudentData: StudentDataResDto = {
     semesterId: 1,
     semesterName: "Semestre 1",
     grades: [
-        // Semestre 1
+
         {
             id: 1,
             createdDate: "2024-01-15",
@@ -88,7 +88,7 @@ export const mockStudentData: StudentDataResDto = {
             passed: true,
             creditsEarned: 6
         },
-        // Semestre 2
+
         {
             id: 5,
             createdDate: "2024-03-10",

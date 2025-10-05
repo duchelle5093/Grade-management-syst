@@ -12,7 +12,7 @@ import { useNotification } from '../../contexts';
 import { SemesterManagement } from './components/SemesterManagement';
 import dayjs from 'dayjs';
 
-// Hook pour gérer le responsive
+
 const useResponsive = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     
@@ -56,7 +56,7 @@ const AcademicPeriodsManager = () => {
     const [editedIsActive, setEditedIsActive] = useState<boolean>(false);
     const [isSemesterModalVisible, setIsSemesterModalVisible] = useState(false);
     
-    // Données mockées (fallback uniquement)
+
     const mockPeriods = [
             {
                 id: 'cc1',
@@ -108,13 +108,13 @@ const AcademicPeriodsManager = () => {
             }
         ];
     
-    // Charger les périodes et semestres du backend
+
     useEffect(() => {
         dispatch(fetchAllGradingWindows());
         dispatch(fetchSemesters());
     }, [dispatch]);
     
-    // Mapper les données backend vers le format AcademicPeriod
+
     const backendPeriods: AcademicPeriod[] = gradingWindows.map(period => ({
         id: period.revendicationPeriodId.toString(),
         name: `Période ${period.exam.assessmentType}`,
@@ -128,16 +128,16 @@ const AcademicPeriodsManager = () => {
         order: period.revendicationPeriodId
     }));
     
-    // Trouver le semestre actif
+
     const activeSemester = semesters.find(s => s.active);
     
-    // Filtrer les périodes par semestre actif
+
     const allPeriods = backendPeriods.length > 0 ? backendPeriods : mockPeriods;
     const periods = activeSemester 
         ? allPeriods.filter(period => period.semester === activeSemester.semesterId)
         : allPeriods;
 
-    // Générer une année académique standard (9 mois)
+
     const months = [
         { name: 'Sep', bg: '#E5E7EB' },
         { name: 'Oct', bg: '#E5E7EB' },
@@ -160,7 +160,7 @@ const AcademicPeriodsManager = () => {
 
     const calculatePosition = (dateStr: string) => {
         const date = new Date(dateStr);
-        // Utiliser l'année académique du semestre actif
+
         const semesterStart = activeSemester ? new Date(activeSemester.startDate) : new Date();
         const semesterEnd = activeSemester ? new Date(activeSemester.endDate) : new Date();
         
@@ -181,7 +181,7 @@ const AcademicPeriodsManager = () => {
         setEditedEndDate(period.endDate);
         setEditedIsActive(period.isActive);
         setIsModalVisible(true);
-        // Définir la date du calendrier selon la période
+
         const periodDate = new Date(period.startDate);
         setCalendarDate(`${periodDate.getFullYear()}-${String(periodDate.getMonth() + 1).padStart(2, '0')}-01`);
     };
@@ -198,7 +198,7 @@ const AcademicPeriodsManager = () => {
     const handleModalConfirm = async () => {
         if (!selectedPeriod) return;
         
-        // Validation des contraintes d'ordre
+
         const newStartDate = new Date(editedStartDate);
         const newEndDate = new Date(editedEndDate);
         
@@ -211,11 +211,11 @@ const AcademicPeriodsManager = () => {
             return;
         }
         
-        // Trouver la période précédente et suivante selon l'ordre
+
         const previousPeriod = periods.find(p => p.order === selectedPeriod.order - 1);
         const nextPeriod = periods.find(p => p.order === selectedPeriod.order + 1);
         
-        // Vérifier contrainte avec période précédente
+
         if (previousPeriod) {
             const prevEndDate = new Date(previousPeriod.endDate);
             if (newStartDate < prevEndDate) {
@@ -228,7 +228,7 @@ const AcademicPeriodsManager = () => {
             }
         }
         
-        // Vérifier contrainte avec période suivante
+
         if (nextPeriod) {
             const nextStartDate = new Date(nextPeriod.startDate);
             if (newEndDate > nextStartDate) {
@@ -243,12 +243,12 @@ const AcademicPeriodsManager = () => {
         
         try {
             const payload = {
-                examId: 1, // ID par défaut, à adapter selon vos besoins
+                examId: 1,
                 startDate: editedStartDate,
                 endDate: editedEndDate,
                 color: selectedPeriod.color,
                 isActive: editedIsActive,
-                // Legacy compatibility
+
                 semesterId: selectedPeriod.semester,
                 name: selectedPeriod.name,
                 shortName: selectedPeriod.shortName,
@@ -297,7 +297,7 @@ const AcademicPeriodsManager = () => {
             }
         ];
 
-        // Ajouter le début de la période suivante
+
         const nextPeriod = periods.find(p => p.order === selectedPeriod.order + 1);
         if (nextPeriod) {
             events.push({
@@ -321,7 +321,7 @@ const AcademicPeriodsManager = () => {
             backgroundColor: '#f5f5f5', 
             overflow: 'hidden' 
         }}>
-            {/* Section principale */}
+            {}
             <div style={{ 
                 flex: 1, 
                 padding: window.innerWidth < 768 ? '16px' : '24px', 
@@ -329,7 +329,7 @@ const AcademicPeriodsManager = () => {
                 position: 'relative',
                 minHeight: window.innerWidth < 768 ? '60vh' : 'auto'
             }}>
-                {/* En-tête */}
+                {}
                 <div style={{ marginBottom: window.innerWidth < 768 ? '16px' : '32px' }}>
                     <Text type="secondary" style={{ fontSize: window.innerWidth < 768 ? '12px' : '14px' }}>Semestre actif</Text>
                     <Title level={window.innerWidth < 768 ? 4 : 3} style={{ color: '#1890ff', margin: '4px 0' }}>
@@ -346,7 +346,7 @@ const AcademicPeriodsManager = () => {
                     </div>
                 </div>
 
-                {/* Timeline Container */}
+                {}
                 <div style={{
                     border: '1px solid #d9d9d9',
                     borderRadius: '6px',
@@ -355,7 +355,7 @@ const AcademicPeriodsManager = () => {
                     position: 'relative',
                     minWidth: window.innerWidth < 768 ? '600px' : 'auto'
                 }}>
-                    {/* Icône graduation */}
+                    {}
                     <div style={{
                         position: 'absolute',
                         left: window.innerWidth < 768 ? '12px' : '24px',
@@ -379,7 +379,7 @@ const AcademicPeriodsManager = () => {
                         </div>
                     </div>
 
-                    {/* En-têtes des mois */}
+                    {}
                     <div style={{ display: 'flex' }}>
                         <div style={{ width: window.innerWidth < 768 ? '100px' : '128px' }}></div>
                         {months.map((month) => (
@@ -401,11 +401,11 @@ const AcademicPeriodsManager = () => {
                         ))}
                     </div>
 
-                    {/* Marqueurs de dates */}
+                    {}
                     <div style={{ display: 'flex', borderBottom: '1px solid #f0f0f0' }}>
                         <div style={{ width: window.innerWidth < 768 ? '100px' : '128px', backgroundColor: '#fafafa' }}></div>
                         <div style={{ flex: 1, position: 'relative', height: window.innerWidth < 768 ? '32px' : '48px' }}>
-                            {/* Marqueurs dynamiques basés sur les périodes */}
+                            {}
                             {periods.map((period) => [
                                 <div key={`start-${period.id}`} style={{
                                     position: 'absolute',
@@ -427,7 +427,7 @@ const AcademicPeriodsManager = () => {
                         </div>
                     </div>
 
-                    {/* Barres des périodes */}
+                    {}
                     {periods.map((period) => (
                         <div key={period.id} style={{ display: 'flex', height: window.innerWidth < 768 ? '80px' : '130px' }}>
                             <div style={{
@@ -465,7 +465,7 @@ const AcademicPeriodsManager = () => {
                 </div>
             </div>
 
-            {/* Sidebar droite */}
+            {}
             <div style={{
                 width: window.innerWidth < 768 ? '100%' : '300px',
                 backgroundColor: 'white',
@@ -565,7 +565,7 @@ const AcademicPeriodsManager = () => {
                 </div>
             </div>
 
-            {/* Modal d'édition */}
+            {}
             <Modal
                 title={`Édition date de la période du ${selectedPeriod?.shortName || 'CC_1'}`}
                 open={isModalVisible}
@@ -649,7 +649,7 @@ const AcademicPeriodsManager = () => {
                 </div>
             </Modal>
 
-            {/* Modale de gestion des semestres */}
+            {}
             <Modal
                 title="Gestion des semestres"
                 open={isSemesterModalVisible}

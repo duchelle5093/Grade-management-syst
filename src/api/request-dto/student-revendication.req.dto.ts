@@ -1,27 +1,27 @@
-// DTOs pour les requêtes de réclamations étudiant selon la nouvelle API
+
 
 export interface StudentRevendicationReqDto {
-    period: any; // Exam object
-    student: any; // Student object
-    grade: any; // Grades object
-    semester: any; // Semester object
+    period: any;
+    student: any;
+    grade: any;
+    semester: any;
     requestedScore: number;
     description: string;
 }
 
 export interface RevendicationPeriodReqDto {
     examId: number;
-    startDate: string; // LocalDate format
-    endDate: string; // LocalDate format
+    startDate: string;
+    endDate: string;
     color?: string;
-    isActive?: boolean; // default: false
+    isActive?: boolean;
 }
 
 export interface TranscriptReqDto {
-    student: any; // Student object
-    semester: any; // Semester object
-    format?: string; // default: "PDF"
-    includeComments?: boolean; // default: true
+    student: any;
+    semester: any;
+    format?: string;
+    includeComments?: boolean;
     facultyName?: string;
     academicYear?: string;
 }

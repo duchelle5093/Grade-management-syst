@@ -1,17 +1,17 @@
-// DTOs pour les requêtes de gestion des périodes de réclamation (Admin)
+
 
 export interface CreateRevendicationPeriodReqDto {
-    examId: number; // required
-    startDate: string; // LocalDate, required
-    endDate: string; // LocalDate, required
+    examId: number;
+    startDate: string;
+    endDate: string;
     color?: string;
-    isActive?: boolean; // default: false
+    isActive?: boolean;
 }
 
 export interface UpdateRevendicationPeriodReqDto {
-    examId: number; // required
-    startDate: string; // LocalDate, required
-    endDate: string; // LocalDate, required
+    examId: number;
+    startDate: string;
+    endDate: string;
     color?: string;
-    isActive?: boolean; // default: false
+    isActive?: boolean;
 }

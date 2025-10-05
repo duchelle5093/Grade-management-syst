@@ -2,28 +2,28 @@ import { useMemo } from 'react';
 import { useAppSelector } from '../store';
 import { AcademicLevel, LEVEL_DISPLAY_NAMES, LEVEL_ROUTES, LICENCE_LEVELS, MASTER_LEVELS } from '../api/enums';
 
-// interface TeacherLevel {
-//     level: AcademicLevel;
-//     displayName: string;
-//     route: string;
-//     subjects: any[]; // Matières enseignées à ce niveau
-// }
+
+
+
+
+
+
 
 export const useTeacherLevels = () => {
     const { profile } = useAppSelector(state => state.user);
 
-    // Extraire les niveaux depuis teachingLevel ou les matières enseignées
+
     const uniqueLevels = useMemo(() => {
-        // Priorité à teachingLevel si disponible
+
         if (profile?.teachingLevel?.length) {
-            // Normaliser si ce sont des objets
+
             const levels = profile.teachingLevel.map(level => 
                 typeof level === 'object' ? level.studentLevel : level
             );
             return [...new Set(levels)];
         }
         
-        // Fallback sur les matières si teachingLevel est vide
+
         if (profile?.subjects?.length) {
             const levels = profile.subjects
                 .flatMap(subject => subject.subjectsLevel)
@@ -34,7 +34,7 @@ export const useTeacherLevels = () => {
         return [];
     }, [profile?.teachingLevel, profile?.subjects]);
 
-    // Générer les données pour les niveaux de Licence
+
     const licenceLevels = useMemo(() => {
         return uniqueLevels
             .filter(level => LICENCE_LEVELS.includes(level))
@@ -46,7 +46,7 @@ export const useTeacherLevels = () => {
             .sort((a, b) => a.level.localeCompare(b.level));
     }, [uniqueLevels]);
 
-    // Générer les données pour les niveaux de Master
+
     const masterLevels = useMemo(() => {
         return uniqueLevels
             .filter(level => MASTER_LEVELS.includes(level))
@@ -58,29 +58,29 @@ export const useTeacherLevels = () => {
             .sort((a, b) => a.level.localeCompare(b.level));
     }, [uniqueLevels]);
 
-    // Tous les niveaux enseignés
+
     const allTeacherLevels = useMemo(() => {
         return [...licenceLevels, ...masterLevels];
     }, [licenceLevels, masterLevels]);
 
     return {
-        // Niveaux disponibles
+
         uniqueLevels,
         allTeacherLevels,
         licenceLevels,
         masterLevels,
 
-        // Flags de disponibilité
+
         hasLicenceLevels: licenceLevels.length > 0,
         hasMasterLevels: masterLevels.length > 0,
         hasAnyLevels: allTeacherLevels.length > 0,
 
-        // Comptes
+
         licenceLevelsCount: licenceLevels.length,
         masterLevelsCount: masterLevels.length,
         totalLevelsCount: allTeacherLevels.length,
 
-        // Méthodes utilitaires
+
 
         isLevelTaught: (level: AcademicLevel) => {
             return uniqueLevels.includes(level);

@@ -9,14 +9,13 @@ import { fetchActiveSemester } from "../semesters/actions";
 const countFailedSubjects = (studentData: StudentDataResDto): { failed: number; passed: number } => {
     if (!studentData?.grades?.length) return { failed: 0, passed: 0 };
 
-    // Regrouper les notes par matière
     const grouped = studentData.grades.reduce((acc, grade) => {
-        const key = grade.subjectCode;
+        const key = grade.subject?.subjectCode || grade.subjectCode;
         if (!acc[key]) {
             acc[key] = { passed: false };
         }
-        // Utiliser la propriété passed du backend
-        acc[key].passed = grade.passed;
+
+        acc[key].passed = grade.hasPassed || grade.passed;
         return acc;
     }, {} as Record<string, { passed: boolean }>);
 
@@ -34,10 +33,9 @@ const countFailedSubjects = (studentData: StudentDataResDto): { failed: number; 
 export default function StudentPage() {
     const dispatch = useAppDispatch();
     const student = useAppSelector((state) => state.user.profile);
-    const studentGrades =  useAppSelector((state) => state.grades.studentGrades);
+    const studentGrades = useAppSelector((state) => state.grades.studentGrades);
     const activeSemester = useAppSelector((state) => state.semesters.activeSemester);
 
-    // Utiliser les données réelles ou fallback sur mock data
     const currentStudentData = (studentGrades && studentGrades.grades?.length > 0) 
         ? studentGrades 
         : (student?.grades?.length > 0)
@@ -49,24 +47,14 @@ export default function StudentPage() {
         [currentStudentData]
     );
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(fetchStudentGrades(student?.id));
         dispatch(fetchActiveSemester());
-    } , [student?.id , dispatch]);
-
-
-    // if (!currentStudent) {
-    //     return (
-    //         <div className="flex items-center justify-center h-64">
-    //             <div className="text-gray-500">Aucune donnée disponible</div>
-    //         </div>
-    //     );
-    // }
+    }, [student?.id, dispatch]);
 
     return (
         <div>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                {/* Titre principal */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
                         <div className="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg font-bold text-2xl">
@@ -93,7 +81,6 @@ export default function StudentPage() {
                     </div>
                 </div>
 
-                {/* Statistiques */}
                 <div className="grid grid-cols-2 gap-4">
                     <div className="bg-green-50 rounded-lg p-4 text-center">
                         <div className="text-2xl font-bold text-green-600">{passed}</div>

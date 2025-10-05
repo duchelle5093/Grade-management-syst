@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { teacherGradeService, studentRevendicationService } from '../../api/configs';
 
-// Actions pour les enseignants
+
 export const fetchTeacherRevendications = createAsyncThunk(
     'revendications/fetchTeacherRevendications',
     async (params: { pageNumber?: number; pageSize?: number; sortBy?: string; sortOrder?: string } = {}) => {
@@ -31,7 +31,7 @@ export const rejectRevendication = createAsyncThunk(
     }
 );
 
-// Actions pour les étudiants
+
 export const createRevendication = createAsyncThunk(
     'revendications/create',
     async (revendicationData: {
@@ -55,7 +55,7 @@ export const fetchStudentRevendications = createAsyncThunk(
     }
 );
 
-// Périodes de réclamation
+
 export const fetchRevendicationPeriods = createAsyncThunk(
     'revendications/fetchPeriods',
     async () => {

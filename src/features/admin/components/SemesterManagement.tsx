@@ -20,11 +20,11 @@ export const SemesterManagement: React.FC = () => {
         dispatch(fetchSemesters());
     }, [dispatch]);
 
-    // const handleCreate = () => {
-    //     setEditingSemester(null);
-    //     form.resetFields();
-    //     setIsModalVisible(true);
-    // };
+
+
+
+
+
 
     const handleEdit = (semester: SemesterResDto) => {
         setEditingSemester(semester);
@@ -55,25 +55,25 @@ export const SemesterManagement: React.FC = () => {
         }
     };
 
-    // const handleDelete = (semester: SemesterResDto) => {
-    //     const hasDependencies = semester.active; // Simplification - en réalité vérifier périodes/notes
-    //     
-    //     Modal.confirm({
-    //         title: 'Confirmer la suppression',
-    //         content: hasDependencies 
-    //             ? `Attention: Le semestre "${semester.name}" est actif et peut contenir des données. Êtes-vous sûr de vouloir le supprimer ?`
-    //             : `Êtes-vous sûr de vouloir supprimer le semestre "${semester.name}" ?`,
-    //         okType: hasDependencies ? 'danger' : 'primary',
-    //         onOk: async () => {
-    //             try {
-    //                 await dispatch(deleteSemester(semester.id)).unwrap();
-    //                 notify({ type: 'success', message: 'Succès', description: 'Semestre supprimé avec succès' });
-    //             } catch (error) {
-    //                 notify({ type: 'error', message: 'Erreur', description: 'Erreur lors de la suppression' });
-    //             }
-    //         }
-    //     });
-    // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     const validateDates = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {
         if (startDate.isAfter(endDate)) {
@@ -107,17 +107,17 @@ export const SemesterManagement: React.FC = () => {
                 };
                 await dispatch(updateSemester(payload)).unwrap();
                 notify({ type: 'success', message: 'Succès', description: 'Semestre modifié avec succès' });
-            // } else {
-            //     const nextOrder = Math.max(...semesters.map(s => s.orderIndex), 0) + 1;
-            //     const payload = {
-            //         name: values.name,
-            //         startDate: values.startDate.format('YYYY-MM-DD'),
-            //         endDate: values.endDate.format('YYYY-MM-DD'),
-            //         active: values.active || false,
-            //         orderIndex: nextOrder
-            //     };
-            //     await dispatch(createSemester(payload)).unwrap();
-            //     notify({ type: 'success', message: 'Succès', description: 'Semestre créé avec succès' });
+
+
+
+
+
+
+
+
+
+
+
             }
 
             setIsModalVisible(false);
@@ -175,12 +175,7 @@ export const SemesterManagement: React.FC = () => {
                         icon={<EditOutlined />} 
                         onClick={() => handleEdit(record)}
                     />
-                    {/* <Button 
-                        type="text" 
-                        danger 
-                        icon={<DeleteOutlined />} 
-                        onClick={() => handleDelete(record)}
-                    /> */}
+                    {}
                 </Space>
             )
         }
@@ -190,14 +185,7 @@ export const SemesterManagement: React.FC = () => {
         <div>
             <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
                 <h3>Gestion des semestres</h3>
-                {/* <Button 
-                    type="primary" 
-                    icon={<PlusOutlined />} 
-                    onClick={handleCreate}
-                    style={{ backgroundColor: '#6EADFF', borderColor: '#6EADFF' }}
-                >
-                    Nouveau semestre
-                </Button> */}
+                {}
             </div>
 
             <Table

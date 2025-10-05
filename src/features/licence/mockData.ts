@@ -1,4 +1,4 @@
-// src/pages/licence1/mockData.ts
+
 import { PeriodLabel } from "../../api/enums";
 import { StudentRow } from "../../components/EditableGradesTable";
 import { TeacherGradeResDto } from "../../api/reponse-dto/grade.res.dto";
@@ -42,7 +42,7 @@ export const mockStudents: StudentRow[] = [
     },
 ];
 
-// Si tu veux tester comme si ça venait du backend (TeacherGradeResDto)
+
 export const mockGrades: TeacherGradeResDto[] = [
     {
         id: 101,

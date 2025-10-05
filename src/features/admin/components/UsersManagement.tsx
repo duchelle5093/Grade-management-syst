@@ -45,7 +45,7 @@ export const UsersManagement = () => {
     const { students = [], teachers = [], stats = null, loading = false } = useAppSelector(state => state.admin || {});
     const { notify } = useNotification();
     
-    // Stats simples calculées directement
+
     const totalStudents = students.length;
     const totalTeachers = teachers.length;
     const activeStudents = students.filter(student => (student.role || student.appRole || 'STUDENT') === 'STUDENT').length;
@@ -64,7 +64,7 @@ export const UsersManagement = () => {
     const [filterDepartment, setFilterDepartment] = useState<string>('all');
     
     const handleEditUser = (user: any) => {
-        console.log('User to edit:', user); // Debug
+        console.log('User to edit:', user);
         setEditingUser(user);
         setIsCreateModalVisible(true);
     };
@@ -190,20 +190,20 @@ Cette action est irréversible.`,
                 username: s.username
             })));
 
-            // Vérifier que tous les étudiants ont un niveau défini
-            // const studentsWithoutLevel = selectedStudentData.filter(student => !student.level);
-            // if (studentsWithoutLevel.length > 0) {
-            //     const studentNames = studentsWithoutLevel.map(s => `${s.firstName} ${s.lastName}`).join(', ');
-            //     notify({
-            //         type: 'warning',
-            //         message: 'Niveau manquant',
-            //         description: `Les étudiants suivants n'ont pas de niveau défini : ${studentNames}. Veuillez d'abord définir leur niveau.`
-            //     });
-            //     setGeneratingTranscripts(false);
-            //     return;
-            // }
 
-            // Grouper les étudiants par niveau
+
+
+
+
+
+
+
+
+
+
+
+
+
             const studentsByLevel = selectedStudentData.reduce((acc, student) => {
                 const level = student.level;
                 if (!acc[level]) acc[level] = [];
@@ -213,7 +213,7 @@ Cette action est irréversible.`,
             
             console.log('Students grouped by level:', studentsByLevel);
 
-            // Générer un PDF pour chaque niveau
+
             const pdfPromises = Object.entries(studentsByLevel).map(async ([level, studentIds]) => {
                 const exportRequest = {
                     documentType: 'transcript',
@@ -231,14 +231,14 @@ Cette action est irréversible.`,
             const pdfBlobs = await Promise.all(pdfPromises);
             
             if (pdfBlobs.length === 1) {
-                // Un seul niveau : téléchargement direct
+
                 const filename = selectedStudents.length === 1 
                     ? `releve_${selectedStudentData[0]?.username || 'etudiant'}.pdf`
                     : `releves_notes_${selectedStudents.length}_etudiants.pdf`;
                 
                 saveAs(pdfBlobs[0], filename);
             } else {
-                // Plusieurs niveaux : créer un ZIP
+
                 try {
                     const JSZip = (await import('jszip')).default;
                     const zip = new JSZip();
@@ -252,7 +252,7 @@ Cette action est irréversible.`,
                     saveAs(zipBlob, `releves_notes_${selectedStudents.length}_etudiants.zip`);
                 } catch (zipError) {
                     console.warn('JSZip not available, downloading PDFs separately');
-                    // Fallback: télécharger séparément
+
                     Object.keys(studentsByLevel).forEach((level, index) => {
                         const filename = `releves_${level}_${studentsByLevel[level].length}_etudiants.pdf`;
                         setTimeout(() => saveAs(pdfBlobs[index], filename), index * 500);
@@ -344,7 +344,7 @@ Cette action est irréversible.`,
                 return levelA.localeCompare(levelB);
             },
             render: (record: any) => {
-                // Pour les enseignants, afficher leurs niveaux d'enseignement
+
                 if (record.teachingLevel && Array.isArray(record.teachingLevel)) {
                     return (
                         <Space wrap>
@@ -361,7 +361,7 @@ Cette action est irréversible.`,
                     );
                 }
                 
-                // Pour les étudiants
+
                 const level = record.studentLevel?.studentLevel || record.studentLevel || record.level;
                 let levelDisplay = 'Non défini';
                 
@@ -491,7 +491,7 @@ Cette action est irréversible.`,
 
     return (
         <div style={{ padding: '24px' }}>
-            {/* Header avec statistiques */}
+            {}
             <Row gutter={16} style={{ marginBottom: 24 }}>
                 <Col span={6}>
                     <Card>
@@ -535,7 +535,7 @@ Cette action est irréversible.`,
                 </Col>
             </Row>
 
-            {/* Carte principale */}
+            {}
             <Card
                 title={
                     <Space>
@@ -551,7 +551,7 @@ Cette action est irréversible.`,
                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}
             >
-                {/* Boutons d'action */}
+                {}
                 <Row justify="space-between" align="middle" style={{ marginBottom: 16 }}>
                     <Col>
                         {activeTab === 'students' && selectedStudents.length > 0 && (
@@ -598,7 +598,7 @@ Cette action est irréversible.`,
                     </Col>
                 </Row>
 
-                {/* Barre de recherche et aide */}
+                {}
                 <Row style={{ marginBottom: 16 }}>
                     <Col span={24}>
                         <Space direction="vertical" style={{ width: '100%' }}>
@@ -666,7 +666,7 @@ Cette action est irréversible.`,
                     </Col>
                 </Row>
 
-                {/* Onglets */}
+                {}
                 <Tabs
                     activeKey={activeTab}
                     onChange={setActiveTab}
@@ -675,7 +675,7 @@ Cette action est irréversible.`,
                 />
             </Card>
 
-            {/* Modals */}
+            {}
             <CreateUserModal
                 visible={isCreateModalVisible}
                 onCancel={() => {
@@ -685,7 +685,7 @@ Cette action est irréversible.`,
                 onSuccess={(newUser) => {
                     setIsCreateModalVisible(false);
                     setEditingUser(null);
-                    // Pas de refresh complet - le store est mis à jour automatiquement
+
                 }}
                 editingUser={editingUser}
             />

@@ -5,9 +5,9 @@ export const useRecentActivity = () => {
     const { teacherGrades } = useAppSelector(state => state.grades);
     
     return useMemo(() => {
-        // Générer des activités récentes basées sur les notes
+
         const recentActivities = teacherGrades
-            .slice(-4) // Prendre les 4 dernières notes
+            .slice(-4)
             .map((grade, index) => ({
                 type: 'grade',
                 name: `Note ${grade.type}`,
@@ -16,7 +16,7 @@ export const useRecentActivity = () => {
                 avatar: grade.type.charAt(0)
             }));
         
-        // Ajouter des activités par défaut si pas assez de données
+
         while (recentActivities.length < 4) {
             recentActivities.push({
                 type: 'system',

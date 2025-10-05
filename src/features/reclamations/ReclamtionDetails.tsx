@@ -46,7 +46,7 @@ export const ReclamationsDetails = ({
     const { notify } = useNotification();
 
     const handleSubmitClaim = async () => {
-        // Mapper le type de réclamation vers periodLabel complet
+
         const periodLabel = formValues.period;
 
         const grade = student?.grades.find(
@@ -82,7 +82,7 @@ export const ReclamationsDetails = ({
         }
     };
 
-    // Déterminer la note actuelle selon le type de note contestée
+
     let CurrentGrade = '';
     if (formValues.period === 'CC_1' || formValues.period === 'CC_2') {
         CurrentGrade = currentTopic?.cc !== null && currentTopic?.cc !== undefined ? String(currentTopic?.cc) : '-';
@@ -98,7 +98,7 @@ export const ReclamationsDetails = ({
             </Title>
             
             <Space direction="vertical" size="middle" className="w-full">
-                {/* Informations étudiant */}
+                {}
                 <Card 
                     size="small" 
                     title={
@@ -116,7 +116,7 @@ export const ReclamationsDetails = ({
                     </Descriptions>
                 </Card>
 
-                {/* Détails de la réclamation */}
+                {}
                 <Card 
                     size="small" 
                     title={

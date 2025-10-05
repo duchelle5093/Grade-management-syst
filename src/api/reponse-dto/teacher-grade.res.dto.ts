@@ -39,7 +39,7 @@ export interface TeacherGradeResDto {
     gpa: number;
     createdDate: string;
     lastModifiedDate: string;
-    // Propriétés dérivées pour compatibilité
+
     studentId: number;
     subjectId: number;
     value: number;
@@ -48,16 +48,16 @@ export interface TeacherGradeResDto {
 
 export interface TeacherRevendicationResDto {
     revendicationId: number;
-    student: any; // StudentResponse object
-    grade: any; // GradeResponse object
-    semester: any; // SemesterResponse object
+    student: any;
+    grade: any;
+    semester: any;
     requestedScore: number;
     description: string;
     teacherComment?: string;
     status: RequestStatus;
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
-    // Pagination fields
+    createdDate: string;
+    lastModifiedDate: string;
+
     content?: any[];
     pageNumber?: number;
     pageSize?: number;

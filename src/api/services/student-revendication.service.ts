@@ -15,7 +15,7 @@ export class StudentRevendicationService {
         this._client = client;
     }
 
-    // Réclamations étudiant
+
     async createRevendication(revendicationData: {
         period: any;
         student: any;
@@ -33,13 +33,13 @@ export class StudentRevendicationService {
         return response.data;
     }
 
-    // Relevé de notes
+
     async getTranscript(): Promise<any> {
         const response = await this._client.get(studentRevendicationApis.GET_TRANSCRIPT);
         return response.data;
     }
 
-    // Périodes de réclamation
+
     async getAllRevendicationPeriods(): Promise<any[]> {
         const response = await this._client.get(studentRevendicationApis.GET_REVENDICATION_PERIODS);
         return response.data;

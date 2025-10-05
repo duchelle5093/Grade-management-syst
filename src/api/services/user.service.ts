@@ -35,15 +35,15 @@ export class UserService {
   }
 
   async getProfile() {
-    // Essayer de déterminer le rôle depuis le token JWT
+
     const token = localStorage.getItem('token');
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        const role = payload.sub; // Le username peut indiquer le rôle
+        const role = payload.sub;
         const authorities = payload.authorities;
         
-        // Vérifier les autorités d'abord
+
         if (authorities && Array.isArray(authorities)) {
           const userRole = authorities[0];
           if (userRole === 'ADMIN') {
@@ -55,7 +55,7 @@ export class UserService {
           }
         }
         
-        // Fallback sur le username pattern
+
         if (role && typeof role === 'string') {
           if (role.includes('admin')) {
             return await this.getAdminProfile();
@@ -68,7 +68,7 @@ export class UserService {
       }
     }
     
-    // Fallback: essayer student en premier (plus probable)
+
     try {
       return await this.getStudentProfile();
     } catch {

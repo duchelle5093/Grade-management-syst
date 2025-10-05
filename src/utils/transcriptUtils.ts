@@ -40,7 +40,7 @@ export const generateMultipleTranscripts = async (
     studentsData: Array<{ student: StudentTranscriptData; grades: GradeData[] }>
 ) => {
     if (studentsData.length === 1) {
-        // Un seul étudiant : téléchargement direct
+
         const { blob, filename } = await generateStudentTranscript(
             studentsData[0].student,
             studentsData[0].grades
@@ -49,19 +49,19 @@ export const generateMultipleTranscripts = async (
         return;
     }
 
-    // Plusieurs étudiants : téléchargements multiples avec délai
+
     for (let i = 0; i < studentsData.length; i++) {
         const { student, grades } = studentsData[i];
         const { blob, filename } = await generateStudentTranscript(student, grades);
         
-        // Ajouter un délai entre les téléchargements pour éviter les conflits
+
         setTimeout(() => {
             saveAs(blob, filename);
-        }, i * 500); // 500ms de délai entre chaque téléchargement
+        }, i * 500);
     }
 };
 
-// Fonction pour générer des données de notes mockées (à remplacer par de vraies données API)
+
 export const generateMockGrades = (): GradeData[] => {
     const subjects = [
         { code: 'ICT201', name: 'INTRODUCTION TO SOFTWARE ENGINEERING', credits: 5 },
@@ -75,9 +75,9 @@ export const generateMockGrades = (): GradeData[] => {
         subjectCode: subject.code,
         subjectName: subject.name,
         creditsEarned: subject.credits,
-        value: Math.floor(Math.random() * 40) + 50, // Note entre 50 et 90
+        value: Math.floor(Math.random() * 40) + 50,
         semesterName: Math.random() > 0.5 ? 'Semestre 1' : 'Semestre 2',
         periodLabel: Math.random() > 0.5 ? 'CC_1' : 'SN_1',
-        passed: Math.random() > 0.2 // 80% de chance de réussir
+        passed: Math.random() > 0.2
     }));
 };

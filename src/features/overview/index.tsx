@@ -68,7 +68,7 @@ export const Overview = () => {
         dispatch(fetchAllSubjects());
     }, [dispatch]);
 
-    // Calculs des statistiques
+
     const stats = useMemo(() => {
         const totalStudents = students.length;
         const totalTeachers = teachers.length;
@@ -76,7 +76,7 @@ export const Overview = () => {
         const totalDepartments = departments.length;
         const activeStudents = students.filter(s => s.role === 'STUDENT').length;
         
-        // Répartition par niveau
+
         const studentsPerLevel = [
             { level: 'LEVEL1', count: students.filter(s => (s.studentLevel?.studentLevel || s.level) === 'LEVEL1').length },
             { level: 'LEVEL2', count: students.filter(s => (s.studentLevel?.studentLevel || s.level) === 'LEVEL2').length },
@@ -86,16 +86,16 @@ export const Overview = () => {
             { level: 'NON_DEFINI', count: students.filter(s => !(s.studentLevel?.studentLevel || s.level)).length }
         ];
 
-        // Matières par département
+
         const subjectsPerDepartment = departments.map(dept => ({
             department: dept.name,
             count: subjects.filter(s => s.departmentId === dept.id).length
         }));
 
-        // Matières sans enseignant
+
         const subjectsWithoutTeacher = subjects.filter(s => !s.teacherId).length;
         
-        // Taux d'assignation
+
         const assignmentRate = totalSubjects > 0 ? ((totalSubjects - subjectsWithoutTeacher) / totalSubjects) * 100 : 0;
 
         return {
@@ -111,7 +111,7 @@ export const Overview = () => {
         };
     }, [students, teachers, subjects, departments]);
 
-    // Configuration des graphiques
+
     const levelChartData = {
         labels: ['Licence 1', 'Licence 2', 'Licence 3', 'Master 1', 'Master 2', 'Non défini'],
         datasets: [{
@@ -222,7 +222,7 @@ export const Overview = () => {
         }
     };
 
-    // Données mockées pour l'activité récente
+
     const recentActivity = [
         { type: 'user', name: 'Jean Dupont', action: 'Nouvel étudiant inscrit', time: '2 min', avatar: 'JD' },
         { type: 'grade', name: 'Mathématiques L1', action: 'Notes saisies', time: '15 min', avatar: 'M' },
@@ -232,13 +232,13 @@ export const Overview = () => {
 
     return (
         <div style={{ padding: '24px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-            {/* En-tête */}
+            {}
             <div style={{ marginBottom: '24px' }}>
                 <Title level={2} style={{ margin: 0, color: '#262626' }}>Dashboard Administrateur</Title>
                 <Text type="secondary">Vue d'ensemble de la plateforme de gestion des notes</Text>
             </div>
 
-            {/* Statistiques principales */}
+            {}
             <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
                 <Col xs={24} sm={12} lg={6}>
                     <Card style={{ borderRadius: '12px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
@@ -302,7 +302,7 @@ export const Overview = () => {
                 </Col>
             </Row>
 
-            {/* Graphiques */}
+            {}
             <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
                 <Col xs={24} lg={8}>
                     <Card 
@@ -339,7 +339,7 @@ export const Overview = () => {
                 </Col>
             </Row>
 
-            {/* Indicateurs et activité */}
+            {}
             <Row gutter={[16, 16]}>
                 <Col xs={24} lg={12}>
                     <Card 

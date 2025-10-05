@@ -4,7 +4,7 @@ import { processSignOut } from "../features/auth/actions";
 import { useAppDispatch, useAppSelector } from "../store";
 import { DrawerSidebarProvider } from "../contexts";
 import { DashboardLayout } from "./DashboardLayout.tsx";
-//import { SideBarHeader } from "../components/SidebarHeader.tsx";
+
 import { SidebarNavItem } from "../components/SidebarNavItem.tsx";
 import { DashboardHeader } from "../components/DashboardHeader.tsx";
 import signOutIconSvg from "../images/logoutt.png";
@@ -21,7 +21,7 @@ export const Dashboard = () => {
     const userProfile = useAppSelector((state) => state.user.profile);
     const navigate = useNavigate();
     
-    // Hook pour obtenir les niveaux enseignés
+
     const {
         hasLicenceLevels,
         hasMasterLevels,
@@ -55,7 +55,7 @@ export const Dashboard = () => {
                                         icon={<HomeIcon width={24} className="text-gray-500" />}
                                         label={"Home"}
                                     />
-                                    {/* Affichage conditionnel des niveaux Licence */}
+                                    {}
                                     {hasLicenceLevels && (
                                         <SidebarNavItem
                                             to={licenceLevels[0]?.route || "licence1"}
@@ -71,7 +71,7 @@ export const Dashboard = () => {
                                             ))}
                                         </SidebarNavItem>
                                     )}
-                                    {/* Affichage conditionnel des niveaux Master */}
+                                    {}
                                     {hasMasterLevels && (
                                         <SidebarNavItem
                                             to={masterLevels[0]?.route || "master1"}

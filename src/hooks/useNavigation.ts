@@ -1,4 +1,4 @@
-// hooks/useAppNavigation.ts
+
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store';
 import { navigateTo as setNavigationPath } from '../features/navigation';

@@ -10,10 +10,10 @@ export const useStudentsByLevel = () => {
             return { levels: [], total: 0 };
         }
         
-        // Extraire les niveaux des matières enseignées
+
         const teacherLevels = [...new Set(profile.subjects.map(s => s.level))];
         
-        // Grouper les étudiants par niveau
+
         const levelCounts = teacherLevels.map(level => {
             const count = students.filter(s => s.level === level).length;
             const percentage = students.length > 0 ? Math.round((count / students.length) * 100) : 0;

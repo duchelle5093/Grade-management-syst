@@ -48,7 +48,7 @@ apiGatewayClient.interceptors.response.use(
                     description: 'Network error',
                 })
             );
-        } // Send by client
+        }
         else if (
             error instanceof AxiosError &&
             error.status &&
@@ -62,7 +62,7 @@ apiGatewayClient.interceptors.response.use(
                 error.response.data.error ??
                 error.response.data.title ??
                 error.response.statusText ??
-                error.response.data.cause; // Send by server
+                error.response.data.cause;
             store.dispatch(
                 triggerServerNotification({
                     message: 'error',
@@ -77,8 +77,8 @@ apiGatewayClient.interceptors.response.use(
                     type: 'error',
                     description: 'something went wrong',
                 })
-            ); // Send by client
-        } // Send by client
+            );
+        }
 
         return Promise.reject(new Error());
     }

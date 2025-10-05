@@ -42,10 +42,10 @@ export const routes: RouteObject[] = [
         path: "login",
         element: <LoginPage />,
       },
-      // {
-      //   path: "register",
+
+
       //   element: <RegisterPage />,
-      // },
+
       {
         path: "change-password",
         element: <ChangePwdPage />,

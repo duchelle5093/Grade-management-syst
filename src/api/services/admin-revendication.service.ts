@@ -15,7 +15,7 @@ export class AdminRevendicationService {
         this._client = client;
     }
 
-    // Gestion des périodes de réclamation
+
     async createRevendicationPeriod(periodData: {
         examId: number;
         startDate: string;

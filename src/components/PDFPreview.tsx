@@ -41,7 +41,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ studentData, grades }) =
 
   return (
     <div className="bg-white p-6 max-w-4xl mx-auto shadow-lg" style={{ fontFamily: 'Arial, sans-serif' }}>
-      {/* En-tête officiel */}
+      {}
       <div className="flex justify-between items-start mb-6 pb-4 border-b-2 border-black">
         <div className="w-2/5">
           <div className="font-bold text-sm mb-1">IGNITE ACADEMY</div>
@@ -60,11 +60,11 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ studentData, grades }) =
 
 
 
-      {/* Titre du document */}
+      {}
       <div className="text-center font-bold text-xl mb-2">RELEVÉ DE NOTES/TRANSCRIPT</div>
       <div className="text-right text-xs text-gray-600 mb-4">{docNumber}</div>
 
-      {/* Informations étudiant */}
+      {}
       <div className="mb-6">
         <div className="flex mb-1">
           <span className="w-1/4 font-bold text-sm">Noms et Prénoms :</span>
@@ -82,7 +82,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ studentData, grades }) =
         </div>
       </div>
 
-      {/* Tableau des notes */}
+      {}
       <div className="border border-black mb-6">
         <div className="flex bg-gray-100 border-b border-black text-xs">
           <div className="w-[12%] p-1 border-r border-black font-bold text-center">Code UE</div>
@@ -108,7 +108,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ studentData, grades }) =
         ))}
       </div>
 
-      {/* Section résumé */}
+      {}
       <div className="flex justify-between mb-6">
         <div className="w-2/5">
           <div className="text-sm mb-1">Total Crédits : {totalCredits}</div>
@@ -141,7 +141,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ studentData, grades }) =
         </div>
       </div>
 
-      {/* Pied de page */}
+      {}
       <div className="text-center text-xs text-gray-600 border-t border-gray-400 pt-3">
         Document officiel généré par IGNITE ACADEMY
       </div>

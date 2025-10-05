@@ -46,7 +46,7 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
     const { activeSemester } = useAppSelector((s) => s.semesters);
     const user = useAppSelector((s) => s.user.profile);
 
-    const { activePeriod, editableColumns } = useActivePeriodPolling({ enabled: true, interval: 60000 }); // 1 minute au lieu de 10s
+    const { activePeriod, editableColumns } = useActivePeriodPolling({ enabled: true, interval: 60000 });
     const currentPeriodLabel = activePeriod?.shortName || "CC_1";
     const formattedPeriod = translatePeriodName(activePeriod?.name) || formatPeriodLabel(currentPeriodLabel);
     const { filteredStudents, teacherSubjectsForLevel } = useFilteredStudents({
@@ -96,7 +96,7 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
             
             studentGrades.forEach((grade) => {
                 const examType = grade.exam || grade.type;
-                // Gérer les valeurs qui peuvent être des objets ou des nombres
+
                 const ccScore = typeof grade.ccScore === 'object' ? grade.ccScore?.parsedValue : grade.ccScore;
                 const snScore = typeof grade.snScore === 'object' ? grade.snScore?.parsedValue : grade.snScore;
                 
@@ -135,7 +135,7 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
         );
     }, [mergedRows, searchValue]);
 
-    // Calcul du taux de réussite
+
     const successRate = useMemo(() => {
         if (!mergedRows?.length) return 0;
         
@@ -144,13 +144,13 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
             if (grades.length === 0) return false;
             
             const total = grades.reduce((sum, grade) => sum + grade, 0);
-            return total >= 60; // Seuil de réussite sur 120 (4 notes de 30 max chacune)
+            return total >= 60;
         });
         
         return Math.round((studentsWithValidGrades.length / mergedRows.length) * 100);
     }, [mergedRows]);
 
-    // Calcul des jours restants
+
     const daysRemaining = useMemo(() => {
         if (!activePeriod?.endDate) return 0;
         
@@ -200,10 +200,10 @@ export const GradeManagement = ({ level, levelName, levelCode }: GradeManagement
                     (grade.exam || grade.type) === currentPeriodLabel
                 );
 
-                // Vérifier si la note a réellement changé
+
                 const originalRow = mergedRows.find(r => r.studentId === row.studentId);
                 const originalValue = originalRow?.[columnKey as keyof StudentGradeRow];
-                if (existing && originalValue === value) continue; // Pas de changement
+                if (existing && originalValue === value) continue;
 
                 if (existing) {
                     payloads.push({

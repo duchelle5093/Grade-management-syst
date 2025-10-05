@@ -16,7 +16,7 @@ export const useClaims = (currentSubjectId?: number) => {
         await dispatch(listGradeClaims());
     };
 
-    // Transformer les données API en format compatible avec l'interface
+
     const getClaimsForStudent = (studentId: number, period: 'cc1' | 'sn1' | 'cc2' | 'sn2') => {
         const periodMap = {
             cc1: ['CC_1', 'CC #1'],

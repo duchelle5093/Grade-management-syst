@@ -13,7 +13,7 @@ export interface GradingWindowResponse {
     isActive: boolean;
     createdDate: string;
     lastModifiedDate: string;
-    // Legacy compatibility
+
     id: number;
     name: string;
     shortName: string;
@@ -27,7 +27,7 @@ export interface GradingWindowRequest {
     endDate: string;
     color?: string;
     isActive?: boolean;
-    // Legacy compatibility
+
     semesterId?: number;
     name?: string;
     shortName?: string;

@@ -1,121 +1,112 @@
 import { useMemo } from 'react';
 import { useAppSelector } from '../store';
-import { useTeacherLevels } from './useTeacherLevels';
 
 export const useRecentGrades = () => {
     const { teacherGrades } = useAppSelector(state => state.grades);
     
     return useMemo(() => {
-        const now = new Date();
-        const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        if (!teacherGrades?.length) {
+            return { count: 0, grades: [] };
+        }
         
-        const recentGrades = teacherGrades.filter(grade => 
-            new Date(grade.createdDate) >= last24h ||
-            (grade.lastModifiedDate && new Date(grade.lastModifiedDate) >= last24h)
-        );
+        const gradesWithValues = teacherGrades.filter(grade => {
+            const ccScore = typeof grade.ccScore === 'object' ? grade.ccScore?.parsedValue : grade.ccScore;
+            const snScore = typeof grade.snScore === 'object' ? grade.snScore?.parsedValue : grade.snScore;
+            return ccScore > 0 || snScore > 0 || grade.totalScore > 0;
+        });
         
         return {
-            grades: recentGrades,
-            count: recentGrades.length,
-            byPeriod: recentGrades.reduce((acc, grade) => {
-                const period = grade.periodLabel || grade.assessmentType || 'UNKNOWN';
-                acc[period] = (acc[period] || 0) + 1;
-                return acc;
-            }, {} as Record<string, number>)
+            count: gradesWithValues.length,
+            grades: gradesWithValues.slice(0, 5)
         };
     }, [teacherGrades]);
 };
 
 export const useStudentsByLevel = () => {
-    const students = useAppSelector(state => state.user.students);
-    const { uniqueLevels } = useTeacherLevels();
+    const students = useAppSelector(state => state.user?.students || []);
     
     return useMemo(() => {
-        const byLevel = uniqueLevels.reduce((acc, level) => {
-            // Compter les étudiants qui ont au moins une matière de ce niveau
-            acc[level] = students.filter(student => 
-                student.subjects?.some(subject => subject.level === level) ||
-                student.levelId === level || // Utiliser levelId si disponible
-                student.level?.id === level // Ou level.id si c'est un objet
-            ).length;
-            return acc;
-        }, {} as Record<string, number>);
+        if (!Array.isArray(students) || students.length === 0) {
+            return { levels: [], total: 0 };
+        }
         
-        const total = Object.values(byLevel).reduce((sum, count) => sum + count, 0);
+        const levelGroups = students.reduce((acc, student) => {
+            const level = student.level || student.studentLevel || 'LEVEL2';
+            if (!acc[level]) acc[level] = [];
+            acc[level].push(student);
+            return acc;
+        }, {} as Record<string, any[]>);
+        
+        const totalStudents = students.length;
+        
+        const levels = Object.entries(levelGroups).map(([level, levelStudents]) => {
+            const count = levelStudents.length;
+            const percentage = totalStudents > 0 ? Math.round((count / totalStudents) * 100) : 0;
+            
+            const displayLevel = level === 'LEVEL2' ? 'Licence 2' : 
+                               level === 'LEVEL3' ? 'Licence 3' : 
+                               level === 'LEVEL4' ? 'Master 1' : 
+                               level === 'LEVEL5' ? 'Master 2' : 
+                               'Licence 2';
+            
+            return {
+                level: displayLevel,
+                count,
+                percentage
+            };
+        });
         
         return {
-            byLevel,
-            total,
-            levels: Object.entries(byLevel).map(([level, count]) => ({
-                level,
-                count,
-                percentage: total > 0 ? Math.round((count / total) * 100) : 0
-            }))
+            levels,
+            total: totalStudents
         };
-    }, [students, uniqueLevels]);
+    }, [students]);
 };
 
 export const useGradeProgression = () => {
     const { teacherGrades } = useAppSelector(state => state.grades);
     
     return useMemo(() => {
-        // Grouper par étudiant
-        const gradesByStudent = teacherGrades.reduce((acc, grade) => {
-            if (!acc[grade.studentId]) acc[grade.studentId] = [];
-            acc[grade.studentId].push(grade);
-            return acc;
-        }, {} as Record<number, any[]>);
+        if (!teacherGrades?.length) {
+            return {
+                progressRate: 0,
+                improvements: 0,
+                declines: 0,
+                stable: 0
+            };
+        }
         
-        const progressions: Array<{
-            studentId: number;
-            improvement: number;
-            type: 'progress' | 'decline' | 'stable';
-        }> = [];
-        
-        // Calculer progression CC → SN pour chaque semestre
-        Object.entries(gradesByStudent).forEach(([studentId, grades]) => {
-            // Semestre 1
-            const cc1 = grades.find(g => (g.periodLabel || g.assessmentType) === 'CC_1')?.value || grades.find(g => (g.periodLabel || g.assessmentType) === 'CC_1')?.score;
-            const sn1 = grades.find(g => (g.periodLabel || g.assessmentType) === 'SN_1')?.value || grades.find(g => (g.periodLabel || g.assessmentType) === 'SN_1')?.score;
-            
-            if (cc1 !== undefined && sn1 !== undefined) {
-                const improvement = sn1 - cc1;
-                progressions.push({
-                    studentId: Number(studentId),
-                    improvement,
-                    type: improvement > 0 ? 'progress' : improvement < 0 ? 'decline' : 'stable'
-                });
-            }
-            
-            // Semestre 2
-            const cc2 = grades.find(g => (g.periodLabel || g.assessmentType) === 'CC_2')?.value || grades.find(g => (g.periodLabel || g.assessmentType) === 'CC_2')?.score;
-            const sn2 = grades.find(g => (g.periodLabel || g.assessmentType) === 'SN_2')?.value || grades.find(g => (g.periodLabel || g.assessmentType) === 'SN_2')?.score;
-            
-            if (cc2 !== undefined && sn2 !== undefined) {
-                const improvement = sn2 - cc2;
-                progressions.push({
-                    studentId: Number(studentId),
-                    improvement,
-                    type: improvement > 0 ? 'progress' : improvement < 0 ? 'decline' : 'stable'
-                });
-            }
+        const gradesWithScores = teacherGrades.filter(grade => {
+            const totalScore = grade.totalScore || 0;
+            const ccScore = typeof grade.ccScore === 'object' ? grade.ccScore?.parsedValue : grade.ccScore;
+            const snScore = typeof grade.snScore === 'object' ? grade.snScore?.parsedValue : grade.snScore;
+            return totalScore > 0 || ccScore > 0 || snScore > 0;
         });
         
-        const improvements = progressions.filter(p => p.type === 'progress').length;
-        const declines = progressions.filter(p => p.type === 'decline').length;
-        const stable = progressions.filter(p => p.type === 'stable').length;
+        if (gradesWithScores.length === 0) {
+            return {
+                progressRate: 0,
+                improvements: 0,
+                declines: 0,
+                stable: 0
+            };
+        }
+        
+        const passedGrades = gradesWithScores.filter(grade => {
+            const totalScore = grade.totalScore || 0;
+            const ccScore = typeof grade.ccScore === 'object' ? grade.ccScore?.parsedValue : grade.ccScore;
+            const snScore = typeof grade.snScore === 'object' ? grade.snScore?.parsedValue : grade.snScore;
+            const finalScore = totalScore || Math.max(ccScore || 0, snScore || 0);
+            return finalScore >= 10;
+        }).length;
+        
+        const progressRate = Math.round((passedGrades / gradesWithScores.length) * 100);
         
         return {
-            total: progressions.length,
-            improvements,
-            declines,
-            stable,
-            averageImprovement: progressions.length > 0 
-                ? progressions.reduce((sum, p) => sum + p.improvement, 0) / progressions.length 
-                : 0,
-            progressRate: progressions.length > 0 
-                ? Math.round((improvements / progressions.length) * 100) 
-                : 0
+            progressRate,
+            improvements: passedGrades,
+            declines: gradesWithScores.length - passedGrades,
+            stable: 0
         };
     }, [teacherGrades]);
 };
@@ -124,49 +115,46 @@ export const useRecentActivity = () => {
     const { teacherGrades } = useAppSelector(state => state.grades);
     
     return useMemo(() => {
-        const now = new Date();
-        const last7days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        if (!teacherGrades?.length) {
+            return [];
+        }
         
-        const recentActivities = teacherGrades
-            .filter(grade => 
-                new Date(grade.createdDate) >= last7days ||
-                (grade.lastModifiedDate && new Date(grade.lastModifiedDate) >= last7days)
-            )
+        const gradesByStudent = teacherGrades
+            .filter(grade => grade.student && (grade.ccScore || grade.snScore || grade.totalScore))
+            .reduce((acc, grade) => {
+                const studentId = grade.student?.id || grade.studentId;
+                if (!acc[studentId] || new Date(grade.lastModifiedDate || grade.createdDate || 0) > new Date(acc[studentId].lastModifiedDate || acc[studentId].createdDate || 0)) {
+                    acc[studentId] = grade;
+                }
+                return acc;
+            }, {} as Record<string, any>);
+        
+        const uniqueGrades = Object.values(gradesByStudent)
             .sort((a, b) => {
-                const dateA = new Date(a.lastModifiedDate || a.createdDate);
-                const dateB = new Date(b.lastModifiedDate || b.createdDate);
-                return dateB.getTime() - dateA.getTime();
+                const dateA = new Date(a.lastModifiedDate || a.createdDate || 0).getTime();
+                const dateB = new Date(b.lastModifiedDate || b.createdDate || 0).getTime();
+                return dateB - dateA;
             })
-            .slice(0, 5) // Dernières 5 activités
-            .map(grade => {
-                const isUpdate = !!grade.lastModifiedDate;
-                const date = new Date(grade.lastModifiedDate || grade.createdDate);
-                const timeAgo = getTimeAgo(date);
-                
-                return {
-                    type: 'grade' as const,
-                    name: `${grade.subjectName || grade.subject?.name} ${grade.periodLabel || grade.assessmentType}`,
-                    action: isUpdate ? 'Note modifiée' : 'Note ajoutée',
-                    time: timeAgo,
-                    avatar: (grade.subjectCode || grade.subject?.code)?.charAt(0) || 'N',
-                    studentName: grade.studentName || grade.student?.name,
-                    value: grade.value || grade.score
-                };
-            });
+            .slice(0, 5);
         
-        return recentActivities;
+        return uniqueGrades.map((grade) => {
+            const student = grade.student || {};
+            const firstName = student.firstName || student.name?.split(' ')[0] || '';
+            const lastName = student.lastName || student.name?.split(' ')[1] || '';
+            const studentName = `${firstName} ${lastName}`.trim() || 
+                              student.name || 
+                              `Etudiant ${student.studentNumber || ''}`.trim() || 
+                              'Etudiant';
+            
+            const timeAgo = Math.floor((Date.now() - new Date(grade.lastModifiedDate || grade.createdDate || Date.now()).getTime()) / (1000 * 60 * 60 * 24));
+            
+            return {
+                type: 'grade',
+                name: studentName,
+                action: 'Note modifiée',
+                time: timeAgo === 0 ? "Aujourd'hui" : timeAgo === 1 ? "Hier" : `${timeAgo}j`,
+                avatar: firstName.charAt(0) || lastName.charAt(0) || 'E'
+            };
+        });
     }, [teacherGrades]);
-};
-
-// Fonction utilitaire pour calculer le temps écoulé
-const getTimeAgo = (date: Date): string => {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
-    if (diffMins < 60) return `${diffMins}min`;
-    if (diffHours < 24) return `${diffHours}h`;
-    return `${diffDays}j`;
 };

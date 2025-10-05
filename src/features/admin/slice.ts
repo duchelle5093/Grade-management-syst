@@ -66,7 +66,7 @@ const adminSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // Fetch students
+
             .addCase(fetchAllStudents.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -80,14 +80,14 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to fetch students';
             })
             
-            // Fetch teachers
+
             .addCase(fetchAllTeachers.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(fetchAllTeachers.fulfilled, (state, action) => {
                 state.loading = false;
-                // Normaliser les données des enseignants selon la nouvelle API
+
                 const teachers = Array.isArray(action.payload) ? action.payload.map((teacher: any) => ({
                     id: teacher.teacherId,
                     teacherId: teacher.teacherId,
@@ -114,14 +114,14 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to fetch teachers';
             })
             
-            // Fetch departments
+
             .addCase(fetchAllDepartments.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(fetchAllDepartments.fulfilled, (state, action) => {
                 state.loading = false;
-                // Normaliser les données des départements selon la nouvelle API
+
                 const departments = Array.isArray(action.payload) ? action.payload.map((dept: any) => ({
                     id: dept.departmentId,
                     name: dept.departmentName,
@@ -151,7 +151,7 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to fetch departments';
             })
             
-            // Create user
+
             .addCase(createUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -164,14 +164,14 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to create user';
             })
             
-            // Update user
+
             .addCase(updateUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(updateUser.fulfilled, (state, action) => {
                 state.loading = false;
-                // Mettre à jour l'utilisateur dans la liste
+
                 const index = state.students.findIndex(student => student.id === action.payload.id);
                 if (index !== -1) {
                     state.students[index] = action.payload;
@@ -182,14 +182,14 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to update user';
             })
             
-            // Delete user
+
             .addCase(deleteUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(deleteUser.fulfilled, (state, action) => {
                 state.loading = false;
-                // Supprimer l'utilisateur de la liste
+
                 state.students = state.students.filter(student => 
                     (student.studentId || student.id) !== action.payload
                 );
@@ -199,7 +199,7 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to delete user';
             })
             
-            // Create teacher
+
             .addCase(createTeacher.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -214,7 +214,7 @@ const adminSlice = createSlice({
             
 
             
-            // Import students
+
             .addCase(importStudents.pending, (state) => {
                 state.importLoading = true;
                 state.error = null;
@@ -228,7 +228,7 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to import students';
             })
             
-            // Import teachers
+
             .addCase(importTeachers.pending, (state) => {
                 state.importLoading = true;
                 state.error = null;
@@ -242,7 +242,7 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to import teachers';
             })
             
-            // Fetch grading windows
+
             .addCase(fetchAllGradingWindows.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -256,7 +256,7 @@ const adminSlice = createSlice({
                 state.error = action.error.message || 'Failed to fetch grading windows';
             })
             
-            // Create grading window
+
             .addCase(createGradingWindow.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -270,7 +270,7 @@ const adminSlice = createSlice({
                 state.error = action.payload as string || 'Failed to create grading window';
             })
             
-            // Update grading window
+
             .addCase(updateGradingWindow.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -287,7 +287,7 @@ const adminSlice = createSlice({
                 state.error = action.payload as string || 'Failed to update grading window';
             })
             
-            // Delete grading window
+
             .addCase(deleteGradingWindow.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -301,7 +301,7 @@ const adminSlice = createSlice({
                 state.error = action.payload as string || 'Failed to delete grading window';
             })
             
-            // Create department
+
             .addCase(createDepartment.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -315,7 +315,7 @@ const adminSlice = createSlice({
                 state.error = action.payload as string || 'Failed to create department';
             })
             
-            // Update department
+
             .addCase(updateDepartment.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -332,7 +332,7 @@ const adminSlice = createSlice({
                 state.error = action.payload as string || 'Failed to update department';
             })
             
-            // Delete department
+
             .addCase(deleteDepartment.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -346,7 +346,7 @@ const adminSlice = createSlice({
                 state.error = action.payload as string || 'Failed to delete department';
             })
             
-            // Get department details
+
             .addCase(getDepartmentDetails.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -359,7 +359,7 @@ const adminSlice = createSlice({
                 state.error = action.payload as string || 'Failed to get department details';
             })
             
-            // Switch user department
+
             .addCase(switchUserDepartment.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -372,7 +372,7 @@ const adminSlice = createSlice({
                 state.error = action.payload as string || 'Failed to switch department';
             })
             
-            // Fetch active grading windows
+
             .addCase(fetchActiveGradingWindows.pending, (state) => {
                 state.loading = true;
                 state.error = null;

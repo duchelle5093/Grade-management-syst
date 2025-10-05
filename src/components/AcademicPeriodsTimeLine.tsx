@@ -20,7 +20,7 @@ interface Period {
     isActive?: boolean;
 }
 
-// Données mockées de fallback
+
 const mockPeriods = [
     {
         id: "cc1",
@@ -56,7 +56,7 @@ const mockPeriods = [
     }
 ];
 
-// Fonction pour convertir les données du backend au format de l'interface
+
 const convertGradingWindowToPeriod = (window: GradingWindowResponse) => ({
     id: window.id.toString(),
     title: window.shortName,
@@ -78,21 +78,21 @@ export const AcademicTimeline: React.FC = () => {
 
     useEffect(() => {
         if (gradingWindows && gradingWindows.length > 0) {
-            // Utiliser les données du backend si disponibles
+
             const convertedPeriods = gradingWindows.map(convertGradingWindowToPeriod);
             setPeriods(convertedPeriods);
         } else {
-            // Fallback vers les données mockées si l'API ne retourne rien
+
             setPeriods(mockPeriods);
         }
     }, [gradingWindows]);
 
-    // Déterminer la période active selon la propriété isActive
+
     const currentPeriod = periods.find(p => p.isActive) || periods[0];
 
     return (
         <Card className="p-6 shadow rounded-2xl bg-white">
-            {/* HEADER */}
+            {}
             <div className="flex justify-between mb-6">
                 <div>
                     <Title level={4}>Période en cours</Title>
@@ -126,7 +126,7 @@ export const AcademicTimeline: React.FC = () => {
                 </div>
             </div>
 
-            {/* FULLCALENDAR */}
+            {}
             <div className="border rounded-lg p-4">
                 <FullCalendar
                     plugins={[dayGridPlugin, interactionPlugin]}
@@ -153,13 +153,13 @@ export const AcademicTimeline: React.FC = () => {
                 />
             </div>
 
-            {/* ACTIONS */}
+            {}
             <div className="flex justify-end gap-4 mt-6">
                 <Button onClick={() => setIsCreateModalVisible(true)}>Nouvelle Période</Button>
                 <Button type="primary">Enregistrer</Button>
             </div>
 
-            {/* Modal de création */}
+            {}
             <CreatePeriodModal
                 visible={isCreateModalVisible}
                 onCancel={() => setIsCreateModalVisible(false)}

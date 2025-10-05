@@ -56,7 +56,7 @@ export const SubjectsManagement = () => {
         dispatch(fetchAllDepartments());
     }, [dispatch]);
 
-    // Filtrer les matières selon le département sélectionné et la recherche
+
     useEffect(() => {
         let filtered = subjects;
 
@@ -173,13 +173,13 @@ export const SubjectsManagement = () => {
             title: 'Enseignant',
             key: 'teacher',
             render: (record: SubjectResDto) => {
-                // Chercher l'enseignant par teacherId ou id
+
                 const currentTeacher = teachers.find(t => 
                     t.teacherId === record.teacherId || 
                     t.id === record.teacherId
                 );
                 
-                // Si pas trouvé dans teachers, utiliser les données de la matière
+
                 if (!currentTeacher && record.teacherName) {
                     return (
                         <Space>
@@ -255,7 +255,7 @@ export const SubjectsManagement = () => {
     return (
         <div style={{ padding: '24px', height: 'calc(100vh - 48px)', overflow: 'hidden' }}>
             <Row gutter={24} style={{ height: '100%' }}>
-                {/* Colonne Départements */}
+                {}
                 <Col span={8} style={{ height: '100%' }}>
                     <Card
                         title={
@@ -346,7 +346,7 @@ export const SubjectsManagement = () => {
                     </Card>
                 </Col>
 
-                {/* Colonne Matières */}
+                {}
                 <Col span={16} style={{ height: '100%' }}>
                     <Card
                         title={
@@ -376,7 +376,7 @@ export const SubjectsManagement = () => {
                         style={{ height: '100%' }}
                         bodyStyle={{ height: 'calc(100% - 57px)', overflowY: 'auto', padding: '16px' }}
                     >
-                        {/* Barre de recherche */}
+                        {}
                         <Row style={{ marginBottom: 16 }}>
                             <Col span={24}>
                                 <Search
@@ -390,7 +390,7 @@ export const SubjectsManagement = () => {
                             </Col>
                         </Row>
 
-                        {/* Tableau des matières */}
+                        {}
                         <Table
                             columns={subjectColumns}
                             dataSource={filteredSubjects}
@@ -410,7 +410,7 @@ export const SubjectsManagement = () => {
                 </Col>
             </Row>
 
-            {/* Modal de création/modification */}
+            {}
             <SubjectModal
                 visible={isSubjectModalVisible}
                 onCancel={() => {
@@ -425,7 +425,7 @@ export const SubjectsManagement = () => {
                 editingSubject={editingSubject}
             />
 
-            {/* Modal de gestion des départements */}
+            {}
             <DepartmentManagementModal
                 visible={isDepartmentModalVisible}
                 onCancel={() => {

@@ -56,7 +56,7 @@ const semestersSlice = createSlice({
             })
             .addCase(createSemester.fulfilled, (state, action) => {
                 state.loading = false;
-                // Si le nouveau semestre est actif, désactiver les autres
+
                 if (action.payload.active) {
                     state.semesters.forEach(s => s.active = false);
                 }
@@ -74,7 +74,7 @@ const semestersSlice = createSlice({
                 state.loading = false;
                 const index = state.semesters.findIndex(s => s.id === action.payload.id);
                 if (index !== -1) {
-                    // Si le semestre devient actif, désactiver les autres
+
                     if (action.payload.active) {
                         state.semesters.forEach(s => s.active = false);
                     }

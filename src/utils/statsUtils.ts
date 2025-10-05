@@ -14,12 +14,7 @@ interface ActivePeriod {
     name?: string;
 }
 
-/**
- * Calcule le taux de réussite des étudiants
- * @param students - Liste des étudiants avec leurs notes
- * @param passingGrade - Note minimale pour réussir (défaut: 10)
- * @returns Pourcentage de réussite (0-100)
- */
+
 export const calculateSuccessRate = (
     students: StudentGradeRow[], 
     passingGrade: number = 10
@@ -35,11 +30,7 @@ export const calculateSuccessRate = (
     return Math.round((studentsWithPassingGrades.length / students.length) * 100);
 };
 
-/**
- * Calcule le nombre de jours restants avant la fin de la période active
- * @param activePeriod - Période académique active
- * @returns Nombre de jours restants (minimum 0)
- */
+
 export const calculateDaysRemaining = (activePeriod?: ActivePeriod): number => {
     if (!activePeriod?.endDate) return 0;
     
@@ -51,12 +42,7 @@ export const calculateDaysRemaining = (activePeriod?: ActivePeriod): number => {
     return Math.max(0, diffDays);
 };
 
-/**
- * Calcule la moyenne de la classe pour une période donnée
- * @param students - Liste des étudiants avec leurs notes
- * @param period - Période à analyser ('cc1', 'sn1', 'cc2', 'sn2')
- * @returns Moyenne de la classe (0 si aucune note)
- */
+
 export const calculateClassAverage = (
     students: StudentGradeRow[], 
     period: keyof Pick<StudentGradeRow, 'cc1' | 'sn1' | 'cc2' | 'sn2'>
@@ -70,14 +56,10 @@ export const calculateClassAverage = (
     if (validGrades.length === 0) return 0;
     
     const sum = validGrades.reduce((acc, grade) => acc + grade, 0);
-    return Math.round((sum / validGrades.length) * 100) / 100; // 2 décimales
+    return Math.round((sum / validGrades.length) * 100) / 100;
 };
 
-/**
- * Compte le nombre d'étudiants ayant au moins une note
- * @param students - Liste des étudiants avec leurs notes
- * @returns Nombre d'étudiants avec des notes
- */
+
 export const countStudentsWithGrades = (students: StudentGradeRow[]): number => {
     if (!students?.length) return 0;
     
@@ -88,11 +70,7 @@ export const countStudentsWithGrades = (students: StudentGradeRow[]): number => 
     }).length;
 };
 
-/**
- * Détermine la couleur selon les jours restants
- * @param daysRemaining - Nombre de jours restants
- * @returns Objet avec les classes CSS pour background et text
- */
+
 export const getDaysRemainingColors = (daysRemaining: number) => {
     if (daysRemaining > 7) {
         return {

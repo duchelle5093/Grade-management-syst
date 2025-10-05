@@ -5,9 +5,9 @@ export interface LoginResDto{
     username: string;
     roles: Role[];
     token: string;
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
-    // Legacy compatibility
+    createdDate: string;
+    lastModifiedDate: string;
+
     refreshToken: null;
     type: string;
     firstName: string;
@@ -16,7 +16,7 @@ export interface LoginResDto{
     role: string;
     authorities: [],
     mustChangePassword: boolean;
-    levels?: AcademicLevel[]; // Niveaux enseignés par l'enseignant
+    levels?: AcademicLevel[];
 }
 
 export interface ChangePasswordReqDto{

@@ -88,13 +88,13 @@ const gradesSlice = createSlice({
                     grade.id === updatedGrade.id ? { ...grade, ...updatedGrade } : grade
                 );
             })
-            // Delete grade
+
             .addCase(deleteGrade.fulfilled, (state, action) => {
                 const deletedId = action.payload;
                 state.teacherGrades = state.teacherGrades.filter(grade => (grade.gradeId || grade.id) !== deletedId);
                 state.studentGrades = state.studentGrades.filter(grade => grade.id !== deletedId);
             })
-            // Fetch grade sheet
+
             .addCase(fetchGradeSheet.pending, (state) => {
                 state.loading = true;
             })
@@ -106,7 +106,7 @@ const gradesSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message || 'Failed to fetch grade sheet';
             })
-            // Export grades
+
             .addCase(exportGrades.pending, (state) => {
                 state.exportLoading = true;
             })
@@ -117,7 +117,7 @@ const gradesSlice = createSlice({
                 state.exportLoading = false;
                 state.error = action.error.message || 'Failed to export grades';
             })
-            // Publish grades
+
             .addCase(publishGrades.pending, (state) => {
                 state.publishLoading = true;
             })
@@ -128,12 +128,12 @@ const gradesSlice = createSlice({
                 state.publishLoading = false;
                 state.error = action.error.message || 'Failed to publish grades';
             })
-            // Fetch active period
+
             .addCase(fetchActivePeriod.fulfilled, (state, action) => {
-                // L'API retourne un tableau, prendre le premier élément
+
                 state.activePeriod = Array.isArray(action.payload) ? action.payload[0] : action.payload;
             })
-            // Claims management
+
             .addCase(listGradeClaims.pending, (state) => {
                 state.claimsLoading = true;
             })
@@ -146,11 +146,11 @@ const gradesSlice = createSlice({
                 state.error = action.error.message || 'Failed to fetch claims';
             })
             .addCase(submitGradeClaim.fulfilled, (state, action) => {
-                // Ajouter la nouvelle réclamation à la liste
+
                 state.claims.push(action.payload);
             })
             .addCase(processGradeClaim.fulfilled, (state, action) => {
-                // Mettre à jour le statut de la réclamation
+
                 const claimIndex = state.claims.findIndex(claim => claim.id === action.meta.arg.claimId);
                 if (claimIndex !== -1) {
                     const newStatus = action.meta.arg.decision.approve ? 'APPROVED' : 'REJECTED';

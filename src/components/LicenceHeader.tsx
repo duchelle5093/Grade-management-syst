@@ -23,7 +23,7 @@ export const GradesHeader = ({
 }: LicenceHeaderProps) => {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-      {/* Titre principal */}
+      {}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <div className="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg font-bold text-2xl">
@@ -40,7 +40,7 @@ export const GradesHeader = ({
         </div>
       </div>
 
-      {/* Statistiques */}
+      {}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-gray-50 rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-gray-800">{studentCount || 0}</div>

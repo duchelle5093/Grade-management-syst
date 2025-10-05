@@ -55,14 +55,14 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
     );
     const [formData, setFormData] = useState<any>({});
     
-    // Charger les départements
+
     useEffect(() => {
         if (visible) {
             dispatch(fetchAllDepartments());
         }
     }, [visible, dispatch]);
 
-    // Pré-remplir le formulaire en mode édition
+
     useEffect(() => {
         if (editingUser && visible) {
             setCurrentStep(1); 
@@ -80,12 +80,12 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                 };
                 
                 if (isTeacher) {
-                    // Champs spécifiques aux enseignants
+
                     formData.levelIds = editingUser.teachingLevel || [];
                     formData.departmentId = editingUser.department?.departmentId || 1;
                     formData.phone = editingUser.phoneNumber || '';
                 } else {
-                    // Champs spécifiques aux étudiants
+
                     formData.matricule = editingUser.matricule || editingUser.username || '';
                     formData.levelId = editingUser.studentLevel?.studentLevel ? parseInt(editingUser.studentLevel.studentLevel.replace('LEVEL', '')) : (editingUser.studentLevel ? parseInt(editingUser.studentLevel.replace('LEVEL', '')) : 1);
                     formData.speciality = editingUser.speciality || '';
@@ -139,15 +139,15 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             
 
             if (selectedRole === Role.STUDENT) {
-                userData.levelId = allData.levelId || 1; // Convertir level en levelId
+                userData.levelId = allData.levelId || 1;
                 userData.matricule = allData.matricule;
                 userData.speciality = allData.speciality;
                 userData.cycle = allData.cycle;
                 userData.dateOfBirth = allData.dateOfBirth;
                 userData.placeOfBirth = allData.placeOfBirth;
             } else if (selectedRole === Role.TEACHER) {
-                userData.levelIds = allData.levelIds || []; // Convertir levels en levelIds
-                userData.departmentId = allData.departmentId || 1; // Convertir department en departmentId
+                userData.levelIds = allData.levelIds || [];
+                userData.departmentId = allData.departmentId || 1;
                 userData.phone = allData.phone;
                 userData.subjectIds = allData.subjectIds || [];
             }
@@ -370,7 +370,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                         <Form.Item
                                             name="speciality"
                                             label="Spécialité"
-                                            //rules={[{ required: true, message: 'La spécialité est requise' }]}
+
                                         >
                                             <Select 
                                                 size="large" 
@@ -453,7 +453,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                         <Form.Item
                                             name="departmentId"
                                             label="Département"
-                                            //rules={[{ required: true, message: 'Le département est requis' }]}
+
                                         >
                                             <Select 
                                                 size="large" 

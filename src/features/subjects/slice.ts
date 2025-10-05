@@ -38,7 +38,7 @@ const subjectsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // Fetch assigned subjects
+
             .addCase(fetchAssignedSubjects.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -51,14 +51,14 @@ const subjectsSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message || 'Failed to fetch assigned subjects';
             })
-            // Fetch all subjects
+
             .addCase(fetchAllSubjects.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(fetchAllSubjects.fulfilled, (state, action) => {
                 state.loading = false;
-                // Normaliser les données de l'API vers le format attendu selon la nouvelle structure
+
                 const subjects = Array.isArray(action.payload) ? action.payload.map((subject: any) => ({
                     id: subject.subjectId,
                     name: subject.subjectName || subject.subjectCode,
@@ -81,7 +81,7 @@ const subjectsSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message || 'Failed to fetch all subjects';
             })
-            // Fetch subject by ID
+
             .addCase(fetchSubjectById.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -94,12 +94,12 @@ const subjectsSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message || 'Failed to fetch subject';
             })
-            // Create subject
+
             .addCase(createSubject.fulfilled, (state, action) => {
                 state.assignedSubjects.push(action.payload);
                 state.allSubjects.push(action.payload);
             })
-            // Update subject
+
             .addCase(updateSubject.fulfilled, (state, action) => {
                 const updatedSubject = action.payload;
                 state.assignedSubjects = state.assignedSubjects.map(subject =>
@@ -112,7 +112,7 @@ const subjectsSlice = createSlice({
                     state.currentSubject = updatedSubject;
                 }
             })
-            // Delete subject
+
             .addCase(deleteSubject.fulfilled, (state, action) => {
                 const deletedId = action.payload;
                 state.assignedSubjects = state.assignedSubjects.filter(subject => subject.id !== deletedId);

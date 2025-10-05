@@ -1,4 +1,4 @@
-// Version simplifiée pour tester le PDF
+
 import { pdf } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import React from 'react';

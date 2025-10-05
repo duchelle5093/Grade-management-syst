@@ -34,7 +34,7 @@ export class SubjectsService {
         await this._client.delete(`${subjectsApis.DELETE_SUBJECT}/${id}`);
     }
 
-    // Assigner un enseignant à une matière
+
     async assignTeacherToSubject(subjectId: number, teacherId: number, subjectData: SubjectResDto): Promise<SubjectResDto> {
         const updatedSubject = {
             ...subjectData,

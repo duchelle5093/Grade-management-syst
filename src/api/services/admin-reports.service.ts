@@ -10,25 +10,25 @@ import {
 } from '../reponse-dto/admin.res.dto';
 
 const adminReportsApis = {
-    // Rapports PDF
+
     GENERATE_REPORTS: 'admin/reports/generate',
     GET_REPORT_STATUS: 'admin/reports/status',
     DOWNLOAD_REPORT: 'admin/reports/download',
     
-    // Exports
+
     EXPORT_GRADES: 'admin/exports/grades',
     EXPORT_STUDENTS: 'admin/exports/students',
     EXPORT_TEACHERS: 'admin/exports/teachers',
     
-    // Export PDF (nouvelles APIs)
+
     EXPORT_PRINT: 'export/print',
     EXPORT_PUBLISH: 'export/publish',
     
-    // Statistiques
+
     GET_ADMIN_STATS: 'admin/stats',
     GET_GRADE_STATS: 'admin/stats/grades',
     
-    // Imports
+
     IMPORT_STUDENTS: 'admin/imports/students',
     IMPORT_TEACHERS: 'admin/imports/teachers',
 };
@@ -40,7 +40,7 @@ export class AdminReportsService {
         this._client = client;
     }
 
-    // Génération de relevés PDF
+
     async generateStudentReports(request: GenerateReportReqDto): Promise<ReportGenerationResDto> {
         const response = await this._client.post<ReportGenerationResDto>(adminReportsApis.GENERATE_REPORTS, request);
         return response.data;
@@ -58,7 +58,7 @@ export class AdminReportsService {
         return response.data;
     }
 
-    // Export Excel des résultats
+
     async exportGrades(request: ExportGradesReqDto): Promise<ExportResultResDto> {
         const response = await this._client.post<ExportResultResDto>(adminReportsApis.EXPORT_GRADES, request);
         return response.data;
@@ -75,7 +75,7 @@ export class AdminReportsService {
         return response.data;
     }
 
-    // Statistiques pour le dashboard
+
     async getAdminStats(): Promise<AdminStatsResDto> {
         const response = await this._client.get<AdminStatsResDto>(adminReportsApis.GET_ADMIN_STATS);
         return response.data;
@@ -90,7 +90,7 @@ export class AdminReportsService {
         return response.data;
     }
 
-    // Import en masse
+
     async importStudents(file: File): Promise<any> {
         const formData = new FormData();
         formData.append('file', file);
@@ -111,7 +111,7 @@ export class AdminReportsService {
         return response.data;
     }
 
-    // Nouvelles méthodes pour les APIs export/print et export/publish
+
     async exportPrintTranscripts(request: {
         level?: string;
         subjectId?: number;
@@ -121,7 +121,7 @@ export class AdminReportsService {
         studentIds?: number[];
     }): Promise<Blob> {
         const response = await this._client.post(adminReportsApis.EXPORT_PRINT, request, {
-            responseType: 'blob' // Important pour recevoir le PDF
+            responseType: 'blob'
         });
         return response.data;
     }

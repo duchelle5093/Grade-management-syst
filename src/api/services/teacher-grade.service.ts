@@ -17,7 +17,7 @@ export class TeacherGradeService {
         this._client = client;
     }
 
-    // Gestion des notes
+
     async createGrade(gradeData: {
         studentId: number;
         subjectId: number;
@@ -52,9 +52,9 @@ export class TeacherGradeService {
 
     async getMyGrades(): Promise<any[]> {
         const response = await this._client.get(teacherGradeApis.GET_MY_GRADES);
-        // Transformer les données pour compatibilité
+
         return response.data.map((grade: any) => {
-            // Gérer ccScore et snScore qui peuvent être des objets ou des nombres
+
             const ccScore = typeof grade.ccScore === 'object' ? grade.ccScore?.parsedValue || 0 : grade.ccScore || 0;
             const snScore = typeof grade.snScore === 'object' ? grade.snScore?.parsedValue || 0 : grade.snScore || 0;
             
@@ -70,7 +70,7 @@ export class TeacherGradeService {
         });
     }
 
-    // Gestion des réclamations
+
     async getRevendications(pageNumber = 0, pageSize = 50, sortBy = 'revendicationId', sortOrder = 'asc'): Promise<any> {
         const response = await this._client.get(teacherGradeApis.GET_REVENDICATIONS, {
             params: { pageNumber, pageSize, sortBy, sortOrder }

@@ -77,7 +77,7 @@ export const CreatePeriodModal: React.FC<CreatePeriodModalProps> = ({
         onCancel();
     };
 
-    // Validation des dates pour éviter les chevauchements
+
     const validateEndDate = (_: any, value: any) => {
         const startDate = form.getFieldValue('startDate');
         if (startDate && value && value.isBefore(startDate)) {

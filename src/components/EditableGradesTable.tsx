@@ -15,7 +15,7 @@ interface EditableGradesTableProps {
     isDataEditable?: boolean;
     setIsDataEditable: (value: boolean) => void;
     onSearch?: (value: string) => void;
-    editableColumns?: string[]; // ex: ["cc1", "sn1"]
+    editableColumns?: string[];
 }
 
 export const EditableGradesTable = ({
@@ -35,7 +35,7 @@ export const EditableGradesTable = ({
         setEditingData(data);
     }, [data]);
 
-    /** Mapping entre colonnes et labels backend */
+    
     const periodMap: Record<string, "CC_1" | "SN_1" | "CC_2" | "SN_2"> = {
         cc1: "CC_1",
         sn1: "SN_1",
@@ -44,7 +44,7 @@ export const EditableGradesTable = ({
     };
 
 
-    // ---- Obtenir une note ----
+
     const getStudentGrade = (
         studentId: number,
         field: "cc1" | "sn1" | "cc2" | "sn2"
@@ -55,7 +55,7 @@ export const EditableGradesTable = ({
         return grade?.value ?? null;
     };
 
-    // ---- Mettre à jour une note ----
+
     const updateStudentGrade = (
         studentId: number,
         field: string,
@@ -64,7 +64,7 @@ export const EditableGradesTable = ({
         const periodLabel = periodMap[field as keyof typeof periodMap];
         const numericValue = value ? parseFloat(value) : null;
 
-        // Vérifie si la note existe déjà
+
         const existing = editingData.find(
             (g) => g.studentId === studentId && g.periodLabel === periodLabel
         );
@@ -76,12 +76,12 @@ export const EditableGradesTable = ({
             value: numericValue,
         };
 
-        // Retirer l’ancienne valeur si elle existait
+
         const newData = editingData.filter(
             (g) => !(g.studentId === studentId && g.periodLabel === periodLabel)
         );
 
-        // Ajouter la nouvelle valeur si non vide
+
         if (numericValue !== null) {
             newData.push(updatedGrade as TeacherGradeResDto);
         }
@@ -90,7 +90,7 @@ export const EditableGradesTable = ({
         onGradesChange?.(newData);
     };
 
-    // ---- Colonnes du tableau ----
+
     const columns = [
         {
             title: "Matricule",
@@ -147,7 +147,7 @@ export const EditableGradesTable = ({
         },
     ];
 
-    // ---- Stats ----
+
     const studentsWithGrades = new Set<number>();
     editingData.forEach((g) => {
         if (g.value !== null && g.value !== undefined) {

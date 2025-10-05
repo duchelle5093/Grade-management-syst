@@ -18,8 +18,8 @@ import {
     CheckCircleOutlined
 } from '@ant-design/icons';
 import { useAppSelector } from '../../store';
-import { useTeacherLevels, useRecentGrades, useStudentsByLevel, useGradeProgression, useRecentActivity } from '../../hooks';
-import { useEffect } from 'react';
+import { useTeacherLevels, useRecentGrades, useStudentsByLevel, useRecentActivity } from '../../hooks';
+import { useEffect, useMemo } from 'react';
 import { useAppDispatch } from '../../store';
 import { fetchTeacherGrades } from '../grades/actions';
 import { fetchTeacherStudents } from '../user/actions';
@@ -37,13 +37,18 @@ export const TeacherOverview = () => {
         totalLevelsCount
     } = useTeacherLevels();
     
-    // Stats temps réel
+
     const recentGrades = useRecentGrades();
     const studentsByLevel = useStudentsByLevel();
-    const gradeProgression = useGradeProgression();
+
     const recentActivity = useRecentActivity();
     
-    // Chargement initial des données
+    const { claims } = useAppSelector(state => state.grades);
+    const pendingClaims = useMemo(() => {
+        return claims?.filter(claim => claim.status === 'PENDING') || [];
+    }, [claims]);
+    
+
     useEffect(() => {
         dispatch(fetchTeacherGrades());
         dispatch(fetchTeacherStudents());
@@ -95,17 +100,17 @@ export const TeacherOverview = () => {
                 <Col xs={24} sm={12} lg={6}>
                     <Card style={{ borderRadius: '12px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
                         <Statistic
-                            title="Notes récentes (24h)"
-                            value={recentGrades.count}
-                            prefix={<CheckCircleOutlined style={{ color: '#FF85C0' }} />}
-                            valueStyle={{ color: '#FF85C0', fontWeight: 'bold' }}
+                            title="Revendications en attente"
+                            value={pendingClaims.length}
+                            prefix={<ClockCircleOutlined style={{ color: pendingClaims.length > 0 ? '#ff4d4f' : '#52c41a' }} />}
+                            valueStyle={{ color: pendingClaims.length > 0 ? '#ff4d4f' : '#52c41a', fontWeight: 'bold' }}
                         />
                     </Card>
                 </Col>
             </Row>
 
             <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
-                <Col xs={24} lg={8}>
+                <Col xs={24} lg={12}>
                     <Card 
                         title="Étudiants par niveau" 
                         style={{ borderRadius: '12px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
@@ -145,40 +150,7 @@ export const TeacherOverview = () => {
                         )}
                     </Card>
                 </Col>
-                <Col xs={24} lg={8}>
-                    <Card 
-                        title="Progression des notes" 
-                        style={{ borderRadius: '12px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
-                        headStyle={{ borderBottom: '1px solid #f0f0f0', fontWeight: 'bold' }}
-                    >
-                        <div style={{ textAlign: 'center' }}>
-                            <Statistic
-                                title="Taux de progression"
-                                value={gradeProgression.progressRate || 0}
-                                suffix="%"
-                                valueStyle={{ color: (gradeProgression.progressRate || 0) > 50 ? '#52c41a' : '#faad14' }}
-                            />
-                            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-around' }}>
-                                <div>
-                                    <Text type="secondary">Améliorations</Text>
-                                    <br />
-                                    <Text strong style={{ color: '#52c41a' }}>{gradeProgression.improvements || 0}</Text>
-                                </div>
-                                <div>
-                                    <Text type="secondary">Déclins</Text>
-                                    <br />
-                                    <Text strong style={{ color: '#ff4d4f' }}>{gradeProgression.declines || 0}</Text>
-                                </div>
-                                <div>
-                                    <Text type="secondary">Stables</Text>
-                                    <br />
-                                    <Text strong>{gradeProgression.stable || 0}</Text>
-                                </div>
-                            </div>
-                        </div>
-                    </Card>
-                </Col>
-                <Col xs={24} lg={8}>
+                <Col xs={24} lg={12}>
                     <Card 
                         title="Activité récente" 
                         style={{ borderRadius: '12px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}

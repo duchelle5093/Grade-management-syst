@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { gradingWindowsService } from '../../api/configs';
 import { GradingWindowRequest } from '../../api/services/grading-windows.service';
 
-// Actions pour les fenêtres de notation
+
 export const fetchAllGradingWindows = createAsyncThunk(
     'admin/fetchAllGradingWindows',
     async () => {

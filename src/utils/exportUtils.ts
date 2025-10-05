@@ -60,7 +60,7 @@ export const exportStatsToExcel = (stats: any) => {
     exportToExcel(exportData, `statistiques-${Date.now()}`, 'Statistiques');
 };
 
-// Fonctions d'export PDF
+
 export const exportUsersToPDF = async (users: any[]) => {
     try {
         console.log('Exporting users to PDF:', users.length, 'users');

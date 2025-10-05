@@ -7,14 +7,14 @@ export interface TeacherResDto {
     lastName: string;
     phoneNumber: string;
     email: string;
-    subjects: any[]; // List<SubjectResponse>
-    department: any; // Department object
-    teachingLevel: AcademicLevel[]; // Set<TeachingLevel>
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
+    subjects: any[];
+    department: any;
+    teachingLevel: AcademicLevel[];
+    createdDate: string;
+    lastModifiedDate: string;
     role: Role;
     isActive: boolean;
-    // Legacy compatibility
+
     id: number;
     phone: string;
     createdAt: string;
@@ -23,17 +23,17 @@ export interface TeacherResDto {
 export interface DepartmentResDto {
     departmentId: number;
     departmentName: string;
-    departmentSubjects?: any[]; // Set<SubjectResponse>
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
-    // Pagination fields
+    departmentSubjects?: any[];
+    createdDate: string;
+    lastModifiedDate: string;
+
     content?: DepartmentResDto[];
     pageNumber?: number;
     pageSize?: number;
     totalElements?: number;
     totalPages?: number;
     lastPage?: boolean;
-    // Legacy compatibility
+
     id: number;
     name: string;
     subjects: {
@@ -54,7 +54,7 @@ export interface DepartmentResDto {
 
 import { AcademicLevel, StudyCycle } from '../enums';
 
-// DTO pour les réponses d'étudiant avec pagination - Aligné avec la documentation API
+
 export interface StudentResDto {
     id: number;
     firstName: string;
@@ -71,7 +71,7 @@ export interface StudentResDto {
     lastModifiedDate: string;
     isActive: boolean;
     semesterId?: number;
-    // Pagination fields
+
     content?: StudentResDto[];
     pageNumber?: number;
     pageSize?: number;
@@ -80,20 +80,20 @@ export interface StudentResDto {
     lastPage?: boolean;
 }
 
-// DTO pour les réponses de matière avec pagination
+
 export interface SubjectResDto {
     subjectId: number;
     subjectCode: string;
-    credits: number; // BigDecimal
+    credits: number;
     description?: string;
     teacher?: TeacherResDto;
-    subjectsLevel: AcademicLevel[]; // List<TeachingLevel>
+    subjectsLevel: AcademicLevel[];
     Studentcycle: StudyCycle;
-    semester?: any; // SemesterResponse
+    semester?: any;
     department?: DepartmentResDto;
-    createdDate: string; // Instant
-    lastModifiedDate: string; // Instant
-    // Pagination fields
+    createdDate: string;
+    lastModifiedDate: string;
+
     content?: SubjectResDto[];
     pageNumber?: number;
     pageSize?: number;

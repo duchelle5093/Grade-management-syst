@@ -5,12 +5,12 @@ import { useNotification } from '../contexts/notification/context';
 
 interface UseActivePeriodPollingProps {
     enabled?: boolean;
-    interval?: number; // en millisecondes
+    interval?: number;
 }
 
 export const useActivePeriodPolling = ({ 
     enabled = true, 
-    interval = 10000 // 10 secondes par défaut
+    interval = 10000
 }: UseActivePeriodPollingProps = {}) => {
     const dispatch = useAppDispatch();
     const { notify } = useNotification();
@@ -18,9 +18,9 @@ export const useActivePeriodPolling = ({
     const intervalRef = useRef(null);
     const previousPeriodRef = useRef<string | null>(null);
 
-    // Fonction pour récupérer la période active
+
     const fetchPeriod = async () => {
-        if (loading) return; // Éviter les requêtes multiples
+        if (loading) return;
         
         try {
             const result = await dispatch(fetchActivePeriod());
@@ -28,7 +28,7 @@ export const useActivePeriodPolling = ({
             if (fetchActivePeriod.fulfilled.match(result)) {
                 const newPeriod = result.payload?.shortName || result.payload?.periodLabel || result.payload?.name;
                 
-                // Notifier si la période a changé
+
                 if (previousPeriodRef.current && 
                     previousPeriodRef.current !== newPeriod && 
                     newPeriod) {
@@ -49,13 +49,13 @@ export const useActivePeriodPolling = ({
     useEffect(() => {
         if (!enabled) return;
 
-        // Récupération initiale
+
         fetchPeriod();
 
-        // Démarrer le polling
+
         intervalRef.current = setInterval(fetchPeriod, interval);
 
-        // Cleanup
+
         return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
@@ -64,18 +64,18 @@ export const useActivePeriodPolling = ({
         };
     }, [enabled, interval, dispatch]);
 
-    // Fonction pour forcer une mise à jour
+
     const refreshPeriod = () => {
         fetchPeriod();
     };
 
-    // Mapper la période vers les colonnes éditables
+
     const getEditableColumns = (periodShortName?: string): string[] => {
         console.log('DEBUG - getEditableColumns called with:', periodShortName);
         
         if (!periodShortName) {
             console.log('DEBUG - No periodShortName, returning fallback ["cc1"]');
-            return ["cc1"]; // Fallback vers CC1 si aucune période active
+            return ["cc1"];
         }
         
         const mapping: Record<string, string[]> = {
@@ -88,7 +88,7 @@ export const useActivePeriodPolling = ({
         const result = mapping[periodShortName] || ["cc1"];
         console.log('DEBUG - Mapping result:', { periodShortName, result, availableKeys: Object.keys(mapping) });
         
-        return result; // Fallback vers CC1 si période inconnue
+        return result;
     };
 
     const periodName = activePeriod?.shortName || activePeriod?.periodLabel || activePeriod?.name;

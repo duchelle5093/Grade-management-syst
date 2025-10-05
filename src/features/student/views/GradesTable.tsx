@@ -34,18 +34,18 @@ export default function GradesTable({ student }: GradesTableProps) {
   const [claimedTopics, setClaimedTopics] = useState<Set<string>>(new Set());
   const {notify} = useNotification()
 
-  // Regrouper les notes par matière avec colonnes séparées
+
   const groupedGrades = useMemo(() => {
     if (!student?.grades?.length) return [];
     
     const grouped = student.grades.reduce((acc, grade) => {
-      const key = grade.subjectCode;
+      const key = grade.subject?.subjectCode || '';
       if (!acc[key]) {
         acc[key] = {
-          subjectCode: grade.subjectCode,
-          subjectName: grade.subjectName,
-          semesterName: grade.semesterName,
-          creditsEarned: grade.creditsEarned,
+          subjectCode: grade.subject?.subjectCode || '',
+          subjectName: grade.subject?.subjectName || '',
+          semesterName: grade.semester?.name || '',
+          creditsEarned: grade.subject?.credits?.parsedValue || grade.subject?.credits || 0,
           cc1: null as number | null,
           cc2: null as number | null,
           sn1: null as number | null,
@@ -55,24 +55,25 @@ export default function GradesTable({ student }: GradesTableProps) {
         };
       }
       
-      // Assigner selon type
-      switch (grade.type) {
+      const ccScore = typeof grade.ccScore === 'number' ? grade.ccScore : grade.ccScore?.parsedValue || 0;
+      const snScore = typeof grade.snScore === 'number' ? grade.snScore : grade.snScore?.parsedValue || 0;
+      
+      switch (grade.exam) {
         case 'CC_1':
-          acc[key].cc1 = grade.value;
+          acc[key].cc1 = ccScore;
           break;
         case 'CC_2':
-          acc[key].cc2 = grade.value;
+          acc[key].cc2 = ccScore;
           break;
         case 'SN_1':
-          acc[key].sn1 = grade.value;
+          acc[key].sn1 = snScore;
           break;
         case 'SN_2':
-          acc[key].sn2 = grade.value;
+          acc[key].sn2 = snScore;
           break;
       }
       
-      // Utiliser la propriété passed du backend
-      acc[key].passed = grade.passed;
+      acc[key].passed = grade.hasPassed;
       
       return acc;
     }, {} as Record<string, any>);
@@ -141,10 +142,17 @@ export default function GradesTable({ student }: GradesTableProps) {
       const studentData = {
         firstName: student.firstName || '',
         lastName: student.lastName || '',
-        username: student.username || student.studentId?.toString() || '',
+        username: student.matricule || student.username || student.studentId?.toString() || '',
         email: student.email || '',
         level: student.studentLevel?.studentLevel || student.level || '',
-        gpa: student.gpa || 0
+        gpa: (() => {
+          if (!student?.grades?.length) return 0;
+          const totalGpa = student.grades.reduce((sum, grade) => {
+            const gpa = typeof grade.gpa === 'number' ? grade.gpa : grade.gpa?.parsedValue || 0;
+            return sum + gpa;
+          }, 0);
+          return totalGpa;
+        })()
       };
 
       const grades = groupedGrades.map(grade => ({
@@ -255,8 +263,8 @@ export default function GradesTable({ student }: GradesTableProps) {
         const topicData = {
           code: subjectCode,
           title: record.subjectName || 'Sans nom',
-          cc: record.cc1, // Utiliser cc1 pour compatibilité
-          sn: record.sn1, // Utiliser sn1 pour compatibilité
+          cc: record.cc1,
+          sn: record.sn1,
           semester: record.semesterName?.toLowerCase().includes('1') ? 'S1' : 'S2' as 'S1' | 'S2',
           credit: record.creditsEarned || 0
         };
@@ -286,19 +294,23 @@ export default function GradesTable({ student }: GradesTableProps) {
         locale={{ emptyText: groupedGrades.length === 0 ? 'Aucune note disponible' : 'Aucune donnée' }}
       />
       
-      {/* Ligne moyenne générale */}
-      {student?.gpa && (
-        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-semibold text-blue-800">
-              Moyenne Générale (GPA)
-            </span>
-            <span className="text-xl font-bold text-blue-900">
-              {student.gpa.toFixed(2)}
-            </span>
-          </div>
+      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="flex justify-between items-center">
+          <span className="text-lg font-semibold text-blue-800">
+            Moyenne Générale (GPA)
+          </span>
+          <span className="text-xl font-bold text-blue-900">
+{(() => {
+              if (!student?.grades?.length) return '0.00';
+              const totalGpa = student.grades.reduce((sum, grade) => {
+                const gpa = typeof grade.gpa === 'number' ? grade.gpa : grade.gpa?.parsedValue || 0;
+                return sum + gpa;
+              }, 0);
+              return totalGpa.toFixed(2);
+            })()}
+          </span>
         </div>
-      )}
+      </div>
       
       <Modal
         open={isModalVisible}

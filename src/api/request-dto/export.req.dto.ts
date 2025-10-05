@@ -4,12 +4,12 @@ export interface ExportGradesReqDto {
     documentType: string;
     periodLabel?: string;
     semesterId?: number;
-    studentIds?: number[]; // Pour filtrer par étudiants spécifiques
+    studentIds?: number[];
 }
 
 export interface ExportResultResDto {
     message: string;
     status: string;
     data: any;
-    downloadUrl?: string; // Si l'API retourne une URL de téléchargement
+    downloadUrl?: string;
 }
