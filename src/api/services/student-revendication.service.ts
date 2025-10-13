@@ -17,10 +17,10 @@ export class StudentRevendicationService {
 
 
     async createRevendication(revendicationData: {
-        period: any;
-        student: any;
-        grade: any;
-        semester: any;
+        period: { examId: number; examType: string; };
+        student: { studentId: number; };
+        grade: { gradeId: number; };
+        semester: { semesterId: number; };
         requestedScore: number;
         description: string;
     }): Promise<any> {

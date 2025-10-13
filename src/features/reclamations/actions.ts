@@ -35,10 +35,10 @@ export const rejectRevendication = createAsyncThunk(
 export const createRevendication = createAsyncThunk(
     'revendications/create',
     async (revendicationData: {
-        period: any;
-        student: any;
-        grade: any;
-        semester: any;
+        period: { examId: number; examType: string; };
+        student: { studentId: number; };
+        grade: { gradeId: number; };
+        semester: { semesterId: number; };
         requestedScore: number;
         description: string;
     }) => {

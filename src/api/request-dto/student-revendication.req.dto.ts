@@ -1,10 +1,19 @@
 
 
 export interface StudentRevendicationReqDto {
-    period: any;
-    student: any;
-    grade: any;
-    semester: any;
+    period: {
+        examId: number;
+        examType: string;
+    };
+    student: {
+        studentId: number;
+    };
+    grade: {
+        gradeId: number;
+    };
+    semester: {
+        semesterId: number;
+    };
     requestedScore: number;
     description: string;
 }

@@ -4,7 +4,7 @@ import {useAppDispatch, useAppSelector} from "../../store";
 import { StudentDataResDto } from "../../api/reponse-dto/student.res.dto";
 import {fetchStudentGrades} from "../grades";
 import { mockStudentData } from "./mockData";
-import { fetchActiveSemester } from "../semesters/actions";
+import { fetchActiveSemester } from "../semesters";
 
 const countFailedSubjects = (studentData: StudentDataResDto): { failed: number; passed: number } => {
     if (!studentData?.grades?.length) return { failed: 0, passed: 0 };

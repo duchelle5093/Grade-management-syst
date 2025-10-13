@@ -74,54 +74,8 @@ export class AdminService {
         return response.data;
     }
 
-    async createUser(userData: {
-        username: string;
-        email: string;
-        firstName: string;
-        lastName: string;
-        role: Role;
-        password: string;
-
-        level?: string;
-        matricule?: string;
-        speciality?: string;
-        cycle?: string;
-
-        levels?: string[];
-        department?: string;
-        phone?: string;
-    }): Promise<any> {
-
-        let payload: any = {
-            username: userData.username,
-            email: userData.email,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            role: userData.role,
-            password: userData.password
-        };
-
-        if (userData.role === Role.STUDENT) {
-            payload.level = userData.level;
-            payload.matricule = userData.matricule;
-            payload.speciality = userData.speciality;
-            payload.cycle = userData.cycle;
-        } else if (userData.role === Role.TEACHER) {
-            payload.levels = userData.levels;
-            payload.department = userData.department;
-            payload.phone = userData.phone;
-        }
-        
-
-        Object.keys(payload).forEach(key => {
-            if (payload[key] === undefined || payload[key] === null || payload[key] === '') {
-                delete payload[key];
-            }
-        });
-        
-        console.log('Clean payload sent to API:', payload);
-        
-        const response = await this._client.post(adminApis.REGISTER_USER, payload);
+    async createUser(userData: any): Promise<any> {
+        const response = await this._client.post(adminApis.REGISTER_USER, userData);
         return response.data;
     }
 
@@ -213,7 +167,7 @@ export class AdminService {
 
     async createDepartment(department: {
         departmentName: string;
-        subjectIds?: number[];
+        subjectIds: number[];
     }): Promise<any> {
         const response = await this._client.post(adminApis.CREATE_DEPARTMENT, department);
         return response.data;
@@ -221,7 +175,7 @@ export class AdminService {
 
     async updateDepartment(id: number, department: {
         departmentName: string;
-        subjectIds?: number[];
+        subjectIds: number[];
     }): Promise<any> {
         const response = await this._client.put(`${adminApis.UPDATE_DEPARTMENT}/${id}`, department);
         return response.data;

@@ -231,7 +231,11 @@ export const DepartmentManagementModal: React.FC<DepartmentManagementModalProps>
                                         <Form.Item
                                             name="name"
                                             label="Nom du département"
-                                            rules={[{ required: true, message: 'Le nom est requis' }]}
+                                            rules={[
+                                                { required: true, message: 'Le nom du département est requis' },
+                                                { min: 5, message: 'Le nom doit contenir au moins 5 caractères' },
+                                                { max: 100, message: 'Le nom ne peut pas dépasser 100 caractères' }
+                                            ]}
                                         >
                                             <Input placeholder="Ex: Informatique" />
                                         </Form.Item>
@@ -240,6 +244,7 @@ export const DepartmentManagementModal: React.FC<DepartmentManagementModalProps>
                                         <Form.Item
                                             name="subjectIds"
                                             label="Matières associées"
+                                            rules={[{ required: true, message: 'Au moins une matière doit être sélectionnée' }]}
                                         >
                                             <Select
                                                 mode="multiple"

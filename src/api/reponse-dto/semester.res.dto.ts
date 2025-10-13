@@ -1,12 +1,12 @@
 export interface SemesterResDto {
-    id: number;
+    semesterId: number;
     createdDate: string;
     lastModifiedDate: string;
     name: string;
     startDate: string;
     endDate: string;
     active: boolean;
-    orderIndex: number;
+    orderIndex?: number;
 }
 
 import { PeriodLabel } from '../enums';

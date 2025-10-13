@@ -3,7 +3,7 @@ import { adminService } from '../../api/configs';
 
 export interface DepartmentData {
     name: string;
-    subjectIds?: number[];
+    subjectIds: number[];
 }
 
 export const createDepartment = createAsyncThunk(
@@ -12,7 +12,7 @@ export const createDepartment = createAsyncThunk(
         try {
             const payload = {
                 departmentName: departmentData.name,
-                subjectIds: departmentData.subjectIds
+                subjectIds: departmentData.subjectIds || []
             };
             return await adminService.createDepartment(payload);
         } catch (error: any) {
@@ -27,7 +27,7 @@ export const updateDepartment = createAsyncThunk(
         try {
             const payload = {
                 departmentName: departmentData.name,
-                subjectIds: departmentData.subjectIds
+                subjectIds: departmentData.subjectIds || []
             };
             return await adminService.updateDepartment(id, payload);
         } catch (error: any) {

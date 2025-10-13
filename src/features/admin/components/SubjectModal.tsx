@@ -64,22 +64,21 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
         try {
             const values = await form.validateFields();
             
-            const selectedDept = departments.find(d => d.name === values.departmentName);
+            const selectedDept = departments.find(d => d.id === values.departmentId);
             if (!selectedDept) {
                 throw new Error('Département non trouvé');
             }
 
             const subjectData = {
-                name: values.name,
-                code: values.code.toUpperCase(),
+                subjectName: values.name,
+                subjectCode: values.code.toUpperCase(),
                 description: values.description,
                 credits: values.credits,
-                level: values.level,
-                cycle: values.cycle,
-                departmentId: selectedDept.id,
+                subjectsLevel: [values.level],
+                Studentcycle: values.cycle,
+                departmentId: values.departmentId,
                 teacherId: values.teacherId,
-                semesterId: values.semesterId || 1,
-                active: values.active ?? true
+                semesterId: values.semesterId || 1
             };
 
             const subjectExists = allSubjects.some(subject =>
@@ -163,7 +162,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
         });
     };
 
-    const selectedDepartment = Form.useWatch('departmentName', form);
+    const selectedDepartment = Form.useWatch('departmentId', form);
     const selectedLevel = Form.useWatch('level', form);
     
     const availableTeachers = selectedDepartment && selectedLevel
@@ -290,9 +289,11 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
                     name="description"
                     label="Description"
                     rules={[
+                        { required: true, message: 'La description est requise' },
                         { 
+                            min: 10,
                             max: 500, 
-                            message: 'La description ne peut pas dépasser 500 caractères' 
+                            message: 'La description doit contenir entre 10 et 500 caractères' 
                         }
                     ]}
                 >
@@ -353,13 +354,13 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item
-                            name="departmentName"
+                            name="departmentId"
                             label="Département"
                             rules={[{ required: true, message: 'Le département est requis' }]}
                         >
                             <Select size="large" placeholder="Sélectionnez le département">
                                 {departments.map(dept => (
-                                    <Option key={dept.id} value={dept.name}>
+                                    <Option key={dept.id} value={dept.id}>
                                         {dept.name}
                                     </Option>
                                 ))}

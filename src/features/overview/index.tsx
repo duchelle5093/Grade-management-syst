@@ -223,12 +223,7 @@ export const Overview = () => {
     };
 
 
-    const recentActivity = [
-        { type: 'user', name: 'Jean Dupont', action: 'Nouvel étudiant inscrit', time: '2 min', avatar: 'JD' },
-        { type: 'grade', name: 'Mathématiques L1', action: 'Notes saisies', time: '15 min', avatar: 'M' },
-        { type: 'claim', name: 'Sophie Martin', action: 'Réclamation soumise', time: '1h', avatar: 'SM' },
-        { type: 'subject', name: 'Physique Quantique', action: 'Matière créée', time: '2h', avatar: 'PQ' }
-    ];
+
 
     return (
         <div style={{ padding: '24px', backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
@@ -339,85 +334,7 @@ export const Overview = () => {
                 </Col>
             </Row>
 
-            {}
-            <Row gutter={[16, 16]}>
-                <Col xs={24} lg={12}>
-                    <Card 
-                        title="Indicateurs de performance" 
-                        style={{ borderRadius: '12px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
-                        headStyle={{ borderBottom: '1px solid #f0f0f0', fontWeight: 'bold' }}
-                    >
-                        <Space direction="vertical" style={{ width: '100%' }} size="large">
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                                    <Text strong>Taux d'assignation des matières</Text>
-                                    <Text style={{ color: '#6EADFF', fontWeight: 'bold' }}>{Math.round(stats.assignmentRate)}%</Text>
-                                </div>
-                                <Progress 
-                                    percent={Math.round(stats.assignmentRate)} 
-                                    strokeColor="#6EADFF" 
-                                    trailColor="#f0f0f0"
-                                    showInfo={false}
-                                />
-                            </div>
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                                    <Text strong>Matières sans enseignant</Text>
-                                    <Badge count={stats.subjectsWithoutTeacher} style={{ backgroundColor: '#ff4d4f' }} />
-                                </div>
-                            </div>
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                                    <Text strong>Moyenne étudiants/enseignant</Text>
-                                    <Text style={{ color: '#36CFC9', fontWeight: 'bold' }}>
-                                        {stats.totalTeachers > 0 ? Math.round(stats.totalStudents / stats.totalTeachers) : 0}
-                                    </Text>
-                                </div>
-                            </div>
-                        </Space>
-                    </Card>
-                </Col>
-                <Col xs={24} lg={12}>
-                    <Card 
-                        title="Activité récente" 
-                        style={{ borderRadius: '12px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
-                        headStyle={{ borderBottom: '1px solid #f0f0f0', fontWeight: 'bold' }}
-                    >
-                        <List
-                            itemLayout="horizontal"
-                            dataSource={recentActivity}
-                            renderItem={(item) => (
-                                <List.Item>
-                                    <List.Item.Meta
-                                        avatar={
-                                            <Avatar 
-                                                style={{ 
-                                                    backgroundColor: 
-                                                        item.type === 'user' ? '#6EADFF' :
-                                                        item.type === 'grade' ? '#36CFC9' :
-                                                        item.type === 'claim' ? '#ff4d4f' : '#B37FEB'
-                                                }}
-                                            >
-                                                {item.avatar}
-                                            </Avatar>
-                                        }
-                                        title={<Text strong>{item.name}</Text>}
-                                        description={
-                                            <div>
-                                                <Text type="secondary">{item.action}</Text>
-                                                <br />
-                                                <Text type="secondary" style={{ fontSize: '12px' }}>
-                                                    <ClockCircleOutlined /> Il y a {item.time}
-                                                </Text>
-                                            </div>
-                                        }
-                                    />
-                                </List.Item>
-                            )}
-                        />
-                    </Card>
-                </Col>
-            </Row>
+
         </div>
     );
 };

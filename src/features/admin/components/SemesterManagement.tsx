@@ -80,7 +80,7 @@ export const SemesterManagement: React.FC = () => {
             throw new Error('La date de début doit être antérieure à la date de fin');
         }
         
-        const existingSemesters = semesters.filter(s => editingSemester ? s.id !== editingSemester.id : true);
+        const existingSemesters = semesters.filter(s => editingSemester ? s.semesterId !== editingSemester.semesterId : true);
         const hasOverlap = existingSemesters.some(semester => {
             const semStart = dayjs(semester.startDate);
             const semEnd = dayjs(semester.endDate);
@@ -98,7 +98,7 @@ export const SemesterManagement: React.FC = () => {
             
             if (editingSemester) {
                 const payload = {
-                    id: editingSemester.id,
+                    id: editingSemester.semesterId,
                     name: values.name,
                     startDate: values.startDate.format('YYYY-MM-DD'),
                     endDate: values.endDate.format('YYYY-MM-DD'),
@@ -149,19 +149,12 @@ export const SemesterManagement: React.FC = () => {
             title: 'Statut',
             dataIndex: 'active',
             key: 'active',
-            render: (active: boolean, record: SemesterResDto) => (
-                <Space>
-                    {active ? (
-                        <Tag color="green" icon={<CheckCircleOutlined />}>Actif</Tag>
-                    ) : (
-                        <Tag color="default">Inactif</Tag>
-                    )}
-                    <Switch 
-                        checked={active} 
-                        size="small"
-                        onChange={() => handleToggleActive(record)}
-                    />
-                </Space>
+            render: (active: boolean) => (
+                active ? (
+                    <Tag color="green" icon={<CheckCircleOutlined />}>Actif</Tag>
+                ) : (
+                    <Tag color="default">Inactif</Tag>
+                )
             )
         },
 
@@ -191,7 +184,7 @@ export const SemesterManagement: React.FC = () => {
             <Table
                 columns={columns}
                 dataSource={semesters}
-                rowKey="revendicationPeriodId"
+                rowKey="semesterId"
                 loading={loading}
                 pagination={{ pageSize: 10 }}
                 defaultSortOrder="ascend"

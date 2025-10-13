@@ -116,16 +116,16 @@ const AcademicPeriodsManager = () => {
     
 
     const backendPeriods: AcademicPeriod[] = gradingWindows.map(period => ({
-        id: period.revendicationPeriodId.toString(),
-        name: `Période ${period.exam.assessmentType}`,
-        shortName: period.exam.assessmentType,
-        type: period.exam.assessmentType as 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2',
-        semester: period.semester.semesterId as 1 | 2,
+        id: period.revendicationPeriodId?.toString() || period.id?.toString() || Math.random().toString(),
+        name: `Période ${period.exam?.assessmentType || 'CC_1'}`,
+        shortName: period.exam?.assessmentType || 'CC_1',
+        type: (period.exam?.assessmentType || 'CC_1') as 'CC_1' | 'SN_1' | 'CC_2' | 'SN_2',
+        semester: (period.semester?.semesterId || 1) as 1 | 2,
         startDate: period.startDate,
         endDate: period.endDate,
         color: period.color,
         isActive: period.isActive,
-        order: period.revendicationPeriodId
+        order: period.revendicationPeriodId || period.id || Math.random()
     }));
     
 
@@ -260,6 +260,9 @@ const AcademicPeriodsManager = () => {
                 id: parseInt(selectedPeriod.id), 
                 windowData: payload 
             })).unwrap();
+            
+            // Refetch pour éviter les doublons
+            dispatch(fetchAllGradingWindows());
             
             notify({
                 type: 'success',

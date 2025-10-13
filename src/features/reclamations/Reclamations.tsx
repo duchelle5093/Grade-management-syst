@@ -87,6 +87,15 @@ export default function Reclamations({
             name="requestedScore"
             rules={[
               { required: true, message: "Veuillez entrer la note reclamée." },
+              { 
+                validator: (_, value) => {
+                  const num = parseFloat(value);
+                  if (isNaN(num) || num < 0 || num > 20) {
+                    return Promise.reject('La note doit être entre 0 et 20');
+                  }
+                  return Promise.resolve();
+                }
+              }
             ]}
             className="mb-0 !-mt-4"
           >
@@ -94,7 +103,9 @@ export default function Reclamations({
               type="number"
               size="large"
               min={0}
-              placeholder="Entrez la note reclamée"
+              max={20}
+              step={0.1}
+              placeholder="Entrez la note reclamée (0-20)"
               className="!w-full"
             />
           </Form.Item>
@@ -125,18 +136,19 @@ export default function Reclamations({
             }
             name="description"
             rules={[
-              {
-                required: true,
-                message: "Veuillez décrire votre revendication.",
-              },
+              { required: true, message: "Veuillez décrire votre revendication." },
+              { min: 10, message: "La description doit contenir au moins 10 caractères" },
+              { max: 500, message: "La description ne peut pas dépasser 500 caractères" }
             ]}
             className="md:col-span-2 !-mt-4"
           >
             <Input.TextArea
               rows={3}
               size="large"
-              placeholder="Décrivez votre revendication..."
+              placeholder="Décrivez votre revendication... (10-500 caractères)"
               className="!w-full"
+              showCount
+              maxLength={500}
             />
           </Form.Item>
         </div>

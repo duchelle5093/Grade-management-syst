@@ -277,9 +277,14 @@ const adminSlice = createSlice({
             })
             .addCase(updateGradingWindow.fulfilled, (state, action) => {
                 state.loading = false;
-                const index = state.gradingWindows.findIndex(window => window.id === action.payload.id);
+                const index = state.gradingWindows.findIndex(window => 
+                    (window.revendicationPeriodId || window.id) === (action.payload.revendicationPeriodId || action.payload.id)
+                );
                 if (index !== -1) {
                     state.gradingWindows[index] = action.payload;
+                } else {
+                    // Si pas trouvé, refetch les données pour éviter les doublons
+                    // Ne pas ajouter, juste ignorer car les données seront rechargées
                 }
             })
             .addCase(updateGradingWindow.rejected, (state, action) => {

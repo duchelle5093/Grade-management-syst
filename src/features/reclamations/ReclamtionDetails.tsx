@@ -5,8 +5,7 @@ import {ReclamationValuesProps} from "../student/views/GradesTable.tsx";
 import {StudentDataResDto, StudentTopicResDto} from "../../api/reponse-dto/student.res.dto.ts";
 import {useAppDispatch} from "../../store";
 import {useNotification} from "../../contexts";
-import {submitGradeClaim} from "../grades";
-import {GradeClaimReqDto} from "../../api/request-dto/gradeClaim.req.dto.ts";
+import {createRevendication} from "./actions";
 import { Card, Descriptions, Typography, Space, Divider, Input } from "antd";
 import { UserOutlined, BookOutlined, EditOutlined, MessageOutlined } from "@ant-design/icons";
 
@@ -50,11 +49,49 @@ export const ReclamationsDetails = ({
         const periodLabel = formValues.period;
 
         const grade = student?.grades.find(
-            grade => (grade.subjectCode || grade.subject?.code) === currentTopic?.code &&
-                     (grade.periodLabel || grade.assessmentType) === periodLabel
+            grade => {
+                const subjectMatch = (grade.subjectCode || grade.subject?.subjectCode || grade.subject?.code) === currentTopic?.code;
+                const periodMatch = (grade.exam || grade.assessmentType || grade.periodLabel) === periodLabel;
+                return subjectMatch && periodMatch;
+            }
         );
 
         if (!grade) {
+            const availableGrades = student?.grades.filter(
+                g => (g.subjectCode || g.subject?.subjectCode || g.subject?.code) === currentTopic?.code
+            );
+            
+            if (availableGrades?.length > 0) {
+                const firstGrade = availableGrades[0];
+                const payload = {
+                    period: {
+                        examId: firstGrade.examId || firstGrade.exam?.examId || 1,
+                        examType: periodLabel
+                    },
+                    student: {
+                        studentId: student.id || student.studentId
+                    },
+                    grade: {
+                        gradeId: firstGrade.id || firstGrade.gradeId
+                    },
+                    semester: {
+                        semesterId: firstGrade.semesterId || firstGrade.semester?.semesterId || 1
+                    },
+                    requestedScore: parseFloat(formValues.requestedScore.toString()),
+                    description: formValues.description
+                };
+                
+                try {
+                    const result = await dispatch(createRevendication(payload));
+                    if (createRevendication.fulfilled.match(result)) {
+                        handleOk();
+                    }
+                } catch (error) {
+                    console.error('Erreur soumission réclamation:', error);
+                }
+                return;
+            }
+            
             notify({
                 type: 'error',
                 message: 'Erreur',
@@ -64,17 +101,26 @@ export const ReclamationsDetails = ({
         }
 
         const payload = {
-            period: grade.exam || { assessmentType: periodLabel },
-            student: { id: student.id || student.studentId },
-            grade: { id: grade.id || grade.gradeId },
-            semester: { id: grade.semesterId },
+            period: {
+                examId: grade.examId || grade.exam?.examId || 1,
+                examType: periodLabel
+            },
+            student: {
+                studentId: student.id || student.studentId
+            },
+            grade: {
+                gradeId: grade.id || grade.gradeId
+            },
+            semester: {
+                semesterId: grade.semesterId || grade.semester?.semesterId
+            },
             requestedScore: parseFloat(formValues.requestedScore.toString()),
             description: formValues.description
         };
         
         try {
-            const result = await dispatch(submitGradeClaim(payload));
-            if (submitGradeClaim.fulfilled.match(result)) {
+            const result = await dispatch(createRevendication(payload));
+            if (createRevendication.fulfilled.match(result)) {
                 handleOk();
             }
         } catch (error) {

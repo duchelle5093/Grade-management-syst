@@ -139,7 +139,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             
 
             if (selectedRole === Role.STUDENT) {
-                userData.levelId = allData.levelId || 1;
+                userData.levelId = allData.levelId;
                 userData.matricule = allData.matricule;
                 userData.speciality = allData.speciality;
                 userData.cycle = allData.cycle;
@@ -434,7 +434,6 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                                         <Form.Item
                                             name="levelIds"
                                             label="Niveaux enseignés"
-                                            rules={[{ required: true, message: 'Au moins un niveau est requis' }]}
                                         >
                                             <Select 
                                                 mode="multiple"
